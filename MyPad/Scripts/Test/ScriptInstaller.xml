@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Script>
+  <Name>Test</Name>
+  <Description>A quick simple test script.</Description>
+  <Type>Menu</Type>
+  <File>Test.lua</File>
+</Script>

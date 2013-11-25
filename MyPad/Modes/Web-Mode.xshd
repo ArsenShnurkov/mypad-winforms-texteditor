@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SyntaxDefinition name="Web" extensions=".php;.php3;.php4;.php5;.phtml;.htm;.html;.xhtml">
+	<Environment>
+		<Custom name="TypeReference" bold="false" italic="false" color="#04ABAB" />
+		<Custom name="UnknownEntity" bold="false" italic="false" color="#AB0404" />
+		<Default bold="false" italic="false" color="Black" bgcolor="White" />
+		<Selection bold="false" italic="false" color="White" bgcolor="#3399FF" />
+		<VRuler bold="false" italic="false" color="#E3E3E3" bgcolor="White" />
+		<InvalidLines bold="false" italic="false" color="Red" />
+		<CaretMarker bold="false" italic="false" color="Yellow" />
+		<CaretLine bold="false" italic="false" color="#E3E3E3" bgcolor="White" />
+		<LineNumbers bold="false" italic="false" color="#A0A0A0" bgcolor="White" />
+		<FoldLine bold="false" italic="false" color="#A0A0A0" />
+		<FoldMarker bold="false" italic="false" color="White" bgcolor="White" />
+		<SelectedFoldLine bold="false" italic="false" color="Black" />
+		<EOLMarkers bold="false" italic="false" color="#555555" bgcolor="White" />
+		<SpaceMarkers bold="false" italic="false" color="#555555" bgcolor="White" />
+		<TabMarkers bold="false" italic="false" color="#555555" bgcolor="White" />
+	</Environment>
+	<Properties>
+		<Property name="LineComment" value="//" />
+	</Properties>
+	<Digits name="Digits" bold="false" italic="false" color="Firebrick" />
+	<RuleSets>
+		<RuleSet ignorecase="false">
+			<Delimiters>~!%^*()-+=|\#/{}[]:;"'&lt;&gt; , .?</Delimiters>
+			<Span name="PHPShortTag" rule="PHPRuleSet" bold="false" italic="false" color="Black" stopateol="false">
+				<Begin>&lt;?</Begin>
+				<End>?&gt;</End>
+			</Span>
+			<Span name="PHPTag" rule="PHPRuleSet" bold="false" italic="false" color="Black" stopateol="false">
+				<Begin>&lt;?php</Begin>
+				<End>?&gt;</End>
+			</Span>
+			<Span name="PHPPrintTag" rule="PHPRuleSet" bold="false" italic="false" color="Black" stopateol="true">
+				<Begin>&lt;?=</Begin>
+				<End>?&gt;</End>
+			</Span>
+			<Span name="HTMLComment" bold="false" italic="true" color="DimGray" stopateol="false">
+				<Begin>&lt;!--</Begin>
+				<End>--&gt;</End>
+			</Span>
+			<Span name="CSSTag" rule="CSSRuleSet" bold="false" italic="false" color="Indigo" stopateol="false">
+				<Begin>&lt;style</Begin>
+				<End>/style&gt;</End>
+			</Span>
+			<Span name="HTMLTag" rule="HTMLRuleSet" bold="false" italic="false" color="Indigo" stopateol="true">
+				<Begin>&lt;</Begin>
+				<End>&gt;</End>
+			</Span>
+		</RuleSet>
+		<RuleSet name="PHPRuleSet" ignorecase="false">
+			<Delimiters>~!%^*()-+=|\#/{}[]:;"'&lt;&gt; , .?$</Delimiters>
+			<Span name="PreprocessorDirectives" bold="false" italic="false" color="Green" stopateol="true">
+				<Begin>#</Begin>
+			</Span>
+			<Span name="LINECOMMENT" bold="false" italic="true" color="DimGray" stopateol="true">
+				<Begin>///</Begin>
+			</Span><Span name="LINECOMMENT" bold="false" italic="true" color="DimGray" stopateol="true">
+				<Begin>//@!/@</Begin>
+			</Span>
+			<Span name="BLOCKCOMMENT" bold="false" italic="true" color="DimGray" stopateol="false">
+				<Begin>/*</Begin>
+				<End>*/</End>
+			</Span>
+			<Span name="STRING" bold="false" italic="false" color="Firebrick" stopateol="false" escapecharacter="\">
+				<Begin>"</Begin>
+				<End>"</End>
+			</Span><Span name="MORELINEDSTRING" bold="false" italic="false" color="Firebrick" stopateol="false" escapecharacter="\">
+				<Begin>@@"</Begin>
+				<End>"</End>
+			</Span>
+			<Span name="CHAR" bold="false" italic="false" color="Firebrick" stopateol="false" escapecharacter="\">
+				<Begin>'</Begin>
+				<End>'</End>
+			</Span>
+			<MarkPrevious bold="false" italic="false" color="Black">(</MarkPrevious>
+			<MarkFollowing bold="false" italic="true" color="Indigo">$</MarkFollowing>
+			<KeyWords name="PHPVariableStart" bold="false" italic="true" color="Indigo">
+        			<Key word="$" />
+      			</KeyWords>
+			<KeyWords name="Punctuation" bold="false" italic="false" color="Black">
+				<Key word="?" />
+				<Key word="," />
+				<Key word="." />
+				<Key word="(" />
+				<Key word=")" />
+				<Key word="[" />
+				<Key word="]" />
+				<Key word="{" />
+				<Key word="}" />
+				<Key word="+" />
+				<Key word="-" />
+				<Key word="/" />
+				<Key word="%" />
+				<Key word="*" />
+				<Key word="&lt;" />
+				<Key word="&gt;" />
+				<Key word="^" />
+				<Key word="!" />
+				<Key word="|" />
+			</KeyWords>
+			<KeyWords name="AccessKeywords" bold="false" italic="false" color="Blue">
+				<Key word="global" />
+				<Key word="self" />
+			</KeyWords>
+			<KeyWords name="OperatorKeywords" bold="false" italic="false" color="Blue">
+				<Key word="and" />
+				<Key word="or" />
+				<Key word="new" />
+				<Key word="xor" />
+				<Key word="true" />
+				<Key word="false" />
+			</KeyWords>
+			<KeyWords name="SelectionStatements" bold="false" italic="false" color="Blue">
+				<Key word="else" />
+				<Key word="if" />
+				<Key word="switch" />
+				<Key word="case" />
+				<Key word="endif" />
+				<Key word="elseif" />
+			</KeyWords>
+			<KeyWords name="IterationStatements" bold="false" italic="false" color="Blue">
+				<Key word="do" />
+				<Key word="for" />
+				<Key word="foreach" />
+				<Key word="while" />
+				<Key word="endwhile" />
+				<Key word="exit" />
+			</KeyWords>
+			<KeyWords name="JumpStatements" bold="false" italic="false" color="DarkBlue">
+				<Key word="break" />
+				<Key word="continue" />
+				<Key word="default" />
+				<Key word="goto" />
+				<Key word="return" />
+			</KeyWords>
+			<KeyWords name="ExceptionHandlingStatements" bold="false" italic="false" color="Blue">
+				<Key word="require" />
+				<Key word="include" />
+				<Key word="function" />
+				<Key word="include_once" />
+				<Key word="require_once" />
+				<Key word="old_function" />
+			</KeyWords>
+			<KeyWords name="ValueTypes" bold="false" italic="false" color="Blue">
+				<Key word="int" />
+				<Key word="integer" />
+				<Key word="real" />
+				<Key word="double" />
+				<Key word="float" />
+				<Key word="string" />
+				<Key word="array" />
+				<Key word="object" />
+			</KeyWords>
+			<KeyWords name="ReferenceTypes" bold="false" italic="false" color="Blue">
+				<Key word="class" />
+				<Key word="new" />
+				<Key word="interface" />
+				<Key word="extends" />
+				<Key word="implements" />
+			</KeyWords>
+			<KeyWords name="Void" bold="false" italic="false" color="Blue">
+				<Key word="void" />
+			</KeyWords>
+			<KeyWords name="AccessModifiers" bold="false" italic="false" color="Blue">
+				<Key word="public" />
+				<Key word="private" />
+				<Key word="protected" />
+				<Key word="abstract" />
+				<Key word="static" />
+				<Key word="const" />
+				<Key word="var" />
+			</KeyWords>
+			<KeyWords name="MagicFunctions" bold="false" italic="false" color="MidnightBlue">
+				<Key word="__get" />
+				<Key word="__set" />
+				<Key word="__construct" />
+				<Key word="__destruct" />
+				<Key word="__call" />
+				<Key word="__clone" />
+				<Key word="__toString" />
+			</KeyWords>
+			<KeyWords name="Literals" bold="false" italic="false" color="Blue">
+				<Key word="null" />
+			</KeyWords>
+		</RuleSet>
+		<RuleSet name="HTMLRuleSet" ignorecase="false">
+			<Delimiters>~!%^*()+=|\#/{}[]:;"'&lt;&gt; , .?</Delimiters>
+			<Span name="String" bold="false" italic="false" color="Green">
+				<Begin>"</Begin>
+				<End>"</End>
+			</Span>
+			<MarkPrevious bold="false" italic="false" color="Red">=</MarkPrevious>
+		</RuleSet>
+		<RuleSet name="CSSRuleSet" ignorecase="false">
+			<Delimiters>~!%^*()+=|\#/{}[]:;"'&lt;&gt; , .?</Delimiters>
+			<MarkPrevious bold="false" italic="false" color="DeepSkyBlue">:</MarkPrevious>
+			<MarkFollowing bold="false" italic="false" color="Firebrick">#</MarkFollowing>
+			<KeyWords name="HTMLTags" bold="false" italic="false" color="Blue">
+				<Key word="*" />
+				<Key word="html" />
+				<Key word="head" />
+				<Key word="body" />
+				<Key word="div" />
+				<Key word="span" />
+				<Key word="table" />
+				<Key word="thead" />
+				<Key word="tbody" />
+				<Key word="tfooter" />
+				<Key word="tr" />
+				<Key word="td" />
+				<Key word="p" />
+				<Key word="ul" />
+				<Key word="ol" />
+				<Key word="li" />
+				<Key word="map" />
+				<Key word="embed" />
+				<Key word="frame" />
+				<Key word="iframe" />
+				<Key word="img" />
+				<Key word="form" />
+				<Key word="input" />
+				<Key word="select" />
+				<Key word="option" />
+				<Key word="textarea" />
+			</KeyWords>
+		</RuleSet>
+	</RuleSets>
+</SyntaxDefinition>

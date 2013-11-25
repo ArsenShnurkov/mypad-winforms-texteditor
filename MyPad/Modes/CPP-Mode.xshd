@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SyntaxDefinition name="C++" extensions=".c;.cpp;.h;.hpp;.cxx">
+	<Environment>
+		<Custom name="TypeReference" bold="false" italic="false" color="#04ABAB" />
+		<Custom name="UnknownEntity" bold="false" italic="false" color="#AB0404" />
+		<Default bold="false" italic="false" color="Black" bgcolor="White" />
+		<Selection bold="false" italic="false" color="White" bgcolor="#3399FF" />
+		<VRuler bold="false" italic="false" color="#E3E3E3" bgcolor="White" />
+		<InvalidLines bold="false" italic="false" color="Red" />
+		<CaretMarker bold="false" italic="false" color="Yellow" />
+		<CaretLine bold="false" italic="false" color="#E3E3E3" bgcolor="White" />
+		<LineNumbers bold="false" italic="false" color="#A0A0A0" bgcolor="White" />
+		<FoldLine bold="false" italic="false" color="#A0A0A0" />
+		<FoldMarker bold="false" italic="false" color="White" bgcolor="White" />
+		<SelectedFoldLine bold="false" italic="false" color="Black" />
+		<EOLMarkers bold="false" italic="false" color="#555555" bgcolor="White" />
+		<SpaceMarkers bold="false" italic="false" color="#555555" bgcolor="White" />
+		<TabMarkers bold="false" italic="false" color="#555555" bgcolor="White" />
+	</Environment>
+	<Properties>
+		<Property name="LineComment" value="//" />
+	</Properties>
+	<Digits name="Digits" bold="false" italic="false" color="Firebrick" />
+	<RuleSets>
+		<RuleSet ignorecase="false">
+			<Delimiters>~!%^*()-+=|\#/{}[]:;"'&lt;&gt; , .?</Delimiters>
+			<Span name="PreprocessorDirectives" bold="false" italic="false" color="Green" stopateol="true">
+				<Begin>#</Begin>
+			</Span>
+			<Span name="LINECOMMENT" bold="false" italic="true" color="DimGray" stopateol="true">
+				<Begin>///</Begin>
+			</Span><Span name="LINECOMMENT" bold="false" italic="true" color="DimGray" stopateol="true">
+				<Begin>//@!/@</Begin>
+			</Span>
+			<Span name="BLOCKCOMMENT" bold="false" italic="true" color="DimGray" stopateol="false">
+				<Begin>/*</Begin>
+				<End>*/</End>
+			</Span>
+			<Span name="STRING" bold="false" italic="false" color="DarkRed" stopateol="false" escapecharacter="\">
+				<Begin>"</Begin>
+				<End>"</End>
+			</Span><Span name="MORELINEDSTRING" bold="false" italic="false" color="DarkRed" stopateol="false" escapecharacter="\">
+				<Begin>@@"</Begin>
+				<End>"</End>
+			</Span>
+			<Span name="CHAR" bold="false" italic="false" color="DarkRed" stopateol="false" escapecharacter="\">
+				<Begin>'</Begin>
+				<End>'</End>
+			</Span>
+			<MarkPrevious bold="false" italic="false" color="MidnightBlue">(</MarkPrevious>
+			<KeyWords name="Punctuation" bold="false" italic="false" color="Green">
+				<Key word="?" />
+				<Key word="," />
+				<Key word="." />
+				<Key word="(" />
+				<Key word=")" />
+				<Key word="[" />
+				<Key word="]" />
+				<Key word="{" />
+				<Key word="}" />
+				<Key word="+" />
+				<Key word="-" />
+				<Key word="/" />
+				<Key word="%" />
+				<Key word="*" />
+				<Key word="&lt;" />
+				<Key word="&gt;" />
+				<Key word="^" />
+				<Key word="!" />
+				<Key word="|" />
+				<Key word="$" />
+			</KeyWords>
+			<KeyWords name="AccessKeywords" bold="true" italic="false" color="Blue">
+				<Key word="this" />
+			</KeyWords>
+			<KeyWords name="OperatorKeywords" bold="true" italic="false" color="DarkCyan">
+				<Key word="and" />
+				<Key word="or" />
+				<Key word="new" />
+				<Key word="xor" />
+				<Key word="true" />
+				<Key word="false" />
+			</KeyWords>
+			<KeyWords name="SelectionStatements" bold="true" italic="false" color="Blue">
+				<Key word="else" />
+				<Key word="if" />
+				<Key word="switch" />
+				<Key word="case" />
+			</KeyWords>
+			<KeyWords name="IterationStatements" bold="true" italic="false" color="Blue">
+				<Key word="do" />
+				<Key word="for" />
+				<Key word="foreach" />
+				<Key word="while" />
+				<Key word="exit" />
+			</KeyWords>
+			<KeyWords name="JumpStatements" bold="false" italic="false" color="DarkBlue">
+				<Key word="break" />
+				<Key word="continue" />
+				<Key word="default" />
+				<Key word="goto" />
+				<Key word="return" />
+			</KeyWords>
+			<KeyWords name="ValueTypes" bold="true" italic="false" color="Blue">
+				<Key word="int" />
+				<Key word="long" />
+				<Key word="double" />
+				<Key word="float" />
+				<Key word="char" />
+				<Key word="byte" />
+				<Key word="unsigned" />
+				<Key word="signed" />
+				<Key word="static" />
+				<Key word="const" />
+			</KeyWords>
+			<KeyWords name="ReferenceTypes" bold="false" italic="false" color="Firebrick">
+				<Key word="class" />
+				<Key word="new" />
+			</KeyWords>
+			<KeyWords name="Void" bold="false" italic="false" color="Blue">
+				<Key word="void" />
+			</KeyWords>
+			<KeyWords name="AccessModifiers" bold="true" italic="false" color="Firebrick">
+				<Key word="public" />
+				<Key word="private" />
+				<Key word="protected" />
+				<Key word="abstract" />
+			</KeyWords>
+			<KeyWords name="MagicFunctions" bold="false" italic="false" color="SaddleBrown">
+				<Key word="operator" />
+			</KeyWords>
+			<KeyWords name="Literals" bold="true" italic="false" color="Blue">
+				<Key word="NULL" />
+			</KeyWords>
+		</RuleSet>
+	</RuleSets>
+</SyntaxDefinition>

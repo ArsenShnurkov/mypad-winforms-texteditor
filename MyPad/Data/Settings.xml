@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting name="ShowEOLMarkers" value="False" />
+  <Setting name="ShowHRuler" value="False" />
+  <Setting name="ShowVRuler" value="False" />
+  <Setting name="ShowInvaludLines" value="False" />
+  <Setting name="ShowLineNumbers" value="True" />
+  <Setting name="ShowMatchingBrackets" value="False" />
+  <Setting name="EnableFolding" value="True" />
+  <Setting name="HighlightCurrentLine" value="False" />
+  <Setting name="IndentStyle" value="Smart" />
+  <Setting name="AutoInsertBrackets" value="False" />
+  <Setting name="Font" value="Consolas" />
+  <Setting name="FontSize" value="9.75" />
+</Settings>
