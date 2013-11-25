@@ -61,7 +61,7 @@ namespace MyPad
             textEditorControl.ShowTabs = SettingsManager.ReadValue<bool>("ShowTabs");
             textEditorControl.ShowVRuler = SettingsManager.ReadValue<bool>("ShowVRuler");
 
-            if (fontName != string.Empty && fontSize > 0)
+            if (!string.IsNullOrWhiteSpace(fontName) && fontSize > 0)
             {
                 try
                 {

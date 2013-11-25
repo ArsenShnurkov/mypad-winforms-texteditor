@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPad", "MyPad\MyPad.csproj", "{7ED3012C-DB58-48C7-B59E-72C963418170}"
 EndProject
 Global
@@ -19,6 +19,9 @@ Global
 		{7ED3012C-DB58-48C7-B59E-72C963418170}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7ED3012C-DB58-48C7-B59E-72C963418170}.Release|x86.ActiveCfg = Release|x86
 		{7ED3012C-DB58-48C7-B59E-72C963418170}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = MyPad\MyPad.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

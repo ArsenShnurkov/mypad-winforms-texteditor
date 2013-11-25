@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Script>
-  <Name>Test</Name>
+  <Name>TestScript</Name>
   <Description>A quick simple test script.</Description>
-  <Type>Menu</Type>
+  <Type>MenuScript</Type>
   <File>Test.lua</File>
 </Script>

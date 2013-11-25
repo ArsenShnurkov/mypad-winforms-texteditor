@@ -7,6 +7,7 @@ using System.IO;
 using ICSharpCode.TextEditor;
 
 using LuaInterface;
+using LuaInterface.Exceptions;
 
 namespace MyPad
 {
