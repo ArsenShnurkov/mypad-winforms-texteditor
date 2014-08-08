@@ -25,10 +25,10 @@ namespace MyPad.Dialogs
 
             if (ScriptManager != null)
             {
-                foreach (LuaScript script in ScriptManager.Scripts)
+                /*foreach (LuaScript script in ScriptManager.Scripts)
                 {
                     listBox1.Items.Add(script.Name);
-                }
+                }*/
             }
 
             return this.ShowDialog();
