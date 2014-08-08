@@ -16,7 +16,7 @@ using MyPad.Dialogs;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
-using LuaInterface;
+//using LuaInterface;
 
 namespace MyPad
 {
@@ -208,8 +208,8 @@ namespace MyPad
 
             ApplicationLog.Init();
             scriptManager = new ScriptManager(this, scriptsToolStripMenuItem);
-            scriptManager.LuaScriptHost.RegisterFunction("GetEditor", this, info);
-            LuaUtil.RegisterClass(scriptManager.LuaScriptHost, scriptUtils);
+            //scriptManager.LuaScriptHost.RegisterFunction("GetEditor", this, info);
+            //LuaUtil.RegisterClass(scriptManager.LuaScriptHost, scriptUtils);
 
             if (fileToLoad != null && File.Exists(fileToLoad))
             {

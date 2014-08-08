@@ -6,8 +6,8 @@ using System.IO;
 
 using ICSharpCode.TextEditor;
 
-using LuaInterface;
-using LuaInterface.Exceptions;
+//using LuaInterface;
+//using LuaInterface.Exceptions;
 
 namespace MyPad
 {
@@ -19,7 +19,7 @@ namespace MyPad
 
     public class LuaScript
     {
-        public Lua LuaScriptHost;
+        //public Lua LuaScriptHost;
         public ScriptType Type;
         public string Name;
         public string Description;
@@ -39,12 +39,16 @@ namespace MyPad
 
         public void Execute(TextEditorControl editor)
         {
+			Console.WriteLine("Scripting not implemented now...");
             if (File.Exists(FullPath))
             {
+				/*
                 Console.WriteLine("Script starting...");
 
                 if (editor != null)
+                {
                     LuaScriptHost["TextEditor"] = editor;
+                }
 
                 try
                 {
@@ -60,6 +64,7 @@ namespace MyPad
                 }
 
                 Console.WriteLine("Script finished");
+                */
             }
         }
 

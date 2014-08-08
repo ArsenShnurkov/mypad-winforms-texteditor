@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-using LuaInterface;
+//using LuaInterface;
 
 namespace MyPad
 {
     public class LuaUtil
     {
-        public static void RegisterClass(Lua luaVM, object obj)
+        /*public static void RegisterClass(Lua luaVM, object obj)
         {
             Type t = obj.GetType();
 
@@ -23,6 +23,6 @@ namespace MyPad
                     luaVM.RegisterFunction(mInfo.Name, obj, mInfo);
                 }
             }
-        }
+        }*/
     }
 }

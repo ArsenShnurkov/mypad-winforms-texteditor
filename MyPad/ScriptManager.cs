@@ -9,18 +9,18 @@ using System.Xml;
 
 using ICSharpCode.TextEditor;
 
-using LuaInterface;
+//using LuaInterface;
 
 namespace MyPad
 {
     public class ScriptManager
     {
-        Lua luaScriptHost;
+        //Lua luaScriptHost;
         IList<LuaScript> scripts;
         ToolStripMenuItem scriptMenuItem;
         MainForm mainForm;
 
-        public Lua LuaScriptHost
+        /*public Lua LuaScriptHost
         {
             get
             {
@@ -34,7 +34,7 @@ namespace MyPad
             {
                 return scripts;
             }
-        }
+        }*/
 
         public ScriptManager(MainForm mainForm, ToolStripMenuItem scriptMenuItem)
         {
@@ -43,7 +43,7 @@ namespace MyPad
             this.scriptMenuItem = scriptMenuItem;
             this.scriptMenuItem.DropDownItemClicked += new ToolStripItemClickedEventHandler(scriptMenuItem_DropDownItemClicked);
 
-            luaScriptHost = new Lua();
+            //luaScriptHost = new Lua();
             LoadScripts();
         }
 
@@ -112,11 +112,12 @@ namespace MyPad
                                 script.Type = ScriptType.MenuScript;
                             else if (type == "Text")
                                 script.Type = ScriptType.TextScript;*/
-
+							/*
                             script.Type = (ScriptType)Enum.Parse(typeof(ScriptType), type);
 
                             if (Enum.ToObject(typeof(ScriptType), script.Type) == null)
                                 script.Type = ScriptType.MenuScript;
+							*/
                         }
                         else if (xml.Name == "Description")
                         {
@@ -132,7 +133,7 @@ namespace MyPad
                     Console.WriteLine(string.Format("Script {0} loaded sussecfully", script.Name));
 
                     script.Enabled = true;
-                    script.LuaScriptHost = luaScriptHost;
+                    //script.LuaScriptHost = luaScriptHost;
                     script.InstallerPath = installFile;
                     scripts.Add(script);
 
