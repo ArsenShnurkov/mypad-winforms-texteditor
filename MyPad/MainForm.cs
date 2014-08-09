@@ -199,8 +199,8 @@ namespace MyPad
 
             if (fileToLoad != null && File.Exists(fileToLoad))
             {
-                 EditorTabPage etb = new EditorTabPage();
-                 etb.LoadFile(fileToLoad);
+                EditorTabPage etb = new EditorTabPage();
+                etb.LoadFile(fileToLoad);
                 etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
                 etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
                 etb.EditorTextChanged += new EventHandler(etb_TextChanged);
@@ -444,7 +444,8 @@ namespace MyPad
 
         private void reloadFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*EditorTabPage etb = */GetActiveTab();
+            /*EditorTabPage etb = */
+            GetActiveTab();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -522,7 +523,7 @@ namespace MyPad
                 if (!etb.Saved)
                 {
                     DialogResult dr = MessageBox.Show("You are about to close an unsaved document, do you want to save it now?",
-                        "MyPad - Save document", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                          "MyPad - Save document", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                     if (dr == DialogResult.Yes)
                     {

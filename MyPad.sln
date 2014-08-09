@@ -37,7 +37,6 @@ Global
 		$1.DirectoryNamespaceAssociation = None
 		$1.ResourceNamePolicy = MSBuild
 		$0.TextStylePolicy = $2
-		$2.EolMarker = Windows
 		$2.inheritsSet = VisualStudio
 		$2.inheritsScope = text/plain
 		$2.scope = text/x-csharp
