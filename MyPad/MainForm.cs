@@ -206,7 +206,6 @@ namespace MyPad
             Type type = this.GetType();
             MethodInfo info = type.GetMethod("GetActiveEditor");
 
-            ApplicationLog.Init();
             scriptManager = new ScriptManager(this, scriptsToolStripMenuItem);
             //scriptManager.LuaScriptHost.RegisterFunction("GetEditor", this, info);
             //LuaUtil.RegisterClass(scriptManager.LuaScriptHost, scriptUtils);
