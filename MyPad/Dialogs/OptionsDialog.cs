@@ -16,22 +16,6 @@ namespace MyPad.Dialogs
             InitializeComponent();
         }
 
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-
-            if (Environment.OSVersion.Version.Major > 5)
-            {
-                panel1.BackColor = Color.Fuchsia;
-
-                Margins margins = new Margins();
-                margins.cyBottomHeight = panel1.Height;
-
-                if (!Win32.ExtendGlass(this, margins))
-                    panel1.BackColor = SystemColors.Control;
-            }
-        }
-
         protected override void OnLoad(EventArgs e)
         {
             FontFamily[] fonts = FontFamily.Families;
@@ -88,7 +72,7 @@ namespace MyPad.Dialogs
             {
                 try
                 {
-                    Font font = new Font(new FontFamily(comboBox1.Text), (float)Convert.ToDouble(comboBox2.Text), FontStyle.Regular);
+                    new Font(new FontFamily(comboBox1.Text), (float)Convert.ToDouble(comboBox2.Text), FontStyle.Regular);
                     SettingsManager.Settings["FontName"] = comboBox1.Text;
                     SettingsManager.Settings["FontSize"] = (float)Convert.ToDouble(comboBox2.Text);
                 }

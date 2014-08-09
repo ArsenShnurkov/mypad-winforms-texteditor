@@ -11,7 +11,6 @@ namespace MyPad
 {
     public class InformationBar : ContainerControl
     {
-        int origHeight = 0;
         int yOffset = 0;
 
         public InformationBar()
@@ -22,8 +21,6 @@ namespace MyPad
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             SetStyle(ControlStyles.ResizeRedraw, true);
             SetStyle(ControlStyles.UserPaint, true);
-
-            origHeight = this.Height;
         }
 
         public void Show(bool animate)

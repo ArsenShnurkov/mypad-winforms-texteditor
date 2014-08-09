@@ -22,7 +22,6 @@ namespace MyPad
 {
     public partial class MainForm : Form
     {
-        ScriptManagerDialog scriptManagerDialog;
         UnsavedDocumentsDialog unsavedDocumentsDialog;
         OptionsDialog optionsDialog;
         AboutDialog aboutDialog;
@@ -30,8 +29,6 @@ namespace MyPad
         FindReplaceDialog findReplaceDialog;
         FindDialog findDialog;
 
-        ScriptManager scriptManager;
-        ScriptUtil scriptUtils;
         string fileToLoad = "";
 
         public MainForm()
@@ -50,7 +47,6 @@ namespace MyPad
                 }
             }
 
-            scriptManagerDialog = new ScriptManagerDialog();
             unsavedDocumentsDialog = new UnsavedDocumentsDialog();
             optionsDialog = new OptionsDialog();
             aboutDialog = new AboutDialog();
@@ -200,15 +196,6 @@ namespace MyPad
             }
 
             base.OnLoad(e);
-
-            scriptUtils = new ScriptUtil();
-
-            Type type = this.GetType();
-            MethodInfo info = type.GetMethod("GetActiveEditor");
-
-            scriptManager = new ScriptManager(this, scriptsToolStripMenuItem);
-            //scriptManager.LuaScriptHost.RegisterFunction("GetEditor", this, info);
-            //LuaUtil.RegisterClass(scriptManager.LuaScriptHost, scriptUtils);
 
             if (fileToLoad != null && File.Exists(fileToLoad))
             {
@@ -457,7 +444,7 @@ namespace MyPad
 
         private void reloadFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            /*EditorTabPage etb = */GetActiveTab();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -815,12 +802,6 @@ namespace MyPad
         private void toolStripButton10_Click(object sender, EventArgs e)
         {
             findToolStripMenuItem_Click(null, null);
-        }
-
-        private void scriptManagerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            scriptManagerDialog.ScriptManager = scriptManager;
-            scriptManagerDialog.ShowDialogEx();
         }
     }
 }

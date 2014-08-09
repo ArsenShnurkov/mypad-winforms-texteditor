@@ -80,7 +80,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.scriptManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -416,7 +415,6 @@
             // scriptsToolStripMenuItem
             // 
             this.scriptsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.scriptManagerToolStripMenuItem,
             this.toolStripSeparator14});
             this.scriptsToolStripMenuItem.Name = "scriptsToolStripMenuItem";
             this.scriptsToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
@@ -525,13 +523,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // scriptManagerToolStripMenuItem
-            // 
-            this.scriptManagerToolStripMenuItem.Name = "scriptManagerToolStripMenuItem";
-            this.scriptManagerToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.scriptManagerToolStripMenuItem.Text = "Script Manager";
-            this.scriptManagerToolStripMenuItem.Click += new System.EventHandler(this.scriptManagerToolStripMenuItem_Click);
             // 
             // toolStripSeparator14
             // 
@@ -853,7 +844,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         private System.Windows.Forms.ToolStripMenuItem scriptsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem scriptManagerToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
     }
 }
