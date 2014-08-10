@@ -37,8 +37,8 @@ namespace MyPad
             settings = new Dictionary<string, object>();
             mruList = new List<string>();
 
-            settingsPath = Path.Combine(Application.StartupPath, "Data/Settings.xml");
-            mruPath = Path.Combine(Application.StartupPath, "Data/MRUList.xml");
+            settingsPath = Path.Combine(Application.StartupPath, "Data" + Path.DirectorySeparatorChar + "Settings.xml");
+            mruPath = Path.Combine(Application.StartupPath, "Data" + Path.DirectorySeparatorChar + "MRUList.xml");
 
             LoadSettings(settingsPath);
             LoadMRUList(mruPath);
