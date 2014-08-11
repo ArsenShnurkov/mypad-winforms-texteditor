@@ -90,6 +90,7 @@ namespace MyPad
             this.Controls.Add(textEditorControl);
 
             EditorTextChanged = new EventHandler(TextEditorControl_TextChanged);
+
         }
 
         public void ReloadSettings()

@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -60,9 +59,13 @@ namespace MyPad
             int height = SettingsManager.ReadValue<int>("MainWindowHeight");
 
             if (width < 100)
+            {
                 width = 800;
+            }
             if (height < 100)
+            {
                 height = 600;
+            }
 
             this.Location = new Point(x, y);
             this.Size = new Size(width, height);
@@ -81,10 +84,45 @@ namespace MyPad
             }
         }
 
+        public void SetupActiveTab()
+        {
+            EditorTabPage etb = GetActiveTab();
+            if (etb != null)
+            {
+                etb.Show();
+
+                this.Text = string.Format("MyPad - {0} [{1}]", etb.Text, etb.ToolTipText);
+                etb.Editor.Focus();
+
+                toolStripStatusLabel2.Text = string.Format("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString());
+                toolStripStatusLabel3.Text = string.Format("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString());
+
+                string highlighter = etb.Editor.Document.HighlightingStrategy.Name;
+
+                foreach (ToolStripMenuItem tsi in highlightingToolStripMenuItem.DropDownItems)
+                {
+                    if (tsi.Name == highlighter)
+                    {
+                        tsi.Checked = true;
+                    }
+                    else
+                    {
+                        tsi.Checked = false;
+                    }
+                }
+            }
+            else
+            {
+                this.Text = "MyPad";
+            }
+        }
+
         public EditorTabPage GetActiveTab()
         {
             if (tabControl1.SelectedTab != null)
+            {
                 return (EditorTabPage)tabControl1.SelectedTab;
+            }
             return null;
         }
 
@@ -93,7 +131,9 @@ namespace MyPad
             foreach (EditorTabPage etb in tabControl1.TabPages)
             {
                 if (etb.Text == title || etb.Text.StartsWith(title))
+                {
                     return etb;
+                }
             }
             return null;
         }
@@ -103,7 +143,9 @@ namespace MyPad
             EditorTabPage etb = GetActiveTab();
 
             if (etb != null)
+            {
                 return etb.Editor;
+            }
             return null;
         }
 
@@ -114,7 +156,9 @@ namespace MyPad
             foreach (EditorTabPage etb in tabControl1.TabPages)
             {
                 if (etb.Text.StartsWith("Untitled"))
+                {
                     count++;
+                }
             }
 
             return count;
@@ -323,34 +367,31 @@ namespace MyPad
                 if (etb != null)
                     closeToolStripMenuItem_Click(null, null);
             }
+            if (e.Button == MouseButtons.Right)
+            {
+                //Point pt = new Point(e.X, e.Y);
+                Point pt = Cursor.Position;
+                Point p = this.tabControl1.PointToClient(pt);
+                for (int i = 0; i < this.tabControl1.TabCount; i++)
+                {
+                    Rectangle r = this.tabControl1.GetTabRect(i);
+                    if (r.Contains(p))
+                    {
+                        this.tabControl1.SelectedIndex = i; // i is the index of tab under cursor
+                        var menu = new ContextMenu();
+                        menu.MenuItems.Add("Close", closeToolStripMenuItem_Click);
+                        menu.Show(this.tabControl1, p);
+                        SetupActiveTab();
+                        return;
+                    }
+                }
+                //e.Cancel = true;
+            }
         }
 
         void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
-
-            if (etb != null)
-            {
-                this.Text = string.Format("MyPad - {0} [{1}]", etb.Text, etb.ToolTipText);
-                etb.Editor.Focus();
-
-                toolStripStatusLabel2.Text = string.Format("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString());
-                toolStripStatusLabel3.Text = string.Format("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString());
-
-                string highlighter = etb.Editor.Document.HighlightingStrategy.Name;
-
-                foreach (ToolStripMenuItem tsi in highlightingToolStripMenuItem.DropDownItems)
-                {
-                    if (tsi.Name == highlighter)
-                        tsi.Checked = true;
-                    else
-                        tsi.Checked = false;
-                }
-            }
-            else
-            {
-                this.Text = "MyPad";
-            }
+            SetupActiveTab();
         }
 
         void tabControl1_DragDrop(object sender, DragEventArgs e)
@@ -537,6 +578,7 @@ namespace MyPad
                 {
                     etb.Dispose();
                 }
+                SetupActiveTab();
             }
         }
 
@@ -804,5 +846,6 @@ namespace MyPad
         {
             findToolStripMenuItem_Click(null, null);
         }
+
     }
 }
