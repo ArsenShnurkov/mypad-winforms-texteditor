@@ -227,6 +227,67 @@ namespace MyPad
             base.OnClosing(e);
         }
 
+        TabPage FindTabByPath(string fileToLoad)
+        {
+            foreach (var tab in tabControl1.TabPages)
+            {
+                var t = (TabPage)tab;
+                if (string.Compare(t.ToolTipText, fileToLoad) == 0)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        void InternalOpenFile(string fileToLoad)
+        {
+            if (string.IsNullOrWhiteSpace(fileToLoad))
+            {
+                return;
+            }
+            var tab = FindTabByPath(fileToLoad);
+            if (tab != null)
+            {
+                tabControl1.SelectedTab = tab;
+                SetupActiveTab();
+                return;
+            }
+
+            EditorTabPage etb = new EditorTabPage();
+            etb.LoadFile(fileToLoad);
+            etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
+            etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
+            etb.EditorTextChanged += new EventHandler(etb_TextChanged);
+            tabControl1.TabPages.Add(etb);
+            etb.Show();
+            tabControl1.SelectedTab = etb;
+            etb.Update();
+
+            if (!SettingsManager.MRUList.Contains(fileToLoad))
+            {
+                if (SettingsManager.MRUList.Count >= 15)
+                    SettingsManager.MRUList.RemoveAt(14);
+                SettingsManager.MRUList.Insert(0, fileToLoad);
+                ToolStripMenuItem tsi = new ToolStripMenuItem(fileToLoad, null, new EventHandler(RecentFiles_Click));
+                recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
+            }
+            else
+            {
+                SettingsManager.MRUList.Remove(fileToLoad);
+                SettingsManager.MRUList.Insert(0, fileToLoad);
+                ToolStripMenuItem tsi = GetRecentMenuItem(fileToLoad);
+                recentFilesToolStripMenuItem.DropDown.Items.Remove(tsi);
+                recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
+            }
+        }
+
+        delegate void InternalOpenFileDelegate(string fileToLoad);
+        internal void InvokeOpenFile(string fileToLoad)
+        {
+            base.Invoke(new InternalOpenFileDelegate(this.InternalOpenFile), new object[]{ fileToLoad });
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             FileSyntaxModeProvider provider = new FileSyntaxModeProvider(Path.Combine(Application.StartupPath, "Modes"));
@@ -243,34 +304,7 @@ namespace MyPad
 
             if (fileToLoad != null && File.Exists(fileToLoad))
             {
-                EditorTabPage etb = new EditorTabPage();
-                etb.LoadFile(fileToLoad);
-                etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
-                etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
-                etb.EditorTextChanged += new EventHandler(etb_TextChanged);
-                etb.Show();
-
-                tabControl1.TabPages.Add(etb);
-                tabControl1.SelectedTab = etb;
-
-                if (!SettingsManager.MRUList.Contains(fileToLoad))
-                {
-                    if (SettingsManager.MRUList.Count >= 15)
-                        SettingsManager.MRUList.RemoveAt(14);
-                    SettingsManager.MRUList.Insert(0, fileToLoad);
-
-                    ToolStripMenuItem tsi = new ToolStripMenuItem(fileToLoad, null, new EventHandler(RecentFiles_Click));
-                    recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
-                }
-                else
-                {
-                    SettingsManager.MRUList.Remove(fileToLoad);
-                    SettingsManager.MRUList.Insert(0, fileToLoad);
-
-                    ToolStripMenuItem tsi = GetRecentMenuItem(fileToLoad);
-                    recentFilesToolStripMenuItem.DropDown.Items.Remove(tsi);
-                    recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
-                }
+                InternalOpenFile(fileToLoad);
             }
             else
             {
@@ -327,12 +361,7 @@ namespace MyPad
                 {
                     if (File.Exists(file))
                     {
-                        EditorTabPage etb = new EditorTabPage();
-                        etb.LoadFile(file);
-                        etb.Show();
-
-                        tabControl1.TabPages.Add(etb);
-                        tabControl1.SelectedTab = etb;
+                        InternalOpenFile(file);
                     }
                 }
             }
@@ -344,12 +373,7 @@ namespace MyPad
         {
             ToolStripMenuItem tsi = (ToolStripMenuItem)sender;
 
-            EditorTabPage etb = new EditorTabPage();
-            etb.LoadFile(tsi.Text);
-            etb.Show();
-
-            tabControl1.TabPages.Add(etb);
-            tabControl1.SelectedTab = etb;
+            InternalOpenFile(tsi.Text);
 
             recentFilesToolStripMenuItem.DropDown.Items.Remove(tsi);
             recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
@@ -452,15 +476,7 @@ namespace MyPad
             {
                 string file = openFileDialog1.FileName;
 
-                EditorTabPage etb = new EditorTabPage();
-                etb.LoadFile(file);
-                etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
-                etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
-                etb.EditorTextChanged += new EventHandler(etb_TextChanged);
-                etb.Show();
-
-                tabControl1.TabPages.Add(etb);
-                tabControl1.SelectedTab = etb;
+                InternalOpenFile(file);
 
                 if (!SettingsManager.MRUList.Contains(file))
                 {
