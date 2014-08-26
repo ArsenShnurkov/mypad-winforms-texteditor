@@ -550,6 +550,13 @@ namespace MyPad
 
             if (etb != null)
             {
+                string newName = etb.Editor.ActiveTextAreaControl.SelectionManager.SelectedText;
+                if (string.IsNullOrEmpty(newName))
+                {
+                    newName = "index.htm";
+                }
+                FileInfo finfo = new FileInfo(etb.ToolTipText);
+                saveFileDialog1.FileName = finfo.DirectoryName + Path.DirectorySeparatorChar + newName;
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string file = saveFileDialog1.FileName;
