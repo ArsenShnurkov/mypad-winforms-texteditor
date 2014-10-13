@@ -11,6 +11,8 @@ using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor.Gui;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace MyPad
 {
@@ -41,8 +43,19 @@ namespace MyPad
 
         public EditorTabPage()
         {
-            string fontName = SettingsManager.ReadValue<string>("FontName");
-            float fontSize = SettingsManager.ReadValue<float>("FontSize");
+            string fontName = string.Empty;
+            float fontSize = 0;
+
+            try
+            {
+                fontName = SettingsManager.ReadValue<string>("FontName");
+                string stringFontSize = SettingsManager.ReadAsString("FontSize");
+                fontSize = float.Parse(stringFontSize, CultureInfo.InvariantCulture);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
 
             textEditorControl = new TextEditorControl();
             textEditorControl.Name = "textEditorControl";

@@ -52,7 +52,7 @@ namespace MyPad
 
         public static T ReadValue<T>(string name)
         {
-            if (settings.ContainsKey(name))
+            if (false == string.IsNullOrWhiteSpace(name) && settings.ContainsKey(name))
             {
                 return (T)Convert.ChangeType(settings[name], typeof(T));
             }
