@@ -10,6 +10,6 @@
   <Setting name="HighlightCurrentLine" value="False" />
   <Setting name="IndentStyle" value="Smart" />
   <Setting name="AutoInsertBrackets" value="False" />
-  <Setting name="Font" value="Consolas" />
+  <Setting name="FontName" value="Consolas" />
   <Setting name="FontSize" value="9.75" />
 </Settings>
