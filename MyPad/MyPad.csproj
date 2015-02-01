@@ -56,6 +56,9 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="ICSharpCode.TextEditor">
+      <HintPath>..\..\..\..\..\..\..\usr\lib64\mono\gac\ICSharpCode.TextEditor\4.0.2.6466__4d61825e8dd49f1a\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\AboutDialog.cs">
@@ -174,12 +177,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <ProjectReference Include="..\TextEditor\Project\ICSharpCode.TextEditor.csproj">
-      <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
-      <Name>ICSharpCode.TextEditor</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="RPC_for_SingleInstance\" />
   </ItemGroup>
