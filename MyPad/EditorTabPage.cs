@@ -229,7 +229,7 @@ namespace MyPad
                 lastFindOffset = (m.Index + m.Length);
             }
             else
-                lastFindOffset = 0;
+                lastFindOffset = -1;
 
             return lastFindOffset;
         }
@@ -279,6 +279,13 @@ namespace MyPad
                     }
                 }
             }
+        }
+
+
+        public void ScrollToOffset(int offset)
+        {
+            var location = textEditorControl.Document.OffsetToPosition(offset);
+            this.textEditorControl.ActiveTextAreaControl.Caret.Position = location;
         }
 
         public void SelectLine(int line)

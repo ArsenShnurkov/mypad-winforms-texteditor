@@ -36,7 +36,8 @@ namespace MyPad.Dialogs
 
         public void AddDocument(string item)
         {
-            checkedListBox1.Items.Add(item);
+            int index = checkedListBox1.Items.Add(item);
+            checkedListBox1.SetItemChecked(index, true);
         }
 
         private void button1_Click(object sender, EventArgs e)

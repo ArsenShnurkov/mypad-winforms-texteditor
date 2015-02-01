@@ -25,9 +25,8 @@ namespace MyPad
         OptionsDialog optionsDialog;
         AboutDialog aboutDialog;
 
-        FindReplaceDialog findReplaceDialog;
-        FindDialog findDialog;
-
+        FindReplaceDialog findReplaceDialog = new FindReplaceDialog();
+        FindDialog findDialog = new FindDialog();
         string fileToLoad = "";
 
         public MainForm()
@@ -49,9 +48,6 @@ namespace MyPad
             unsavedDocumentsDialog = new UnsavedDocumentsDialog();
             optionsDialog = new OptionsDialog();
             aboutDialog = new AboutDialog();
-
-            findReplaceDialog = new FindReplaceDialog();
-            findDialog = new FindDialog();
 
             int x = SettingsManager.ReadValue<int>("MainWindowX");
             int y = SettingsManager.ReadValue<int>("MainWindowY");
@@ -757,7 +753,11 @@ namespace MyPad
             {
                 if (findDialog.ShowDialog() == DialogResult.OK)
                 {
-                    etb.Find(findDialog.Search, findDialog.Options);
+                    int index = etb.Find(findDialog.Search, findDialog.Options);
+                    if (index >= 0)
+                    {
+                        etb.ScrollToOffset(index);
+                    }
                 }
             }
         }
@@ -767,7 +767,13 @@ namespace MyPad
             EditorTabPage etb = GetActiveTab();
 
             if (etb != null)
-                etb.Find(findDialog.Search, findDialog.Options);
+            {
+                int index = etb.Find(findDialog.Search, findDialog.Options);
+                if (index >= 0)
+                {
+                    etb.ScrollToOffset(index);
+                }
+            }
         }
 
         private void findAndReplaceToolStripMenuItem_Click(object sender, EventArgs e)
