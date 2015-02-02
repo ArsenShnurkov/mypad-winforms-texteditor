@@ -43,6 +43,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.enchanceHyperlinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5a = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.highlightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -207,6 +209,8 @@
             this.deleteToolStripMenuItem,
             this.toolStripSeparator4,
             this.selectAllToolStripMenuItem,
+            this.toolStripSeparator5a,
+            this.enchanceHyperlinkToolStripMenuItem,
             this.toolStripSeparator6,
             this.highlightingToolStripMenuItem,
             this.toolStripSeparator13,
@@ -241,6 +245,19 @@
             this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.selectAllToolStripMenuItem.Text = "Select All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5a
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator5a";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(161, 6);
+            // 
+            // enchanceHyperlinkToolStripMenuItem
+            // 
+            this.enchanceHyperlinkToolStripMenuItem.Name = "enchanceHyperlinkToolStripMenuItem";
+            this.enchanceHyperlinkToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.enchanceHyperlinkToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.enchanceHyperlinkToolStripMenuItem.Text = "Enchance Hyperlink";
+            this.enchanceHyperlinkToolStripMenuItem.Click += new System.EventHandler(this.enchanceHyperlinkToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -782,6 +799,7 @@
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enchanceHyperlinkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findAndReplaceToolStripMenuItem;
@@ -798,6 +816,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem findNextToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5a;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;

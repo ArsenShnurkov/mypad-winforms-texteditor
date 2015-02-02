@@ -22,7 +22,9 @@ namespace MyPad
         public event EventHandler OnEditorFilenameChanged;
 
         TextEditorControl textEditorControl;
-        bool saved = true;
+
+        bool hasSomethingOnDisk = false;
+        bool isSavingNecessary = false;
 
         int lastFindOffset = 0;
 
@@ -38,7 +40,20 @@ namespace MyPad
         {
             get
             {
+                if (hasSomethingOnDisk == false && string.IsNullOrWhiteSpace(Text))
+                {
+                    return true;
+                }
+                bool saved = hasSomethingOnDisk && (isSavingNecessary == false);
                 return saved;
+            }
+        }
+
+        public bool HasSomethingOnDisk
+        {
+            get
+            {
+                return hasSomethingOnDisk;
             }
         }
 
@@ -153,6 +168,7 @@ namespace MyPad
         {
             textEditorControl.TextChanged -= new EventHandler(Handle_EditorTextChanged);
             textEditorControl.LoadFile(path, true, true);
+            hasSomethingOnDisk = true;
             textEditorControl.TextChanged += new EventHandler(Handle_EditorTextChanged);
 
             this.Text = Path.GetFileName(path);
@@ -162,13 +178,26 @@ namespace MyPad
         public void SaveFile(string path)
         {
             textEditorControl.SaveFile(path);
-            saved = true;
+            isSavingNecessary = true;
+            hasSomethingOnDisk = true;
         }
 
         public void SetTitle(string path)
         {
             this.Text = Path.GetFileName(path);
+            if (hasSomethingOnDisk)
+            {
+                this.ForeColor = Color.Black;
+            }
+            else
+            {
+                this.ForeColor = Color.Red;
+            }
             this.ToolTipText = path;
+            if (Parent != null)
+            {
+                Parent.Invalidate();
+            }
 
             Fire_EditorFilenameChanged(this, new EventArgs());
             //this.Update();
@@ -219,6 +248,48 @@ namespace MyPad
         {
             textEditorControl.ActiveTextAreaControl.TextArea.ClipboardHandler.Delete(null, null);
         }
+
+        public void EnchanceHyperlink()
+        {
+            var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
+
+            // Save selected text
+            string text = textArea.SelectionManager.SelectedText;
+
+            // Clear selection
+            if (textArea.SelectionManager.HasSomethingSelected)
+            {
+                // ensure caret is at start of selection
+                textArea.Caret.Position = textArea.SelectionManager.SelectionCollection[0].StartPosition;
+                // deselect text
+                textArea.SelectionManager.ClearSelection();
+            }
+
+            StringBuilder hyperlink = new StringBuilder(text, text.Length * 2 + 20);
+            if (text.Contains("/") == false)
+            {
+                hyperlink.Append("/");
+            }
+
+            StringBuilder sb = new StringBuilder(text.Length * 2 + 20);
+            if (text.Contains(":"))
+            {
+                sb.AppendFormat("<a href=\"{0}\">{1}</a>", hyperlink.ToString(), text);
+            }
+            else
+            {
+                sb.AppendFormat("<a href=\"https://{0}\">{1}</a>", hyperlink.ToString(), text);
+            }
+
+            // Replace() takes the arguments: start offset to replace, length of the text to remove, new text
+            textArea.Document.Replace(textArea.Caret.Offset,
+                text.Length,
+                sb.ToString());
+
+            // Redraw:
+            textArea.Refresh(); 
+        }
+
 
         public int Find(string search, RegexOptions options)
         {
@@ -342,7 +413,7 @@ namespace MyPad
 
         private void Handle_EditorTextChanged(object sender, EventArgs e)
         {
-            saved = false;
+            isSavingNecessary = true;
 
             if (!this.Text.EndsWith("*"))
             {
@@ -366,6 +437,24 @@ namespace MyPad
                 ClearHighlightedTokens();
                 this.Refresh();
             }
+        }
+    }
+
+    public static class TabControlExtensions
+    {
+        public static int GetUntitledTabCount(this TabControl tabControl1)
+        {
+            int count = 0;
+
+            foreach (EditorTabPage etb in tabControl1.TabPages)
+            {
+                if (etb.HasSomethingOnDisk == false)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }

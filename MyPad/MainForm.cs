@@ -66,6 +66,8 @@ namespace MyPad
             this.Location = new Point(x, y);
             this.Size = new Size(width, height);
 
+            tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControl1_DrawItem);
             tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
             tabControl1.DragEnter += new DragEventHandler(tabControl1_DragEnter);
             tabControl1.DragDrop += new DragEventHandler(tabControl1_DragDrop);
@@ -153,21 +155,6 @@ namespace MyPad
                 return etb.Editor;
             }
             return null;
-        }
-
-        public int GetUntitledTabCount()
-        {
-            int count = 0;
-
-            foreach (EditorTabPage etb in tabControl1.TabPages)
-            {
-                if (etb.Text.StartsWith("Untitled"))
-                {
-                    count++;
-                }
-            }
-
-            return count;
         }
 
         public void ClearCheckedHighlighters()
@@ -471,7 +458,7 @@ namespace MyPad
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EditorTabPage etb = new EditorTabPage();
-            string newTabName = string.Format("Untitled{0}", GetUntitledTabCount());
+            string newTabName = string.Format("Untitled{0}", tabControl1.GetUntitledTabCount());
             etb.SetTitle(newTabName);
             etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
             etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
@@ -527,8 +514,9 @@ namespace MyPad
             {
                 if (File.Exists(etb.ToolTipText))
                 {
-                    etb.SaveFile(etb.ToolTipText);
-                    file = etb.ToolTipText;
+                    file = etb.ToolTipText; // tooltip is exact name of file, and Text property of tab may contain "*" if file is modified and unsaved
+                    etb.SaveFile(file);
+                    etb.SetTitle(file); // remove "*" from tab title, because file is now saved (unchanged)
                 }
                 else
                 {
@@ -687,6 +675,16 @@ namespace MyPad
 
             if (etb != null)
                 etb.SelectAll();
+        }
+
+        private void enchanceHyperlinkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.EnchanceHyperlink();
+            }
         }
 
         private void moveLineUpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -894,5 +892,26 @@ namespace MyPad
             findToolStripMenuItem_Click(null, null);
         }
 
+        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var tab = (sender as TabControl).TabPages[e.Index];
+            //e.DrawBackground();
+            Color c = tab.ForeColor;
+            using (Brush fore = new SolidBrush(tab.ForeColor))
+            {
+                using (Brush back = new SolidBrush(tab.BackColor))
+                {
+                    e.Graphics.FillRectangle(back, e.Bounds);
+                    SizeF sz = e.Graphics.MeasureString(tabControl1.TabPages[e.Index].Text, e.Font);
+                    e.Graphics.DrawString(tabControl1.TabPages[e.Index].Text, e.Font, fore, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
+
+                    Rectangle rect = e.Bounds;
+                    rect.Offset(0, 1);
+                    rect.Inflate(0, -1);
+                    e.Graphics.DrawRectangle(Pens.DarkGray, rect);
+                    e.DrawFocusRectangle();
+                }
+            }
+        }
     }
 }
