@@ -18,7 +18,8 @@ namespace MyPad
 {
     public class EditorTabPage : TabPage
     {
-        public event EventHandler EditorTextChanged;
+        public event EventHandler OnEditorTextChanged;
+        public event EventHandler OnEditorFilenameChanged;
 
         TextEditorControl textEditorControl;
         bool saved = true;
@@ -60,7 +61,7 @@ namespace MyPad
             textEditorControl = new TextEditorControl();
             textEditorControl.Name = "textEditorControl";
             textEditorControl.Dock = DockStyle.Fill;
-            textEditorControl.TextChanged += new EventHandler(Editor_TextChanged);
+            textEditorControl.TextChanged += new EventHandler(Handle_EditorTextChanged);
             textEditorControl.ActiveTextAreaControl.TextArea.SelectionManager.SelectionChanged += new EventHandler(SelectionManager_SelectionChanged);
             textEditorControl.AllowCaretBeyondEOL = SettingsManager.ReadValue<bool>("AllowCaretBeyondEOL");
             textEditorControl.ConvertTabsToSpaces = SettingsManager.ReadValue<bool>("ConvertTabsToSpaces");
@@ -101,8 +102,6 @@ namespace MyPad
             textEditorControl.Show();
 
             this.Controls.Add(textEditorControl);
-
-            EditorTextChanged = new EventHandler(TextEditorControl_TextChanged);
 
         }
 
@@ -152,9 +151,9 @@ namespace MyPad
 
         public void LoadFile(string path)
         {
-            textEditorControl.TextChanged -= new EventHandler(Editor_TextChanged);
+            textEditorControl.TextChanged -= new EventHandler(Handle_EditorTextChanged);
             textEditorControl.LoadFile(path, true, true);
-            textEditorControl.TextChanged += new EventHandler(Editor_TextChanged);
+            textEditorControl.TextChanged += new EventHandler(Handle_EditorTextChanged);
 
             this.Text = Path.GetFileName(path);
             this.ToolTipText = path;
@@ -164,9 +163,16 @@ namespace MyPad
         {
             textEditorControl.SaveFile(path);
             saved = true;
+        }
 
+        public void SetTitle(string path)
+        {
             this.Text = Path.GetFileName(path);
             this.ToolTipText = path;
+
+            Fire_EditorFilenameChanged(this, new EventArgs());
+            //this.Update();
+            //this.Parent.Update();
         }
 
         public void SetHighlighting(string name)
@@ -317,19 +323,36 @@ namespace MyPad
             }
         }
 
-        private void Editor_TextChanged(object sender, EventArgs e)
+        private void Fire_EditorFilenameChanged(object sender, EventArgs e)
+        {
+            if (OnEditorFilenameChanged != null)
+            {
+                OnEditorFilenameChanged(this, e);
+            }
+        }
+
+
+        private void Fire_EditorTextChanged(object sender, EventArgs e)
+        {
+            if (OnEditorTextChanged != null)
+            {
+                OnEditorTextChanged(this, e);
+            }
+        }
+
+        private void Handle_EditorTextChanged(object sender, EventArgs e)
         {
             saved = false;
 
-            if (!this.Text.Contains("*"))
+            if (!this.Text.EndsWith("*"))
+            {
                 this.Text = this.Text + "*";
-
-            EditorTextChanged(this, e);
+            }
         }
 
-        private void TextEditorControl_TextChanged(object sender, EventArgs e)
+        private void Handle_TabTextChanged(object sender, EventArgs e)
         {
-
+            Fire_EditorFilenameChanged(sender, e);
         }
 
         void SelectionManager_SelectionChanged(object sender, EventArgs e)

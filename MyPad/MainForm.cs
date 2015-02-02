@@ -80,6 +80,16 @@ namespace MyPad
             }
         }
 
+
+        public void UpdateMainWindowTitle()
+        {
+            EditorTabPage etb = GetActiveTab();
+            if (etb != null)
+            {
+                this.Text = string.Format("MyPad - {0} [{1}]", etb.Text, etb.ToolTipText);
+            }
+        }
+
         public void SetupActiveTab()
         {
             EditorTabPage etb = GetActiveTab();
@@ -87,7 +97,7 @@ namespace MyPad
             {
                 etb.Show();
 
-                this.Text = string.Format("MyPad - {0} [{1}]", etb.Text, etb.ToolTipText);
+                UpdateMainWindowTitle();
                 etb.Editor.Focus();
 
                 toolStripStatusLabel2.Text = string.Format("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString());
@@ -254,7 +264,8 @@ namespace MyPad
             etb.LoadFile(fileToLoad);
             etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
             etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
-            etb.EditorTextChanged += new EventHandler(etb_TextChanged);
+            etb.OnEditorTextChanged += new EventHandler(etb_TextChanged);
+            etb.OnEditorFilenameChanged += new EventHandler(etb_FilenameChanged);
             tabControl1.TabPages.Add(etb);
             etb.Show();
             tabControl1.SelectedTab = etb;
@@ -452,14 +463,20 @@ namespace MyPad
             }
         }
 
+        void etb_FilenameChanged(object sender, EventArgs e)
+        {
+            UpdateMainWindowTitle();
+        }
+
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EditorTabPage etb = new EditorTabPage();
-            etb.Text = string.Format("Untitled{0}", GetUntitledTabCount());
-            etb.ToolTipText = etb.Text;
+            string newTabName = string.Format("Untitled{0}", GetUntitledTabCount());
+            etb.SetTitle(newTabName);
             etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
             etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
-            etb.EditorTextChanged += new EventHandler(etb_TextChanged);
+            etb.OnEditorTextChanged += new EventHandler(etb_TextChanged);
+            etb.OnEditorFilenameChanged += new EventHandler(etb_FilenameChanged);
             etb.Show();
 
             tabControl1.TabPages.Add(etb);
@@ -555,8 +572,9 @@ namespace MyPad
                 saveFileDialog1.FileName = finfo.DirectoryName + Path.DirectorySeparatorChar + newName;
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    string file = saveFileDialog1.FileName;
-                    etb.SaveFile(file);
+                    string fileName = saveFileDialog1.FileName;
+                    etb.SaveFile(fileName);
+                    etb.SetTitle(fileName);
                 }
             }
         }
