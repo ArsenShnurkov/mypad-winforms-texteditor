@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MyPad")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Simple lightweight text editor written in C# (based on ICSharpCode.TextEditor control)")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Cory Borrow")]
-[assembly: AssemblyProduct("MyPad")]
-[assembly: AssemblyCopyright("Copyright © Cory Borrow 2009")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("")]
+[assembly: AssemblyCopyright("MIT X11, https://en.wikipedia.org/wiki/MIT_License")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyFileVersion("1.0.1.0")]
