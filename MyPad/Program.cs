@@ -9,6 +9,7 @@ namespace MyPad
 {
     static class Program
     {
+        public static TextClipboard TextClipboard = new TextClipboard();
         static CommunicationFactory cf = new CommunicationFactory();
 
         /// <summary>

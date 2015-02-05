@@ -19,7 +19,8 @@ namespace MyPad
     public class EditorTabPage : TabPage
     {
         public event EventHandler OnEditorTextChanged;
-        public event EventHandler OnEditorFilenameChanged;
+        public event EventHandler OnEditorTabFilenameChanged;
+        public event EventHandler OnEditorTabStateChanged;
 
         TextEditorControl textEditorControl;
 
@@ -44,8 +45,11 @@ namespace MyPad
                 {
                     return true;
                 }
-                bool saved = hasSomethingOnDisk && (isSavingNecessary == false);
-                return saved;
+                if (hasSomethingOnDisk && (isSavingNecessary == false))
+                {
+                    return true;
+                }
+                return false;
             }
         }
 
@@ -54,6 +58,22 @@ namespace MyPad
             get
             {
                 return hasSomethingOnDisk;
+            }
+        }
+
+        public bool IsSavingNecessary
+        {
+            get
+            {
+                return isSavingNecessary;
+            }
+            set
+            {
+                if (isSavingNecessary != value)
+                {
+                    isSavingNecessary = value;
+                    UpdateTabName();
+                }
             }
         }
 
@@ -178,11 +198,18 @@ namespace MyPad
         public void SaveFile(string path)
         {
             textEditorControl.SaveFile(path);
-            isSavingNecessary = true;
             hasSomethingOnDisk = true;
+            if (IsSavingNecessary == true)
+            {
+                IsSavingNecessary = false; // will update tab name
+            }
+            else
+            {
+                UpdateTabName();
+            }
         }
 
-        public void SetTitle(string path)
+        public void SetFileName(string path)
         {
             this.Text = Path.GetFileName(path);
             if (hasSomethingOnDisk)
@@ -193,15 +220,15 @@ namespace MyPad
             {
                 this.ForeColor = Color.Red;
             }
+
             this.ToolTipText = path;
             if (Parent != null)
             {
                 Parent.Invalidate();
             }
 
-            Fire_EditorFilenameChanged(this, new EventArgs());
-            //this.Update();
-            //this.Parent.Update();
+            Fire_EditorTab_FilenameChanged();
+            UpdateTabName();
         }
 
         public void SetHighlighting(string name)
@@ -394,14 +421,46 @@ namespace MyPad
             }
         }
 
-        private void Fire_EditorFilenameChanged(object sender, EventArgs e)
+        private void Fire_EditorTab_FilenameChanged()
         {
-            if (OnEditorFilenameChanged != null)
+            if (OnEditorTabFilenameChanged != null)
             {
-                OnEditorFilenameChanged(this, e);
+                OnEditorTabFilenameChanged(this, null);
+            }
+            Fire_EditorTab_StateChanged();
+        }
+
+        private void Fire_EditorTab_StateChanged()
+        {
+            if (OnEditorTabStateChanged != null)
+            {
+                OnEditorTabStateChanged(this, null);
             }
         }
 
+        protected void UpdateTabName()
+        {
+            if (isSavingNecessary)
+            {
+                if (this.Text.EndsWith("*") == false)
+                {
+                    this.Text = this.Text + "*";
+                }
+            }
+            else
+            {
+                if (this.Text.EndsWith("*") == true)
+                {
+                    int length = this.Text.Length;
+                    if (length > 0) // unnecessary check, because it was checked above, that Text.EndsWith("*")
+                    {
+                        this.Text = this.Text.Substring(0, length - 1);
+                    }
+                }
+            }
+
+            Fire_EditorTab_StateChanged();
+        }
 
         private void Fire_EditorTextChanged(object sender, EventArgs e)
         {
@@ -414,16 +473,12 @@ namespace MyPad
         private void Handle_EditorTextChanged(object sender, EventArgs e)
         {
             isSavingNecessary = true;
-
-            if (!this.Text.EndsWith("*"))
-            {
-                this.Text = this.Text + "*";
-            }
+            UpdateTabName();
         }
 
         private void Handle_TabTextChanged(object sender, EventArgs e)
         {
-            Fire_EditorFilenameChanged(sender, e);
+            Fire_EditorTab_FilenameChanged();
         }
 
         void SelectionManager_SelectionChanged(object sender, EventArgs e)

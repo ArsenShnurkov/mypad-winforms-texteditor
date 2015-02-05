@@ -37,6 +37,11 @@ namespace MyPad.Dialogs
             InitializeComponent();
         }
 
+        public void SetFocusOnSearchTextField()
+        {
+            ActiveControl = textBox1;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (checkBox1.Checked)

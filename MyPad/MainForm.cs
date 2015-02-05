@@ -21,13 +21,12 @@ namespace MyPad
 {
     public partial class MainForm : Form
     {
-        UnsavedDocumentsDialog unsavedDocumentsDialog;
         OptionsDialog optionsDialog;
         AboutDialog aboutDialog;
 
         FindReplaceDialog findReplaceDialog = new FindReplaceDialog();
         FindDialog findDialog = new FindDialog();
-        string fileToLoad = "";
+        string fileToLoad = String.Empty;
 
         public MainForm()
         {
@@ -178,47 +177,6 @@ namespace MyPad
             return tsi;
         }
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            SettingsManager.Save();
-
-            unsavedDocumentsDialog.ClearDocuments();
-
-            foreach (EditorTabPage etb in tabControl1.TabPages)
-            {
-                if (!etb.Saved)
-                    unsavedDocumentsDialog.AddDocument(etb.ToolTipText);
-            }
-
-            if (unsavedDocumentsDialog.SelectedDocumentsCount > 0)
-            {
-                DialogResult dr = unsavedDocumentsDialog.ShowDialog();
-
-                if (dr == DialogResult.Yes)
-                {
-                    IEnumerable<string> documents = unsavedDocumentsDialog.SelectedDocuments;
-
-                    foreach (string document in documents)
-                    {
-                        string file = Path.GetFileName(document);
-
-                        EditorTabPage etb = GetTabByTitle(file);
-
-                        if (etb != null)
-                        {
-                            tabControl1.SelectedTab = etb;
-                            saveToolStripMenuItem_Click(null, null);
-                        }
-                    }
-                }
-                else if (dr == DialogResult.Cancel)
-                {
-                    e.Cancel = true;
-                }
-            }
-
-            base.OnClosing(e);
-        }
 
         TabPage FindTabByPath(string fileToLoad)
         {
@@ -231,49 +189,6 @@ namespace MyPad
                 }
             }
             return null;
-        }
-
-        void InternalOpenFile(string fileToLoad)
-        {
-            if (string.IsNullOrWhiteSpace(fileToLoad))
-            {
-                return;
-            }
-            var tab = FindTabByPath(fileToLoad);
-            if (tab != null)
-            {
-                tabControl1.SelectedTab = tab;
-                SetupActiveTab();
-                return;
-            }
-
-            EditorTabPage etb = new EditorTabPage();
-            etb.LoadFile(fileToLoad);
-            etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
-            etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
-            etb.OnEditorTextChanged += new EventHandler(etb_TextChanged);
-            etb.OnEditorFilenameChanged += new EventHandler(etb_FilenameChanged);
-            tabControl1.TabPages.Add(etb);
-            etb.Show();
-            tabControl1.SelectedTab = etb;
-            etb.Update();
-
-            if (!SettingsManager.MRUList.Contains(fileToLoad))
-            {
-                if (SettingsManager.MRUList.Count >= 15)
-                    SettingsManager.MRUList.RemoveAt(14);
-                SettingsManager.MRUList.Insert(0, fileToLoad);
-                ToolStripMenuItem tsi = new ToolStripMenuItem(fileToLoad, null, new EventHandler(RecentFiles_Click));
-                recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
-            }
-            else
-            {
-                SettingsManager.MRUList.Remove(fileToLoad);
-                SettingsManager.MRUList.Insert(0, fileToLoad);
-                ToolStripMenuItem tsi = GetRecentMenuItem(fileToLoad);
-                recentFilesToolStripMenuItem.DropDown.Items.Remove(tsi);
-                recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
-            }
         }
 
         delegate void InternalOpenFileDelegate(string fileToLoad);
@@ -296,7 +211,7 @@ namespace MyPad
 
             base.OnLoad(e);
 
-            if (fileToLoad != null && File.Exists(fileToLoad))
+            if (string.IsNullOrWhiteSpace(fileToLoad) == false && File.Exists(fileToLoad))
             {
                 InternalOpenFile(fileToLoad);
             }
@@ -376,37 +291,6 @@ namespace MyPad
             SettingsManager.MRUList.Insert(0, tsi.Text);
         }
 
-        private void tabControl1_MouseClick(object sender, MouseEventArgs e)
-        {
-            EditorTabPage etb = GetActiveTab();
-
-            if (e.Button == MouseButtons.Middle)
-            {
-                if (etb != null)
-                    closeToolStripMenuItem_Click(null, null);
-            }
-            if (e.Button == MouseButtons.Right)
-            {
-                //Point pt = new Point(e.X, e.Y);
-                Point pt = Cursor.Position;
-                Point p = this.tabControl1.PointToClient(pt);
-                for (int i = 0; i < this.tabControl1.TabCount; i++)
-                {
-                    Rectangle r = this.tabControl1.GetTabRect(i);
-                    if (r.Contains(p))
-                    {
-                        this.tabControl1.SelectedIndex = i; // i is the index of tab under cursor
-                        var menu = new ContextMenu();
-                        menu.MenuItems.Add("Close", closeToolStripMenuItem_Click);
-                        menu.Show(this.tabControl1, p);
-                        SetupActiveTab();
-                        return;
-                    }
-                }
-                //e.Cancel = true;
-            }
-        }
-
         void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetupActiveTab();
@@ -450,24 +334,10 @@ namespace MyPad
             }
         }
 
-        void etb_FilenameChanged(object sender, EventArgs e)
+        void TabControl_TabCaptionUpdate(object sender, EventArgs e)
         {
+            tabControl1.Invalidate(); // redraw tab captions if required
             UpdateMainWindowTitle();
-        }
-
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EditorTabPage etb = new EditorTabPage();
-            string newTabName = string.Format("Untitled{0}", tabControl1.GetUntitledTabCount());
-            etb.SetTitle(newTabName);
-            etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
-            etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
-            etb.OnEditorTextChanged += new EventHandler(etb_TextChanged);
-            etb.OnEditorFilenameChanged += new EventHandler(etb_FilenameChanged);
-            etb.Show();
-
-            tabControl1.TabPages.Add(etb);
-            tabControl1.SelectedTab = etb;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -505,121 +375,6 @@ namespace MyPad
             GetActiveTab();
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EditorTabPage etb = GetActiveTab();
-            string file = "";
-
-            if (etb != null)
-            {
-                if (File.Exists(etb.ToolTipText))
-                {
-                    file = etb.ToolTipText; // tooltip is exact name of file, and Text property of tab may contain "*" if file is modified and unsaved
-                    etb.SaveFile(file);
-                    etb.SetTitle(file); // remove "*" from tab title, because file is now saved (unchanged)
-                }
-                else
-                {
-                    saveAsToolStripMenuItem_Click(null, null);
-                    file = etb.Text;
-                }
-
-                if (!SettingsManager.MRUList.Contains(file))
-                {
-                    if (SettingsManager.MRUList.Count >= 15)
-                        SettingsManager.MRUList.RemoveAt(14);
-                    SettingsManager.MRUList.Insert(0, file);
-
-                    ToolStripMenuItem tsi = new ToolStripMenuItem(file, null, new EventHandler(RecentFiles_Click));
-                    recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
-                }
-                else
-                {
-                    SettingsManager.MRUList.Remove(file);
-                    SettingsManager.MRUList.Insert(0, file);
-
-                    ToolStripMenuItem tsi = GetRecentMenuItem(file);
-                    recentFilesToolStripMenuItem.DropDown.Items.Remove(tsi);
-                    recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
-                }
-            }
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EditorTabPage etb = GetActiveTab();
-
-            if (etb != null)
-            {
-                string newName = etb.Editor.ActiveTextAreaControl.SelectionManager.SelectedText;
-                if (string.IsNullOrEmpty(newName))
-                {
-                    newName = "index.htm";
-                }
-                FileInfo finfo = new FileInfo(etb.ToolTipText);
-                saveFileDialog1.FileName = finfo.DirectoryName + Path.DirectorySeparatorChar + newName;
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    string fileName = saveFileDialog1.FileName;
-                    etb.SaveFile(fileName);
-                    etb.SetTitle(fileName);
-                }
-            }
-        }
-
-        private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EditorTabPage currentActiveTab = GetActiveTab();
-
-            foreach (EditorTabPage etb in tabControl1.TabPages)
-            {
-                tabControl1.SelectedTab = etb;
-                saveToolStripMenuItem_Click(null, null);
-            }
-
-            tabControl1.SelectedTab = currentActiveTab;
-        }
-
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EditorTabPage etb = GetActiveTab();
-
-            if (etb != null)
-            {
-                if (!etb.Saved)
-                {
-                    DialogResult dr = MessageBox.Show("You are about to close an unsaved document, do you want to save it now?",
-                                          "MyPad - Save document", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-                    if (dr == DialogResult.Yes)
-                    {
-                        saveToolStripMenuItem_Click(null, null);
-                        etb.Dispose();
-                    }
-                    else if (dr == DialogResult.No)
-                        etb.Dispose();
-                }
-                else
-                {
-                    etb.Dispose();
-                }
-                SetupActiveTab();
-            }
-        }
-
-        private void closeAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (EditorTabPage etb in tabControl1.TabPages)
-            {
-                tabControl1.SelectedTab = etb;
-                closeToolStripMenuItem_Click(null, null);
-            }
-        }
-
-        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -767,6 +522,7 @@ namespace MyPad
 
             if (etb != null)
             {
+                findDialog.SetFocusOnSearchTextField();
                 if (findDialog.ShowDialog() == DialogResult.OK)
                 {
                     int index = etb.Find(findDialog.Search, findDialog.Options);
@@ -798,6 +554,7 @@ namespace MyPad
 
             if (etb != null)
             {
+                findReplaceDialog.SetFocusOnSearchTextField();
                 if (findReplaceDialog.ShowDialog() == DialogResult.OK)
                 {
                     etb.FindAndReplace(findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
@@ -850,16 +607,6 @@ namespace MyPad
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             openToolStripMenuItem_Click(null, null);
-        }
-
-        private void toolStripButton3_Click(object sender, EventArgs e)
-        {
-            saveToolStripMenuItem_Click(null, null);
-        }
-
-        private void toolStripButton4_Click(object sender, EventArgs e)
-        {
-            saveAllToolStripMenuItem_Click(null, null);
         }
 
         private void toolStripButton5_Click(object sender, EventArgs e)
