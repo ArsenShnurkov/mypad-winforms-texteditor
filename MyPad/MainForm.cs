@@ -441,6 +441,15 @@ namespace MyPad
                 etb.EnchanceHyperlink();
             }
         }
+        private void insertNbspToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.InsertTextAtCursor("&nbsp;");
+            }
+        }
 
         private void moveLineUpToolStripMenuItem_Click(object sender, EventArgs e)
         {

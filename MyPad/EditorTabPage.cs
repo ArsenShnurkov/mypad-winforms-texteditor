@@ -13,6 +13,7 @@ using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor.Gui;
 using System.Diagnostics;
 using System.Globalization;
+using System.Web;
 
 namespace MyPad
 {
@@ -276,7 +277,7 @@ namespace MyPad
             textEditorControl.ActiveTextAreaControl.TextArea.ClipboardHandler.Delete(null, null);
         }
 
-        public void EnchanceHyperlink()
+        public void InsertTextAtCursor(string textToInsert)
         {
             var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
 
@@ -291,35 +292,61 @@ namespace MyPad
                 // deselect text
                 textArea.SelectionManager.ClearSelection();
             }
+            // Replace() takes the arguments: start offset to replace, length of the text to remove, new text
+            textArea.Document.Replace(textArea.Caret.Offset,
+                text.Length,
+                textToInsert);
 
-            StringBuilder hyperlink = new StringBuilder(text, text.Length * 2 + 20);
+            textArea.Caret.Position = new TextLocation(textArea.Caret.Position.Column + textToInsert.Length, textArea.Caret.Position.Line);
+
+            // Redraw:
+            textArea.Refresh(); 
+
+        }
+
+        public void EnchanceHyperlink()
+        {
+            var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
+
+            // Get selected text
+            string text = textArea.SelectionManager.SelectedText;
+
+            StringBuilder hyperlink = new StringBuilder(text.Trim(), text.Length * 2 + 20);
             if (text.Contains("/") == false)
             {
-                hyperlink.Append("/");
+                if (text.Contains("@"))
+                {
+                    hyperlink.Insert(0, "mailto:");
+                }
+                else
+                {
+                    hyperlink.Append("/");
+                }
             }
+
+            string innerHtml = (HttpUtility.UrlDecode(text)).Trim();
 
             StringBuilder sb = new StringBuilder(text.Length * 2 + 20);
             if (text.Contains(":"))
             {
-                sb.AppendFormat("<a href=\"{0}\">{1}</a>", hyperlink.ToString(), text);
+                sb.AppendFormat("<a href=\"{0}\">{1}</a>", hyperlink.ToString(), innerHtml);
             }
             else
             {
-                sb.AppendFormat("<a href=\"https://{0}\">{1}</a>", hyperlink.ToString(), text);
+                sb.AppendFormat("<a href=\"https://{0}\">{1}</a>", hyperlink.ToString(), innerHtml);
             }
 
-            // Replace() takes the arguments: start offset to replace, length of the text to remove, new text
-            textArea.Document.Replace(textArea.Caret.Offset,
-                text.Length,
-                sb.ToString());
 
-            // Redraw:
-            textArea.Refresh(); 
+            InsertTextAtCursor(sb.ToString());
         }
 
 
         public int Find(string search, RegexOptions options)
         {
+            if (lastFindOffset == -1) {
+                lastFindOffset = 0; // restart from top, otherwise it will be exception
+            }
+
             Regex regex = new Regex(search, options);
 
             if (regex.IsMatch(textEditorControl.Text, lastFindOffset))

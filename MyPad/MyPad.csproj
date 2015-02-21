@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7ED3012C-DB58-48C7-B59E-72C963418170}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -194,7 +192,6 @@
   <ItemGroup>
     <Folder Include="RPC_for_SingleInstance\" />
     <Folder Include="Template_Engine\" />
-    <Folder Include="aa\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ICSharpCode.TextEditor.git\Project\ICSharpCode.TextEditor.csproj">

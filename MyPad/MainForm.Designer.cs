@@ -44,11 +44,13 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.enchanceHyperlinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.insertNbspToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5a = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.highlightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator13a = new System.Windows.Forms.ToolStripSeparator();
             this.lineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveLineUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveLineDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -214,6 +216,8 @@
             this.toolStripSeparator6,
             this.highlightingToolStripMenuItem,
             this.toolStripSeparator13,
+            this.insertNbspToolStripMenuItem,
+            this.toolStripSeparator13a,
             this.lineToolStripMenuItem,
             this.selectionToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
@@ -270,10 +274,25 @@
             this.highlightingToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.highlightingToolStripMenuItem.Text = "Highlighting";
             // 
+            // insertNbspToolStripMenuItem
+            // 
+            this.insertNbspToolStripMenuItem.Name = "insertNbspToolStripMenuItem";
+            this.insertNbspToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.insertNbspToolStripMenuItem.Text = "Insert &&nbsp;";
+            this.insertNbspToolStripMenuItem.Click += new System.EventHandler(this.insertNbspToolStripMenuItem_Click);
+            this.insertNbspToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control)
+                | System.Windows.Forms.Keys.Space)));
+            // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
             this.toolStripSeparator13.Size = new System.Drawing.Size(161, 6);
+            // 
+            // 
+            // toolStripSeparator13a
+            // 
+            this.toolStripSeparator13a.Name = "toolStripSeparator13a";
+            this.toolStripSeparator13a.Size = new System.Drawing.Size(161, 6);
             // 
             // lineToolStripMenuItem
             // 
@@ -848,7 +867,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
         private System.Windows.Forms.ToolStripButton toolStripButton10;
         private System.Windows.Forms.ToolStripMenuItem highlightingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem insertNbspToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator13a;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
