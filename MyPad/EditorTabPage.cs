@@ -17,7 +17,7 @@ using System.Web;
 
 namespace MyPad
 {
-    public class EditorTabPage : TabPage
+    public partial class EditorTabPage : TabPage
     {
         public event EventHandler OnEditorTextChanged;
         public event EventHandler OnEditorTabFilenameChanged;
@@ -275,69 +275,6 @@ namespace MyPad
         public void Delete()
         {
             textEditorControl.ActiveTextAreaControl.TextArea.ClipboardHandler.Delete(null, null);
-        }
-
-        public void InsertTextAtCursor(string textToInsert)
-        {
-            var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
-
-            // Save selected text
-            string text = textArea.SelectionManager.SelectedText;
-
-            // Clear selection
-            if (textArea.SelectionManager.HasSomethingSelected)
-            {
-                // ensure caret is at start of selection
-                textArea.Caret.Position = textArea.SelectionManager.SelectionCollection[0].StartPosition;
-                // deselect text
-                textArea.SelectionManager.ClearSelection();
-            }
-            // Replace() takes the arguments: start offset to replace, length of the text to remove, new text
-            textArea.Document.Replace(textArea.Caret.Offset,
-                text.Length,
-                textToInsert);
-
-            textArea.Caret.Position = new TextLocation(textArea.Caret.Position.Column + textToInsert.Length, textArea.Caret.Position.Line);
-
-            // Redraw:
-            textArea.Refresh(); 
-
-        }
-
-        public void EnchanceHyperlink()
-        {
-            var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
-
-            // Get selected text
-            string text = textArea.SelectionManager.SelectedText;
-
-            StringBuilder hyperlink = new StringBuilder(text.Trim(), text.Length * 2 + 20);
-            if (text.Contains("/") == false)
-            {
-                if (text.Contains("@"))
-                {
-                    hyperlink.Insert(0, "mailto:");
-                }
-                else
-                {
-                    hyperlink.Append("/");
-                }
-            }
-
-            string innerHtml = (HttpUtility.UrlDecode(text)).Trim();
-
-            StringBuilder sb = new StringBuilder(text.Length * 2 + 20);
-            if (text.Contains(":"))
-            {
-                sb.AppendFormat("<a href=\"{0}\">{1}</a>", hyperlink.ToString(), innerHtml);
-            }
-            else
-            {
-                sb.AppendFormat("<a href=\"https://{0}\">{1}</a>", hyperlink.ToString(), innerHtml);
-            }
-
-
-            InsertTextAtCursor(sb.ToString());
         }
 
 

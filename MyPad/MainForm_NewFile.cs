@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Reflection;
+//using System.Web.Helpers; 
 
 using MyPad.Dialogs;
 
@@ -80,11 +81,14 @@ namespace MyPad
             links.AppendFormat("<a href=\"{0}\">{1}</a>", "../index.htm", "topic2");
 
             var par = new StringBuilder();
-            par.AppendFormat("title={0}", Uri.EscapeUriString("Здравствуй мир"));
+            par.AppendFormat("title={0}", Uri.EscapeDataString("Здравствуй мир"));
             par.Append("&");
-            par.AppendFormat("header={0}", Uri.EscapeUriString("Вот он и парсинг параметров"));
+            par.AppendFormat("header={0}", Uri.EscapeDataString("Вот он и парсинг параметров"));
             par.Append("&");
-            //par.AppendFormat("links={0}", Uri.EscapeUriString(links.ToString()));
+
+            var escapedString = Uri.EscapeDataString (links.ToString ());
+            par.AppendFormat("links={0}", escapedString);
+            // A potentially dangerous Request.QueryString value was detected from the client
 
             string text = TemplateEngine2.ProcessRequest("Text1.aspx", par.ToString());
             return text;

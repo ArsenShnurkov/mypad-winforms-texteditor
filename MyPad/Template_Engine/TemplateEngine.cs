@@ -117,10 +117,21 @@ namespace MyPad
 
     class TemplateEngine2 : TemplateEngine
     {
+        static MyExeHost myHost = null;
+
+        public static MyExeHost MyExeHost {
+            get { 
+                if (myHost == null)
+                {
+                    myHost = (MyExeHost)ApplicationHost.CreateApplicationHost(typeof(MyExeHost), GetVirtualRoot(), GetPhysicalRoot());
+                } 
+                return myHost;
+            }
+        }
+
         public static string ProcessRequest(string fileName, string query)
         {
-            var myHost = (MyExeHost)ApplicationHost.CreateApplicationHost(typeof(MyExeHost), GetVirtualRoot(), GetPhysicalRoot());
-            string res = myHost.ProcessRequest(fileName, query);
+            string res = MyExeHost.ProcessRequest(fileName, query);
             return res;
         }
     }

@@ -1,7 +1,8 @@
-﻿<% @PAGE validateRequest="false" Inherits="System.Web.UI.Page" Language="C#" %>
+﻿<% @PAGE Inherits="System.Web.UI.Page" Language="C#" %>
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf8" />
 <title><% =Request["title"] %></title>
 </head>
 <body>

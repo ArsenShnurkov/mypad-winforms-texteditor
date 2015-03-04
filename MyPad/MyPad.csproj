@@ -10,6 +10,7 @@
     <AssemblyName>MyPad</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <StartupObject>MyPad.Program</StartupObject>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -153,9 +154,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="MainForm_NewFile.cs" />
-    <None Include="Default.aspx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Text1.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -164,6 +162,9 @@
     <Compile Include="MainForm_OpenFromCommandline.cs" />
     <Compile Include="MainForm_Saving.cs" />
     <Compile Include="MainForm_Closing.cs" />
+    <Compile Include="EditorTabPage_TextProcessing.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
@@ -193,6 +194,16 @@
     <Folder Include="RPC_for_SingleInstance\" />
     <Folder Include="Template_Engine\" />
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy FileWidth="120" TabWidth="8" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+          <CSharpFormattingPolicy StatementBraceStyle="DoNotChange" AfterDelegateDeclarationParameterComma="True" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
   <ItemGroup>
     <ProjectReference Include="..\..\ICSharpCode.TextEditor.git\Project\ICSharpCode.TextEditor.csproj">
       <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>

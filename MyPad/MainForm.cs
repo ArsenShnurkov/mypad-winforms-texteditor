@@ -441,6 +441,87 @@ namespace MyPad
                 etb.EnchanceHyperlink();
             }
         }
+        private void enchanceImagelinkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.EnchanceImagelink();
+            }
+        }
+        private void MakeBoldToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeBold();
+            }
+        }
+        private void MakeBRToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeBR();
+            }
+        }
+        private void MakeH1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeH("1");
+            }
+        }
+        private void MakeH2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeH("2");
+            }
+        }
+        private void MakeH3ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeH("3");
+            }
+        }
+        private void MakeH4ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeH("4");
+            }
+        }
+        private void MakeH5ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeH("5");
+            }
+        }
+        private void MakeH6ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeH("6");
+            }
+        }
         private void insertNbspToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EditorTabPage etb = GetActiveTab();
