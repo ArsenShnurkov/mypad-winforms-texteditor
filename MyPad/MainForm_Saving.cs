@@ -89,6 +89,33 @@ namespace MyPad
             return null;
         }
 
+        string GetRelativeUriString (string oldTabFullName, string newTabFullName)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace (oldTabFullName) == false)
+                {
+                    if (string.IsNullOrWhiteSpace (newTabFullName) == false)
+                    {
+                        Uri fromUri = new Uri (oldTabFullName);
+                        Uri toUri = new Uri (newTabFullName);
+
+                        if (fromUri.Scheme == toUri.Scheme) // path can't be made relative.
+                        {
+
+                            Uri relativeUri = fromUri.MakeRelativeUri (toUri);
+                            String relativePath = Uri.UnescapeDataString (relativeUri.ToString ());
+                            return relativePath;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return String.Empty;
+        }
+
         /// <summary>
         /// Создаёт новую вкладку, размещает в ней текст
         /// </summary>
@@ -96,12 +123,14 @@ namespace MyPad
         private EditorTabPage  CreateNewTabWithProposedFileName(string fileName)
         {
             string newTabName = fileName;
-
+            EditorTabPage currentActiveTab = GetActiveTab();
 
             EditorTabPage etb = new EditorTabPage();
-            etb.Editor.Text = GetDefaultTemplateText();
-
             etb.SetFileName(newTabName);
+
+            var relUri = GetRelativeUriString (currentActiveTab.ToolTipText, newTabName);
+            etb.Editor.Text = GetDefaultTemplateText(fileName, relUri);
+
             etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
             etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
             etb.OnEditorTextChanged += new EventHandler(etb_TextChanged);

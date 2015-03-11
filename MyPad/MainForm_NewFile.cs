@@ -24,6 +24,8 @@ namespace MyPad
     {
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EditorTabPage currentActiveTab = GetActiveTab();
+
             bool bSavingNecessary = true;
             EditorTabPage etb = new EditorTabPage();
             string newTabName = null;
@@ -36,7 +38,9 @@ namespace MyPad
             }
             else
             {
-                string fullPath = Path.Combine(etb.ToolTipText, nearestInternalLink);
+                string name = newTabName = string.Format("Untitled{0}", tabControl1.GetUntitledTabCount());
+                // name = nearestInternalLink;
+                string fullPath = Path.Combine(etb.ToolTipText, name);
                 if (File.Exists(fullPath))
                 {
                     InternalOpenFile(fullPath);
@@ -47,7 +51,9 @@ namespace MyPad
                 // поэтому не сохранять молча уже нельзя
             }
 
-            etb.Editor.Text = GetDefaultTemplateText();
+            var oldName = currentActiveTab == null ? String.Empty : currentActiveTab.ToolTipText;
+            var relPath = GetRelativeUriString (oldName, newTabName);
+            etb.Editor.Text = GetDefaultTemplateText(newTabName, relPath);
             etb.IsSavingNecessary = bSavingNecessary;
             etb.SetFileName(newTabName);
 
@@ -63,27 +69,55 @@ namespace MyPad
             tabControl1.SelectedTab = etb;
 
         }
-        private string GetCurrentLineText(TextEditorControl editor)
+        private string GetCurrentLineText(TextEditorControl textEditorControl)
         {
-            return string.Empty;
+            var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
+
+            // Save selected text
+            string text = textArea.SelectionManager.SelectedText;
+
+            int line;
+
+            if (textArea.SelectionManager.HasSomethingSelected)
+            {
+                // Get point at start of selection
+                line = textArea.SelectionManager.SelectionCollection [0].StartPosition.Line;
+                // deselect text
+                //textArea.SelectionManager.ClearSelection();
+            } 
+            else
+            {
+                line = textArea.Caret.Position.Line;
+            }
+
+            var lineSeg = textArea.TextView.Document.GetLineSegment(line);
+            var linetext = textArea.TextView.Document.GetText(lineSeg);
+
+            return linetext;
         }
 
         private string GetNearestInternalLink(TextEditorControl editor)
         {
             string str = GetCurrentLineText(editor);
+            Regex ex = new Regex (@">(.*)</a");
+            var m = ex.Match (str);
+            if (m != null && m.Captures.Count > 1)
+            {
+                var res = m.Captures[1].Value;
+                return res;
+            }
             return null;
         }
 
-        private string GetDefaultTemplateText()
+        private string GetDefaultTemplateText(string caption, string relativeUri)
         {
             var links = new StringBuilder();
             links.AppendFormat("<a href=\"{0}\">{1}</a>", "index.htm", "topic1");
-            links.AppendFormat("<a href=\"{0}\">{1}</a>", "../index.htm", "topic2");
 
             var par = new StringBuilder();
-            par.AppendFormat("title={0}", Uri.EscapeDataString("Здравствуй мир"));
+            par.AppendFormat("title={0}", Uri.EscapeDataString(caption));
             par.Append("&");
-            par.AppendFormat("header={0}", Uri.EscapeDataString("Вот он и парсинг параметров"));
+            par.AppendFormat("header={0}", Uri.EscapeDataString(caption));
             par.Append("&");
 
             var escapedString = Uri.EscapeDataString (links.ToString ());
