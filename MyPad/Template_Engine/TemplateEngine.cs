@@ -34,6 +34,12 @@ namespace MyPad
                 return ex.ToString();
             }
         }
+
+        /// <returns>null = object creates once and stays forever</returns>
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
     }
 
     class DomainHolder : IDisposable
