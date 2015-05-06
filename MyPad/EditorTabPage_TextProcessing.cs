@@ -173,6 +173,42 @@ namespace MyPad
             InsertTextAtCursor(sb.ToString());
         }
 
+        public void MakeSelectionRed()
+        {
+            var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
+
+            // Get selected text
+            string text = textArea.SelectionManager.SelectedText;
+
+            int leftspaces = 0;
+            for (; leftspaces < text.Length; ++leftspaces)
+            {
+                if (char.IsWhiteSpace (text [leftspaces]) == false)
+                {
+                    break;
+                }
+            }
+            int rightspaces = text.Length;
+            for (; rightspaces > 0; --rightspaces)
+            {
+                if (char.IsWhiteSpace (text [rightspaces - 1]) == false)
+                {
+                    break;
+                }
+            }
+
+            string trimmedText = text.Substring(leftspaces, rightspaces - leftspaces);
+
+            string formatString = "{0}<font style=\"color:red\">{1}</font>{2}";
+            int lengthEstimation2 = formatString.Length + text.Length;
+
+            StringBuilder sb = new StringBuilder(lengthEstimation2);
+            sb.AppendFormat (formatString, text.Substring(0, leftspaces), trimmedText, text.Substring(rightspaces));
+
+            InsertTextAtCursor(sb.ToString());
+        }
+
+
         public void MakeBR()
         {
             var textArea = textEditorControl.ActiveTextAreaControl.TextArea;

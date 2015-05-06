@@ -46,6 +46,7 @@
             this.enchanceHyperlinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enchanceImagelinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MakeBoldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MakeSelectionRedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MakeBRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MakeH1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MakeH2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +55,6 @@
             this.MakeH5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MakeH6ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertNbspToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5a = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.highlightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -220,17 +220,6 @@
             this.deleteToolStripMenuItem,
             this.toolStripSeparator4,
             this.selectAllToolStripMenuItem,
-            this.toolStripSeparator5a,
-            this.enchanceHyperlinkToolStripMenuItem,
-            this.enchanceImagelinkToolStripMenuItem,
-            this.MakeBoldToolStripMenuItem,
-            this.MakeBRToolStripMenuItem,
-            this.MakeH1ToolStripMenuItem,
-            this.MakeH2ToolStripMenuItem,
-            this.MakeH3ToolStripMenuItem,
-            this.MakeH4ToolStripMenuItem,
-            this.MakeH5ToolStripMenuItem,
-            this.MakeH6ToolStripMenuItem,
             this.toolStripSeparator6,
             this.highlightingToolStripMenuItem,
             this.toolStripSeparator13,
@@ -297,12 +286,20 @@
             this.MakeBoldToolStripMenuItem.Text = "Make Bold";
             this.MakeBoldToolStripMenuItem.Click += new System.EventHandler(this.MakeBoldToolStripMenuItem_Click);
             // 
+            // MakeSelectionRedToolStripMenuItem
+            // 
+            this.MakeSelectionRedToolStripMenuItem.Name = "MakeSelectionRedToolStripMenuItem";
+            this.MakeSelectionRedToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.MakeSelectionRedToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.MakeSelectionRedToolStripMenuItem.Text = "Make Red";
+            this.MakeSelectionRedToolStripMenuItem.Click += new System.EventHandler(this.MakeSelectionRedToolStripMenuItem_Click);
+            // 
             // MakeBRToolStripMenuItem
             // 
             this.MakeBRToolStripMenuItem.Name = "MakeBRToolStripMenuItem";
             this.MakeBRToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Enter)));
             this.MakeBRToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.MakeBRToolStripMenuItem.Text = "Make Bold";
+            this.MakeBRToolStripMenuItem.Text = "Make BR";
             this.MakeBRToolStripMenuItem.Click += new System.EventHandler(this.MakeBRToolStripMenuItem_Click);
             // 
             // MakeH1ToolStripMenuItem
@@ -448,7 +445,19 @@
             this.selectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearSelectionToolStripMenuItem,
             this.toolStripSeparator8,
-            this.wrapInToolStripMenuItem});
+            this.enchanceHyperlinkToolStripMenuItem,
+            this.enchanceImagelinkToolStripMenuItem,
+            this.MakeBoldToolStripMenuItem,
+            this.MakeSelectionRedToolStripMenuItem,
+            this.MakeBRToolStripMenuItem,
+            this.MakeH1ToolStripMenuItem,
+            this.MakeH2ToolStripMenuItem,
+            this.MakeH3ToolStripMenuItem,
+            this.MakeH4ToolStripMenuItem,
+            this.MakeH5ToolStripMenuItem,
+            this.MakeH6ToolStripMenuItem,
+            this.wrapInToolStripMenuItem
+            });
             this.selectionToolStripMenuItem.Name = "selectionToolStripMenuItem";
             this.selectionToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.selectionToolStripMenuItem.Text = "Selection";
@@ -911,6 +920,7 @@
         private System.Windows.Forms.ToolStripMenuItem enchanceHyperlinkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enchanceImagelinkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeBoldToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MakeSelectionRedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeBRToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeH1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeH2ToolStripMenuItem;
@@ -934,7 +944,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem findNextToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5a;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;

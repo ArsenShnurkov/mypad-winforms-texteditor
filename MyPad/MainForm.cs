@@ -459,6 +459,15 @@ namespace MyPad
                 etb.MakeBold();
             }
         }
+        private void MakeSelectionRedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.MakeSelectionRed();
+            }
+        }
         private void MakeBRToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EditorTabPage etb = GetActiveTab();
