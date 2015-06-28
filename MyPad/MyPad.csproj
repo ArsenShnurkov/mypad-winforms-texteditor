@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web" />
+    <Reference Include="ICSharpCode.TextEditor">
+      <HintPath>..\..\..\NuGet\ICSharpCode.TextEditor.dll.3.2.2\lib\net40\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\AboutDialog.cs">
@@ -165,6 +168,7 @@
     <Compile Include="EditorTabPage_TextProcessing.cs">
       <SubType>Component</SubType>
     </Compile>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
@@ -204,10 +208,4 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup>
-    <ProjectReference Include="..\..\ICSharpCode.TextEditor.git\Project\ICSharpCode.TextEditor.csproj">
-      <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
-      <Name>ICSharpCode.TextEditor</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>
