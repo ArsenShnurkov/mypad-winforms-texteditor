@@ -15,6 +15,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Web;
 
+using NDepend.Path;
+using NDepend.Path.Interface.Core;
+
 namespace MyPad
 {
     public partial class EditorTabPage : TabPage
@@ -48,38 +51,69 @@ namespace MyPad
 
         public void EnchanceHyperlink()
         {
+
             var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
 
             // Get selected text
             string text = textArea.SelectionManager.SelectedText;
 
-            StringBuilder hyperlink = new StringBuilder(text.Trim(), text.Length * 2 + 20);
-            if (text.Contains("/") == false)
+            IFilePath hyperLinkAddressPath = null;
+            try
             {
-                if (text.Contains("@"))
+                hyperLinkAddressPath = text.ToFilePath();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.ToString());
+            }
+
+
+            StringBuilder newContentForInsertion = new StringBuilder(text.Length * 2 + 20);
+
+            if (hyperLinkAddressPath != null) // This is an existing local file
+            {
+                var hyperLinkAddress = hyperLinkAddressPath.ToString(); // Normalized path
+                if (hyperLinkAddressPath.IsRelativePath)
                 {
-                    hyperlink.Insert(0, "mailto:");
+                    newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, hyperLinkAddress);
+                } else 
+                if (hyperLinkAddressPath.IsAbsolutePath)
+                {
+                    // convert path to relative
+                    newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, hyperLinkAddress);
+                }
+            }
+            else // this is a new local file, or URL or mail address
+            {
+                string innerHtml = (HttpUtility.UrlDecode(text)).Trim(); // Decoded URL
+                StringBuilder hyperlink = new StringBuilder(text.Trim(), text.Length * 2 + 20);
+                if (text.Contains("/") == false)
+                {
+                    if (text.Contains("@"))
+                    {
+                        hyperlink.Insert(0, "mailto:");
+                    }
+                    else
+                    {
+                        hyperlink.Append("/");
+                    }
+                }
+                var hyperLinkAddress = hyperlink.ToString();
+
+                int idxSeparator = hyperLinkAddress.IndexOfAny (new char[]{'/','\\'});
+                int idxPoint = hyperLinkAddress.IndexOfAny (new char[]{'.'});
+
+                if (idxSeparator < idxPoint || hyperLinkAddress.Contains(":"))
+                {
+                    newContentForInsertion.AppendFormat("<a href=\"{0}\">{1}</a>", hyperLinkAddress, innerHtml);
                 }
                 else
                 {
-                    hyperlink.Append("/");
+                    newContentForInsertion.AppendFormat("<a href=\"https://{0}\">{1}</a>", hyperLinkAddress, innerHtml);
                 }
             }
 
-            string innerHtml = (HttpUtility.UrlDecode(text)).Trim();
-
-            StringBuilder sb = new StringBuilder(text.Length * 2 + 20);
-            if (text.Contains(":"))
-            {
-                sb.AppendFormat("<a href=\"{0}\">{1}</a>", hyperlink.ToString(), innerHtml);
-            }
-            else
-            {
-                sb.AppendFormat("<a href=\"https://{0}\">{1}</a>", hyperlink.ToString(), innerHtml);
-            }
-
-
-            InsertTextAtCursor(sb.ToString());
+            InsertTextAtCursor(newContentForInsertion.ToString());
         }
 
         public void EnchanceImagelink()
