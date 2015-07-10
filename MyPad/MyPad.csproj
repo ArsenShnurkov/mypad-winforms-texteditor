@@ -59,7 +59,7 @@
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web" />
     <Reference Include="ICSharpCode.TextEditor">
-      <HintPath>..\..\..\NuGet\ICSharpCode.TextEditor.3.2.2\lib\net40\ICSharpCode.TextEditor</HintPath>
+      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.2\lib\net40\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -170,7 +170,6 @@
     <Compile Include="EditorTabPage_TextProcessing.cs">
       <SubType>Component</SubType>
     </Compile>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
