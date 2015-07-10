@@ -87,6 +87,9 @@ namespace MyPad
             {
                 string innerHtml = (HttpUtility.UrlDecode(text)).Trim(); // Decoded URL
                 StringBuilder hyperlink = new StringBuilder(text.Trim(), text.Length * 2 + 20);
+
+                bool endsLikeHtmlPage = hyperlink.ToString ().ToLower ().EndsWith (".htm");
+
                 if (text.Contains("/") == false)
                 {
                     if (text.Contains("@"))
@@ -95,7 +98,10 @@ namespace MyPad
                     }
                     else
                     {
-                        hyperlink.Append("/");
+                        if (endsLikeHtmlPage == false)
+                        {
+                            hyperlink.Append ("/");
+                        }
                     }
                 }
                 var hyperLinkAddress = hyperlink.ToString();
@@ -103,7 +109,7 @@ namespace MyPad
                 int idxSeparator = hyperLinkAddress.IndexOfAny (new char[]{'/','\\'});
                 int idxPoint = hyperLinkAddress.IndexOfAny (new char[]{'.'});
 
-                if (idxSeparator < idxPoint || hyperLinkAddress.Contains(":") || hyperLinkAddress.ToLower().EndsWith(".htm"))
+                if (idxSeparator < idxPoint || hyperLinkAddress.Contains(":") || endsLikeHtmlPage)
                 {
                     newContentForInsertion.AppendFormat("<a href=\"{0}\">{1}</a>", hyperLinkAddress, innerHtml);
                 }
