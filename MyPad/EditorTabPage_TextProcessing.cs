@@ -103,7 +103,7 @@ namespace MyPad
                 int idxSeparator = hyperLinkAddress.IndexOfAny (new char[]{'/','\\'});
                 int idxPoint = hyperLinkAddress.IndexOfAny (new char[]{'.'});
 
-                if (idxSeparator < idxPoint || hyperLinkAddress.Contains(":"))
+                if (idxSeparator < idxPoint || hyperLinkAddress.Contains(":") || hyperLinkAddress.ToLower().EndsWith(".htm"))
                 {
                     newContentForInsertion.AppendFormat("<a href=\"{0}\">{1}</a>", hyperLinkAddress, innerHtml);
                 }
