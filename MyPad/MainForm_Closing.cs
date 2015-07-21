@@ -71,7 +71,7 @@ namespace MyPad
             foreach (EditorTabPage etb in tabControl1.TabPages)
             {
                 if (!etb.Saved)
-                    unsavedDocumentsDialog.AddDocument(etb.ToolTipText);
+                    unsavedDocumentsDialog.AddDocument(etb.GetFileFullPathAndName());
             }
 
             if (unsavedDocumentsDialog.SelectedDocumentsCount > 0)

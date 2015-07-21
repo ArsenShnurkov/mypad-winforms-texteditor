@@ -87,7 +87,7 @@ namespace MyPad
             EditorTabPage etb = GetActiveTab();
             if (etb != null)
             {
-                this.Text = string.Format("MyPad - {0} [{1}]", etb.Text, etb.ToolTipText);
+                this.Text = string.Format("MyPad - {0} [{1}]", etb.Text, etb.GetFileFullPathAndName());
             }
         }
 
@@ -182,8 +182,9 @@ namespace MyPad
         {
             foreach (var tab in tabControl1.TabPages)
             {
-                var t = (TabPage)tab;
-                if (string.Compare(t.ToolTipText, fileToLoad) == 0)
+                var t = (EditorTabPage)tab;
+                string file = t.GetFileFullPathAndName ();
+                if (string.Compare(file, fileToLoad) == 0)
                 {
                     return t;
                 }

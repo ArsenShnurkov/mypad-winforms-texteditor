@@ -204,6 +204,7 @@
   <ItemGroup>
     <Folder Include="RPC_for_SingleInstance\" />
     <Folder Include="Template_Engine\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

@@ -15,7 +15,9 @@ using MyPad.Dialogs;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
-//using LuaInterface;
+using NDepend.Path;
+using NDepend.Path.Interface.Core;
+using System.Diagnostics;
 
 namespace MyPad
 {
@@ -57,8 +59,16 @@ namespace MyPad
                 {
                     newName = "index.htm";
                 }
-                FileInfo finfo = new FileInfo(etb.ToolTipText);
+                FileInfo finfo = new FileInfo(etb.GetFileFullPathAndName());
                 string proposedFileName = Path.Combine(finfo.DirectoryName, newName);
+                try
+                {
+                    proposedFileName = finfo.DirectoryName.ToString ().ToFilePath() + newName; // normalize
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex.ToString ());
+                }
                 CreateNewTabWithProposedFileName(proposedFileName);
                 // GetNewNameInSaveAsDialogFromProposedName(proposedFileName);
             }
@@ -89,33 +99,6 @@ namespace MyPad
             return null;
         }
 
-        string GetRelativeUriString (string oldTabFullName, string newTabFullName)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace (oldTabFullName) == false)
-                {
-                    if (string.IsNullOrWhiteSpace (newTabFullName) == false)
-                    {
-                        Uri fromUri = new Uri (oldTabFullName);
-                        Uri toUri = new Uri (newTabFullName);
-
-                        if (fromUri.Scheme == toUri.Scheme) // path can't be made relative.
-                        {
-
-                            Uri relativeUri = fromUri.MakeRelativeUri (toUri);
-                            String relativePath = Uri.UnescapeDataString (relativeUri.ToString ());
-                            return relativePath;
-                        }
-                    }
-                }
-            }
-            catch
-            {
-            }
-            return String.Empty;
-        }
-
         /// <summary>
         /// Создаёт новую вкладку, размещает в ней текст
         /// </summary>
@@ -128,7 +111,7 @@ namespace MyPad
             EditorTabPage etb = new EditorTabPage();
             etb.SetFileName(newTabName);
 
-            var relUri = GetRelativeUriString (currentActiveTab.ToolTipText, newTabName);
+            var relUri = EditorTabPage.GetRelativeUriString (currentActiveTab.GetFileFullPathAndName(), newTabName);
             etb.Editor.Text = GetDefaultTemplateText(fileName, relUri);
 
             etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
@@ -146,7 +129,7 @@ namespace MyPad
 
         void SaveTabToDisk(EditorTabPage etb)
         {
-            string fileName = etb.ToolTipText;
+            string fileName = etb.GetFileFullPathAndName();
             // tooltip is exact name of file, and Text property of tab may contain "*" if file is modified and unsaved
             FileInfo fi = new FileInfo(fileName);
             if (fi.Name.StartsWith("Untitled"))

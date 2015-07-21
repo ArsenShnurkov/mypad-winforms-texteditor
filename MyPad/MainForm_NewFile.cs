@@ -40,7 +40,7 @@ namespace MyPad
             {
                 string name = newTabName = string.Format("Untitled{0}", tabControl1.GetUntitledTabCount());
                 // name = nearestInternalLink;
-                string fullPath = Path.Combine(etb.ToolTipText, name);
+                string fullPath = Path.Combine(etb.GetFileFullPathAndName(), name);
                 if (File.Exists(fullPath))
                 {
                     InternalOpenFile(fullPath);
@@ -51,8 +51,8 @@ namespace MyPad
                 // поэтому не сохранять молча уже нельзя
             }
 
-            var oldName = currentActiveTab == null ? String.Empty : currentActiveTab.ToolTipText;
-            var relPath = GetRelativeUriString (oldName, newTabName);
+            var oldName = currentActiveTab == null ? String.Empty : currentActiveTab.GetFileFullPathAndName();
+            var relPath = EditorTabPage.GetRelativeUriString (oldName, newTabName);
             etb.Editor.Text = GetDefaultTemplateText(newTabName, relPath);
             etb.IsSavingNecessary = bSavingNecessary;
             etb.SetFileName(newTabName);
