@@ -57,7 +57,7 @@ namespace MyPad
                 string newName = etb.Editor.ActiveTextAreaControl.SelectionManager.SelectedText;
                 if (string.IsNullOrEmpty(newName))
                 {
-                    newName = "index.htm";
+                    newName = Program.DefaultIndexFileName; // "index.htm"
                 }
                 FileInfo finfo = new FileInfo(etb.GetFileFullPathAndName());
                 string proposedFileName = Path.Combine(finfo.DirectoryName, newName);

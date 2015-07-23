@@ -11,6 +11,7 @@ namespace MyPad
 {
     static class Program
     {
+        public static readonly string DefaultIndexFileName = "index.htm";
         public static TextClipboard TextClipboard = new TextClipboard();
         static CommunicationFactory cf = new CommunicationFactory();
 
@@ -77,8 +78,8 @@ namespace MyPad
 
             var links = new StringBuilder();
             links.AppendFormat("<a href=\"{0}\">{1}</a>", backlink, GetTextTitleFromFile(sourceFilename));
-            string defaultDocumentName = "index.htm";
-            if (defaultDocumentName.CompareTo (backlink) != 0)
+            string defaultDocumentName = Program.DefaultIndexFileName;
+            if (defaultDocumentName.CompareTo (backlink) != 0 && defaultDocumentName.CompareTo(targetFilename) != 0)
             {
                 links.Append (",");
                 links.Append (Environment.NewLine);
