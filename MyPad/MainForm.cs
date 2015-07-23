@@ -16,6 +16,7 @@ using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 //using LuaInterface;
+using System.Diagnostics;
 
 namespace MyPad
 {
@@ -178,7 +179,7 @@ namespace MyPad
         }
 
 
-        TabPage FindTabByPath(string fileToLoad)
+        public EditorTabPage FindTabByPath(string fileToLoad)
         {
             foreach (var tab in tabControl1.TabPages)
             {
@@ -759,6 +760,59 @@ namespace MyPad
                     e.DrawFocusRectangle();
                 }
             }
+        }
+
+        string GetFullFilename (string filename)
+        {
+            // Tro to find in tabs
+            try {
+                filename = new FileInfo (filename).FullName;
+            }
+            catch (Exception ex) {
+                Trace.WriteLine (ex.ToString ());
+            }
+            return filename;
+        }
+
+        public bool AlreadyOpen(string filename)
+        {
+            if (string.IsNullOrWhiteSpace (filename))
+            {
+                return false;
+            }
+
+            filename = GetFullFilename (filename);
+
+            foreach (EditorTabPage etb in tabControl1.TabPages) {
+                if (etb.GetFileFullPathAndName ().CompareTo (filename) == 0) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool Exists(string filename)
+        {
+            if (string.IsNullOrWhiteSpace (filename))
+            {
+                return false;
+            }
+
+            if (AlreadyOpen (filename))
+            {
+                return true;
+            }
+
+            filename = GetFullFilename (filename);
+
+            // try to find on disk
+            if (File.Exists (filename))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

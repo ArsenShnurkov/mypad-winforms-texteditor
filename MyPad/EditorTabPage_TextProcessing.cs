@@ -57,22 +57,36 @@ namespace MyPad
             // Get selected text
             string strSelectedText = textArea.SelectionManager.SelectedText;
             string textOfHref = strSelectedText.Trim ();
+            // remove quotes which was selected by accident
+            while (textOfHref.StartsWith ("\""))
+                textOfHref = textOfHref.Substring (1);
+            while (textOfHref.EndsWith ("\""))
+                textOfHref = textOfHref.Substring (0, textOfHref.Length - 1);
+            
             string textOfWholeTag = (HttpUtility.UrlDecode(strSelectedText)).Trim(); // Decoded URL
 
             try
             {
-                    var url = new Uri(textOfHref);
-                    //if ("file".CompareTo (url.Scheme.ToLower ()) == 0)
-                    if (url.IsFile)
+                var url = new Uri(textOfHref);
+                //if ("file".CompareTo (url.Scheme.ToLower ()) == 0)
+                if (url.IsFile)
+                {
+                    string pathToSource = this.GetFileFullPathAndName ();
+
+                    string pathToTarget = url.AbsolutePath;
+
+                    // replace text of link with title
+                    if (Program.GetMainForm().Exists(pathToTarget))
                     {
-                        string pathToTarget = url.AbsolutePath;
-                        string pathToSource = this.GetFileFullPathAndName ();
-                        var relUri = GetRelativeUriString (pathToSource, pathToTarget);
-                        if (string.IsNullOrWhiteSpace(relUri) == false)
-                        {
-                                textOfHref = relUri; // replace text of link
-                        }
+                        textOfWholeTag = Program.GetTextTitleFromFile(pathToTarget);
                     }
+
+                    var relUri = GetRelativeUriString (pathToSource, pathToTarget);
+                    if (string.IsNullOrWhiteSpace(relUri) == false)
+                    {
+                            textOfHref = relUri; // replace href of link
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -98,12 +112,15 @@ namespace MyPad
                 var hyperLinkAddress = hyperLinkAddressPath.ToString(); // Normalized path
                 if (hyperLinkAddressPath.IsRelativePath)
                 {
-                    newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, hyperLinkAddress);
-                } else 
-                if (hyperLinkAddressPath.IsAbsolutePath)
+                    newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, textOfWholeTag);
+                }
+                else 
                 {
-                    // convert path to relative
-                    newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, hyperLinkAddress);
+                    if (hyperLinkAddressPath.IsAbsolutePath)
+                    {
+                        // convert path to relative
+                        newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, textOfWholeTag);
+                    }
                 }
             }
             else // this is a new local file, or URL or mail address

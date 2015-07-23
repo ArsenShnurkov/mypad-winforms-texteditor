@@ -103,26 +103,37 @@ namespace MyPad
         /// Создаёт новую вкладку, размещает в ней текст
         /// </summary>
         /// <param name="fileName">File name.</param>
-        private EditorTabPage  CreateNewTabWithProposedFileName(string fileName)
+        private EditorTabPage  CreateNewTabWithProposedFileName(string targetFilename)
         {
-            string newTabName = fileName;
-            EditorTabPage currentActiveTab = GetActiveTab();
-
+            if (AlreadyOpen (targetFilename))
+            {
+                return this.FindTabByPath (targetFilename);
+            }
+            if (Exists (targetFilename))
+            {
+                InternalOpenFile (targetFilename);
+                return this.FindTabByPath (targetFilename);
+            }
+               
             EditorTabPage etb = new EditorTabPage();
-            etb.SetFileName(newTabName);
+            etb.SetFileName(targetFilename);
 
-            var relUri = EditorTabPage.GetRelativeUriString (currentActiveTab.GetFileFullPathAndName(), newTabName);
-            etb.Editor.Text = GetDefaultTemplateText(fileName, relUri);
+            // Create content
+            EditorTabPage currentActiveTab = GetActiveTab();
+            string sourceFilename = currentActiveTab.GetFileFullPathAndName ();
+            etb.Editor.Text = Program.GetDefaultTemplateText(targetFilename, sourceFilename, targetFilename);
 
+            // setup event handlers
             etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
             etb.Editor.DragDrop += new DragEventHandler(tabControl1_DragDrop);
             etb.OnEditorTextChanged += new EventHandler(etb_TextChanged);
             etb.OnEditorTabFilenameChanged += new EventHandler(TabControl_TabCaptionUpdate);
             etb.OnEditorTabStateChanged += new EventHandler(TabControl_TabCaptionUpdate);
-            etb.Show();
 
+            // Add into container
             tabControl1.TabPages.Add(etb);
             tabControl1.SelectedTab = etb;
+            etb.Show();
 
             return etb;
         }
