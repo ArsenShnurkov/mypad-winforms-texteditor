@@ -71,7 +71,7 @@ namespace MyPad
             return form;
         }
 
-        public static string GetDefaultTemplateText(string caption, string sourceFilename, string targetFilename)
+        public static string GetDefaultTemplateText(string targetFilename, string caption, string sourceFilename)
         {
             //string relativeUri = EditorTabPage.GetRelativeUriString (sourceFilename, targetFilename);
             string backlink = EditorTabPage.GetRelativeUriString (targetFilename, sourceFilename);
@@ -86,11 +86,10 @@ namespace MyPad
                 links.AppendFormat("<a href=\"{0}\">{1}</a>", defaultDocumentName, GetTextTitleFromFile(defaultDocumentName));
             }
 
-            string title = GetTextTitleFromFile (sourceFilename);
             var par = new StringBuilder();
-            par.AppendFormat("title={0}", Uri.EscapeDataString(title));
+            par.AppendFormat("title={0}", Uri.EscapeDataString(caption));
             par.Append("&");
-            par.AppendFormat("header={0}", Uri.EscapeDataString(title));
+            par.AppendFormat("header={0}", Uri.EscapeDataString(caption));
             par.Append("&");
 
             var escapedString = Uri.EscapeDataString (links.ToString ());

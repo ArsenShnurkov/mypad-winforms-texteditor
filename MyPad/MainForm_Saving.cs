@@ -52,26 +52,60 @@ namespace MyPad
         {
             EditorTabPage etb = GetActiveTab();
 
-            if (etb != null)
+            if (etb == null)
             {
-                string newName = etb.Editor.ActiveTextAreaControl.SelectionManager.SelectedText;
-                if (string.IsNullOrEmpty(newName))
-                {
-                    newName = Program.DefaultIndexFileName; // "index.htm"
-                }
-                FileInfo finfo = new FileInfo(etb.GetFileFullPathAndName());
-                string proposedFileName = Path.Combine(finfo.DirectoryName, newName);
-                try
-                {
-                    proposedFileName = finfo.DirectoryName.ToString ().ToFilePath() + newName; // normalize
-                }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine(ex.ToString ());
-                }
-                CreateNewTabWithProposedFileName(proposedFileName);
-                // GetNewNameInSaveAsDialogFromProposedName(proposedFileName);
+                return;
             }
+
+            string newName = etb.Editor.ActiveTextAreaControl.SelectionManager.SelectedText;
+            if (string.IsNullOrEmpty(newName))
+            {
+                newName = Program.DefaultIndexFileName; // "index.htm"
+            }
+            FileInfo finfo = new FileInfo(etb.GetFileFullPathAndName());
+            string proposedFileName = Path.Combine(finfo.DirectoryName, newName);
+            try
+            {
+                proposedFileName = finfo.DirectoryName.ToString ().ToFilePath() + newName; // normalize
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.ToString ());
+            }
+
+
+            // extract hyperlink text to title
+            int col = etb.Editor.ActiveTextAreaControl.Caret.Column;
+            int line = etb.Editor.ActiveTextAreaControl.Caret.Line;
+            IDocument document = etb.Editor.ActiveTextAreaControl.Document;
+            ISegment s = document.GetLineSegment (line);
+            string content = document.GetText(s);
+            string title = GetATagText(content, col);
+            if (string.IsNullOrWhiteSpace (title))
+            {
+                title = proposedFileName;
+            }
+
+            CreateNewTabWithProposedFileName(proposedFileName, title);
+            // GetNewNameInSaveAsDialogFromProposedName(proposedFileName);
+        }
+
+        public string GetATagText(string content, int pos)
+        {
+            String extract = String.Empty;
+            string ws = @"\w*";
+            string regexQ = string.Format ("{0}\\<{0}a{0}[^>]*\\>([^<]*)\\<{0}/{0}a{0}\\>", ws);
+            Regex regex = new Regex(regexQ);
+            Match match = regex.Match(content);
+            while (match.Success)
+            {
+                if (match.Index < pos && match.Index + match.Length >= pos)
+                {
+                    return match.Groups[1].Value;
+                }
+                match = match.NextMatch ();
+            }
+            return extract;
         }
 
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -103,7 +137,7 @@ namespace MyPad
         /// Создаёт новую вкладку, размещает в ней текст
         /// </summary>
         /// <param name="fileName">File name.</param>
-        private EditorTabPage  CreateNewTabWithProposedFileName(string targetFilename)
+        private EditorTabPage  CreateNewTabWithProposedFileName(string targetFilename, string title)
         {
             if (AlreadyOpen (targetFilename))
             {
@@ -121,7 +155,7 @@ namespace MyPad
             // Create content
             EditorTabPage currentActiveTab = GetActiveTab();
             string sourceFilename = currentActiveTab.GetFileFullPathAndName ();
-            etb.Editor.Text = Program.GetDefaultTemplateText(targetFilename, sourceFilename, targetFilename);
+            etb.Editor.Text = Program.GetDefaultTemplateText(targetFilename, title, sourceFilename);
 
             // setup event handlers
             etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);
