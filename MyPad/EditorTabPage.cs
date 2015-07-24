@@ -232,6 +232,38 @@ namespace MyPad
             UpdateTabName();
         }
 
+        public string GetFileFullPathAndName()
+        {
+            return this.ToolTipText;
+        }
+
+        public static string GetRelativeUriString (string oldTabFullName, string newTabFullName)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace (oldTabFullName) == false)
+                {
+                    if (string.IsNullOrWhiteSpace (newTabFullName) == false)
+                    {
+                        Uri fromUri = new Uri (oldTabFullName);
+                        Uri toUri = new Uri (newTabFullName);
+
+                        if (fromUri.Scheme == toUri.Scheme) // path can't be made relative.
+                        {
+
+                            Uri relativeUri = fromUri.MakeRelativeUri (toUri);
+                            String relativePath = Uri.UnescapeDataString (relativeUri.ToString ());
+                            return relativePath;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return String.Empty;
+        }
+
         public void SetHighlighting(string name)
         {
             textEditorControl.SetHighlighting(name);

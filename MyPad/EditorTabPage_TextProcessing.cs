@@ -55,12 +55,49 @@ namespace MyPad
             var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
 
             // Get selected text
-            string text = textArea.SelectionManager.SelectedText;
+            string strSelectedText = textArea.SelectionManager.SelectedText;
+            string textOfHref = strSelectedText.Trim ();
+            // remove quotes which was selected by accident
+            while (textOfHref.StartsWith ("\""))
+                textOfHref = textOfHref.Substring (1);
+            while (textOfHref.EndsWith ("\""))
+                textOfHref = textOfHref.Substring (0, textOfHref.Length - 1);
+            
+            string textOfWholeTag = (HttpUtility.UrlDecode(strSelectedText)).Trim(); // Decoded URL
+
+            try
+            {
+                var url = new Uri(textOfHref);
+                //if ("file".CompareTo (url.Scheme.ToLower ()) == 0)
+                if (url.IsFile)
+                {
+                    string pathToSource = this.GetFileFullPathAndName ();
+
+                    string pathToTarget = url.AbsolutePath;
+
+                    // replace text of link with title
+                    if (Program.GetMainForm().Exists(pathToTarget))
+                    {
+                        textOfWholeTag = Program.GetTextTitleFromFile(pathToTarget);
+                    }
+
+                    var relUri = GetRelativeUriString (pathToSource, pathToTarget);
+                    if (string.IsNullOrWhiteSpace(relUri) == false)
+                    {
+                            textOfHref = relUri; // replace href of link
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // invalid url exception during parsing in Uri constructor
+                Trace.WriteLine(ex.ToString());
+            }
 
             IFilePath hyperLinkAddressPath = null;
             try
             {
-                hyperLinkAddressPath = text.ToFilePath();
+                hyperLinkAddressPath = textOfHref.ToFilePath();
             }
             catch (Exception ex)
             {
@@ -68,31 +105,38 @@ namespace MyPad
             }
 
 
-            StringBuilder newContentForInsertion = new StringBuilder(text.Length * 2 + 20);
+            StringBuilder newContentForInsertion = new StringBuilder(strSelectedText.Length * 2 + 20);
 
             if (hyperLinkAddressPath != null) // This is an existing local file
             {
                 var hyperLinkAddress = hyperLinkAddressPath.ToString(); // Normalized path
                 if (hyperLinkAddressPath.IsRelativePath)
                 {
-                    newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, hyperLinkAddress);
-                } else 
-                if (hyperLinkAddressPath.IsAbsolutePath)
+                    newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, textOfWholeTag);
+                }
+                else 
                 {
-                    // convert path to relative
-                    newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, hyperLinkAddress);
+                    if (hyperLinkAddressPath.IsAbsolutePath)
+                    {
+                        // convert path to relative
+                        newContentForInsertion.AppendFormat ("<a href=\"{0}\">{1}</a>", hyperLinkAddress, textOfWholeTag);
+                    }
                 }
             }
             else // this is a new local file, or URL or mail address
             {
-                string innerHtml = (HttpUtility.UrlDecode(text)).Trim(); // Decoded URL
-                StringBuilder hyperlink = new StringBuilder(text.Trim(), text.Length * 2 + 20);
+                StringBuilder hyperlink = new StringBuilder(textOfHref, textOfHref.Length * 2 + 20);
 
-                bool endsLikeHtmlPage = hyperlink.ToString ().ToLower ().EndsWith (".htm");
-
-                if (text.Contains("/") == false)
+                if (textOfHref.IndexOf (".") < 0)
                 {
-                    if (text.Contains("@"))
+                    hyperlink.Append(".htm");
+                }
+
+                bool endsLikeHtmlPage = hyperlink.ToString().ToLower().EndsWith (".htm");
+
+                if (textOfHref.Contains("/") == false)
+                {
+                    if (textOfHref.Contains("@"))
                     {
                         hyperlink.Insert(0, "mailto:");
                     }
@@ -104,18 +148,18 @@ namespace MyPad
                         }
                     }
                 }
-                var hyperLinkAddress = hyperlink.ToString();
+                textOfHref = hyperlink.ToString();
 
-                int idxSeparator = hyperLinkAddress.IndexOfAny (new char[]{'/','\\'});
-                int idxPoint = hyperLinkAddress.IndexOfAny (new char[]{'.'});
+                int idxSeparator = textOfHref.IndexOfAny (new char[]{'/','\\'});
+                int idxPoint = textOfHref.IndexOfAny (new char[]{'.'});
 
-                if (idxSeparator < idxPoint || hyperLinkAddress.Contains(":") || endsLikeHtmlPage)
+                if (idxSeparator < idxPoint || textOfHref.Contains(":") || endsLikeHtmlPage)
                 {
-                    newContentForInsertion.AppendFormat("<a href=\"{0}\">{1}</a>", hyperLinkAddress, innerHtml);
+                    newContentForInsertion.AppendFormat("<a href=\"{0}\">{1}</a>", textOfHref, textOfWholeTag);
                 }
                 else
                 {
-                    newContentForInsertion.AppendFormat("<a href=\"https://{0}\">{1}</a>", hyperLinkAddress, innerHtml);
+                    newContentForInsertion.AppendFormat("<a href=\"https://{0}\">{1}</a>", textOfHref, textOfWholeTag);
                 }
             }
 

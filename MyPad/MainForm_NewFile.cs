@@ -40,7 +40,7 @@ namespace MyPad
             {
                 string name = newTabName = string.Format("Untitled{0}", tabControl1.GetUntitledTabCount());
                 // name = nearestInternalLink;
-                string fullPath = Path.Combine(etb.ToolTipText, name);
+                string fullPath = Path.Combine(etb.GetFileFullPathAndName(), name);
                 if (File.Exists(fullPath))
                 {
                     InternalOpenFile(fullPath);
@@ -51,9 +51,8 @@ namespace MyPad
                 // поэтому не сохранять молча уже нельзя
             }
 
-            var oldName = currentActiveTab == null ? String.Empty : currentActiveTab.ToolTipText;
-            var relPath = GetRelativeUriString (oldName, newTabName);
-            etb.Editor.Text = GetDefaultTemplateText(newTabName, relPath);
+            var oldName = currentActiveTab == null ? String.Empty : currentActiveTab.GetFileFullPathAndName();
+            etb.Editor.Text = Program.GetDefaultTemplateText(newTabName, oldName, newTabName);
             etb.IsSavingNecessary = bSavingNecessary;
             etb.SetFileName(newTabName);
 
@@ -109,24 +108,6 @@ namespace MyPad
             return null;
         }
 
-        private string GetDefaultTemplateText(string caption, string relativeUri)
-        {
-            var links = new StringBuilder();
-            links.AppendFormat("<a href=\"{0}\">{1}</a>", "index.htm", "topic1");
-
-            var par = new StringBuilder();
-            par.AppendFormat("title={0}", Uri.EscapeDataString(caption));
-            par.Append("&");
-            par.AppendFormat("header={0}", Uri.EscapeDataString(caption));
-            par.Append("&");
-
-            var escapedString = Uri.EscapeDataString (links.ToString ());
-            par.AppendFormat("links={0}", escapedString);
-            // A potentially dangerous Request.QueryString value was detected from the client
-
-            string text = TemplateEngine2.ProcessRequest("Text1.aspx", par.ToString());
-            return text;
-        }
     }
 }
 
