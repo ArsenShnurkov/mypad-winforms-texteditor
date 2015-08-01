@@ -27,35 +27,11 @@ namespace MyPad.RemotingIpcChannel
             ChannelServices.UnregisterChannel(serverChannel);
         }
 
-        //static bool useLocalWrapper = false;
-        static bool useLocalWrapper = true;
-
         string GetChannelName()
         {
-            if (useLocalWrapper)
-            {
-                var homeFolder = GetHomeFolder ();
-                var res = Path.Combine (homeFolder, ".mypad_channel");
-                return res;
-
-            } else
-            {
-                return Environment.UserName;
-            }
-        }
-
-        string GetClientChannelName()
-        {
-            var spid = Process.GetCurrentProcess ().Id.ToString ();
-            if (useLocalWrapper)
-            {
-                var homeFolder = GetHomeFolder ();
-                var res = Path.Combine (homeFolder, spid);
-                return res;
-            } else
-            {
-                return spid;
-            }
+            var homeFolder = GetHomeFolder ();
+            var res = Path.Combine (homeFolder, ".mypad_channel");
+            return res;
         }
 
         string GetObjectName()
@@ -66,8 +42,7 @@ namespace MyPad.RemotingIpcChannel
 
         public bool PassCommand(string filename, string encoding)
         {
-            var name = GetClientChannelName();
-            var clientChanel = new LocalIpcChannel(name);
+            var clientChanel = new LocalIpcChannel();
             ChannelServices.RegisterChannel(clientChanel, false); 
             var u = "ipc://" + GetChannelName() + "/" + GetObjectName();
             IMyPadServer obj = (IMyPadServer)Activator.GetObject(typeof(IMyPadServer),u);
