@@ -9,7 +9,6 @@
     <RootNamespace>MyPad</RootNamespace>
     <AssemblyName>MyPad</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>MyPad.Program</StartupObject>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
@@ -21,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Commandlineparameters>file:///mnt/LIFE/life/index.htm</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -110,7 +110,6 @@
     <Compile Include="InformationBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Dialogs\AboutDialog.resx">
       <DependentUpon>AboutDialog.cs</DependentUpon>
@@ -176,6 +175,14 @@
       <SubType>Component</SubType>
     </Compile>
     <None Include="packages.config" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="RPC_for_SingleInstance\LocalIpcChannel.cs" />
+    <Compile Include="RPC_for_SingleInstance\LocalUnixIpcChannel.cs" />
+    <Compile Include="RPC_for_SingleInstance\LocalUnixIpcServerChannel.cs" />
+    <Compile Include="RPC_for_SingleInstance\LocalUnixChannelLoader.cs" />
+    <Compile Include="RPC_for_SingleInstance\LocalUnixIpcClientChannel.cs" />
+    <Compile Include="RPC_for_SingleInstance\LocalIpcChannelHelper.cs" />
+    <Compile Include="RPC_for_SingleInstance\LocalConsts.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
