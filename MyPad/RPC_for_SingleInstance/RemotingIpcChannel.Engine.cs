@@ -3,7 +3,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting;
 
@@ -11,10 +10,11 @@ namespace MyPad.RemotingIpcChannel
 {
     public class Engine : MarshalByRefObject, ICommunicationMechanism, IMyPadServer
     {
-        IpcChannel serverChannel;
+        LocalIpcChannel serverChannel;
         public void Start()
         {
-            serverChannel = new IpcChannel(GetChannelName());
+            var name = GetChannelName ();
+            serverChannel = new LocalIpcChannel(name);
             ChannelServices.RegisterChannel(serverChannel, false);
             RemotingConfiguration.RegisterWellKnownServiceType(
                 this.GetType(),
@@ -27,31 +27,60 @@ namespace MyPad.RemotingIpcChannel
             ChannelServices.UnregisterChannel(serverChannel);
         }
 
+        //static bool useLocalWrapper = false;
+        static bool useLocalWrapper = true;
+
         string GetChannelName()
         {
-            return Environment.UserName;
+            if (useLocalWrapper)
+            {
+                var homeFolder = GetHomeFolder ();
+                var res = Path.Combine (homeFolder, ".mypad_channel");
+                return res;
+
+            } else
+            {
+                return Environment.UserName;
+            }
+        }
+
+        string GetClientChannelName()
+        {
+            var spid = Process.GetCurrentProcess ().Id.ToString ();
+            if (useLocalWrapper)
+            {
+                var homeFolder = GetHomeFolder ();
+                var res = Path.Combine (homeFolder, spid);
+                return res;
+            } else
+            {
+                return spid;
+            }
         }
 
         string GetObjectName()
         {
-            return "object2";
+            return "object3";
         }
+
 
         public bool PassCommand(string filename, string encoding)
         {
-            IpcChannel clientChanel = new IpcChannel("myClient");
+            var name = GetClientChannelName();
+            var clientChanel = new LocalIpcChannel(name);
             ChannelServices.RegisterChannel(clientChanel, false); 
-            IMyPadServer obj = (IMyPadServer)Activator.GetObject(
-                typeof(IMyPadServer),
-                "ipc://" + GetChannelName() + "/" + GetObjectName());
+            var u = "ipc://" + GetChannelName() + "/" + GetObjectName();
+            IMyPadServer obj = (IMyPadServer)Activator.GetObject(typeof(IMyPadServer),u);
             try
             {
-            obj.OpenPage(filename, encoding);
+                obj.OpenPage(filename, encoding);
                 return true;
             }
-            catch (RemotingException)
+            catch (RemotingException ex)
             {
                 // Connection refused
+                // error code -2146233087 = 0x80131501 (Failed to connect to server)
+                Trace.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -64,8 +93,21 @@ namespace MyPad.RemotingIpcChannel
         {
             Trace.WriteLine("Request received");
             Console.WriteLine("Request received");
-            var form = Program.GetMainForm();
+            var form = Globals.GetMainForm();
             form.InvokeOpenFile(pageUrl);
+        }
+
+        string GetHomeFolder()
+        {
+            if (Globals.IsLinux)
+            {
+                var res = Environment.GetEnvironmentVariable ("HOME");
+                return res;
+            } else
+            {
+                var res = Environment.GetEnvironmentVariable ("HOMEDRIVE") + Environment.GetEnvironmentVariable ("HOMEPATH");
+                return res;
+            }
         }
     }
     public interface IMyPadServer
