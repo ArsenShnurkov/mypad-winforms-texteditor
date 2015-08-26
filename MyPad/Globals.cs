@@ -80,17 +80,23 @@ namespace MyPad
 
         public static string GetDefaultTemplateText(string targetFilename, string caption, string sourceFilename)
         {
+            var filenameOnly = Path.GetFileName(targetFilename);
+            var filepathOnly = Path.GetDirectoryName(targetFilename);
             //string relativeUri = EditorTabPage.GetRelativeUriString (sourceFilename, targetFilename);
             string backlink = EditorTabPage.GetRelativeUriString (targetFilename, sourceFilename);
 
             var links = new StringBuilder();
             links.AppendFormat("<a href=\"{0}\">{1}</a>", backlink, GetTextTitleFromFile(sourceFilename));
             string defaultDocumentName = Globals.DefaultIndexFileName;
-            if (defaultDocumentName.CompareTo (backlink) != 0 && defaultDocumentName.CompareTo(targetFilename) != 0)
+            if ( defaultDocumentName.CompareTo(filenameOnly) != 0 // If we create a page link from index.htm, there is no need to add it twice
+                && defaultDocumentName.CompareTo (backlink) != 0 // If we create **/index.htm, there is no need to link to itself
+            )
             {
+                var indexfullpath = Path.Combine (filepathOnly, defaultDocumentName);
+                var indextitle = GetTextTitleFromFile (indexfullpath);
                 links.Append (",");
                 links.Append (Environment.NewLine);
-                links.AppendFormat("<a href=\"{0}\">{1}</a>", defaultDocumentName, GetTextTitleFromFile(defaultDocumentName));
+                links.AppendFormat("<a href=\"{0}\">{1}</a>", defaultDocumentName, indextitle);
             }
 
             var par = new StringBuilder();
