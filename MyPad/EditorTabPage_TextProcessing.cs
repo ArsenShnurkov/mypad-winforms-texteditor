@@ -76,9 +76,9 @@ namespace MyPad
                     string pathToTarget = url.AbsolutePath;
 
                     // replace text of link with title
-                    if (Program.GetMainForm().Exists(pathToTarget))
+                    if (Globals.GetMainForm().Exists(pathToTarget))
                     {
-                        textOfWholeTag = Program.GetTextTitleFromFile(pathToTarget);
+                        textOfWholeTag = Globals.GetTextTitleFromFile(pathToTarget);
                     }
 
                     var relUri = GetRelativeUriString (pathToSource, pathToTarget);
@@ -129,6 +129,8 @@ namespace MyPad
 
                 if (textOfHref.IndexOf (".") < 0)
                 {
+                    hyperlink.Replace (' ', '-');
+                    hyperlink.Replace (':', '_');
                     hyperlink.Append(".htm");
                 }
 

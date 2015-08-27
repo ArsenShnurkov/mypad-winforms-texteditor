@@ -60,7 +60,7 @@ namespace MyPad
             string newName = etb.Editor.ActiveTextAreaControl.SelectionManager.SelectedText;
             if (string.IsNullOrEmpty(newName))
             {
-                newName = Program.DefaultIndexFileName; // "index.htm"
+                newName = Globals.DefaultIndexFileName; // "index.htm"
             }
             FileInfo finfo = new FileInfo(etb.GetFileFullPathAndName());
             string proposedFileName = Path.Combine(finfo.DirectoryName, newName);
@@ -155,7 +155,7 @@ namespace MyPad
             // Create content
             EditorTabPage currentActiveTab = GetActiveTab();
             string sourceFilename = currentActiveTab.GetFileFullPathAndName ();
-            etb.Editor.Text = Program.GetDefaultTemplateText(targetFilename, title, sourceFilename);
+            etb.Editor.Text = Globals.GetDefaultTemplateText(targetFilename, title, sourceFilename);
 
             // setup event handlers
             etb.Editor.DragEnter += new DragEventHandler(tabControl1_DragEnter);

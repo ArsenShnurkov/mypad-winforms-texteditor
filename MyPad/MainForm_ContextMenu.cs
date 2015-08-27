@@ -60,7 +60,7 @@ namespace MyPad
             EditorTabPage etb = GetActiveTab();
             if (etb != null)
             {
-                Program.TextClipboard.CopyTextToClipboard(etb.GetFileFullPathAndName(), false);
+                Globals.TextClipboard.CopyTextToClipboard(etb.GetFileFullPathAndName(), false);
             }
         }
 
@@ -73,11 +73,11 @@ namespace MyPad
                 FileInfo fi = new FileInfo(fileFullPathAndName);
                 if (fileFullPathAndName.Contains(Path.DirectorySeparatorChar))
                 {
-                    Program.TextClipboard.CopyTextToClipboard(fi.DirectoryName, false);
+                    Globals.TextClipboard.CopyTextToClipboard(fi.DirectoryName, false);
                 }
                 else
                 {
-                    Program.TextClipboard.CopyTextToClipboard("./", false);
+                    Globals.TextClipboard.CopyTextToClipboard("./", false);
                 }
             }
         }

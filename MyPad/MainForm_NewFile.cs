@@ -52,7 +52,7 @@ namespace MyPad
             }
 
             var oldName = currentActiveTab == null ? String.Empty : currentActiveTab.GetFileFullPathAndName();
-            etb.Editor.Text = Program.GetDefaultTemplateText(newTabName, oldName, newTabName);
+            etb.Editor.Text = Globals.GetDefaultTemplateText(newTabName, oldName, newTabName);
             etb.IsSavingNecessary = bSavingNecessary;
             etb.SetFileName(newTabName);
 

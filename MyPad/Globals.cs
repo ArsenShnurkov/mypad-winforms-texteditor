@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace MyPad
 {
-    static class Program
+    static class Globals
     {
         public static readonly string DefaultIndexFileName = "index.htm";
         public static TextClipboard TextClipboard = new TextClipboard();
@@ -31,7 +31,14 @@ namespace MyPad
                 file = args[0].Trim();
                 if (File.Exists(file) == false)
                 {
-                    file = string.Empty;
+                    var u = new Uri (file);
+                    if (u.IsFile && File.Exists (u.AbsolutePath))
+                    {
+                        file = u.AbsolutePath;
+                    } else
+                    {
+                        file = string.Empty;
+                    }
                 }
             }
 
@@ -46,7 +53,7 @@ namespace MyPad
                 }
             }
 
-            if (file != null && file != string.Empty)
+            if (!string.IsNullOrWhiteSpace(file))
             {
                 if (cf.PassCommand(file, encoding))
                 {
@@ -73,17 +80,23 @@ namespace MyPad
 
         public static string GetDefaultTemplateText(string targetFilename, string caption, string sourceFilename)
         {
+            var filenameOnly = Path.GetFileName(targetFilename);
+            var filepathOnly = Path.GetDirectoryName(targetFilename);
             //string relativeUri = EditorTabPage.GetRelativeUriString (sourceFilename, targetFilename);
             string backlink = EditorTabPage.GetRelativeUriString (targetFilename, sourceFilename);
 
             var links = new StringBuilder();
             links.AppendFormat("<a href=\"{0}\">{1}</a>", backlink, GetTextTitleFromFile(sourceFilename));
-            string defaultDocumentName = Program.DefaultIndexFileName;
-            if (defaultDocumentName.CompareTo (backlink) != 0 && defaultDocumentName.CompareTo(targetFilename) != 0)
+            string defaultDocumentName = Globals.DefaultIndexFileName;
+            if ( defaultDocumentName.CompareTo(filenameOnly) != 0 // If we create a page link from index.htm, there is no need to add it twice
+                && defaultDocumentName.CompareTo (backlink) != 0 // If we create **/index.htm, there is no need to link to itself
+            )
             {
+                var indexfullpath = Path.Combine (filepathOnly, defaultDocumentName);
+                var indextitle = GetTextTitleFromFile (indexfullpath);
                 links.Append (",");
                 links.Append (Environment.NewLine);
-                links.AppendFormat("<a href=\"{0}\">{1}</a>", defaultDocumentName, GetTextTitleFromFile(defaultDocumentName));
+                links.AppendFormat("<a href=\"{0}\">{1}</a>", defaultDocumentName, indextitle);
             }
 
             var par = new StringBuilder();
@@ -144,6 +157,23 @@ namespace MyPad
                 return match.Groups[1].Value;
             }
             return string.Empty;
+        }
+
+
+        internal static bool IsUnix
+        {
+            get { 
+                int p = (int) Environment.OSVersion.Platform;
+                return ((p == 4) || (p == 128) || (p == 6));
+            }
+        }
+
+        public static bool IsLinux
+        {
+            get {
+                bool isLinux = System.IO.Path.DirectorySeparatorChar == '/';
+                return isLinux;
+            }
         }
     }
 }

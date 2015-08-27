@@ -194,9 +194,16 @@ namespace MyPad
         }
 
         delegate void InternalOpenFileDelegate(string fileToLoad);
+
         internal void InvokeOpenFile(string fileToLoad)
         {
-            base.Invoke(new InternalOpenFileDelegate(this.InternalOpenFile), new object[]{ fileToLoad });
+            if (this.InvokeRequired)
+            {
+                base.Invoke (new InternalOpenFileDelegate (this.InternalOpenFile), new object[]{ fileToLoad });
+            } else
+            {
+                this.InternalOpenFile (fileToLoad);
+            }
         }
 
         protected override void OnLoad(EventArgs e)
