@@ -183,6 +183,20 @@
     <Compile Include="RPC_for_SingleInstance\LocalUnixIpcClientChannel.cs" />
     <Compile Include="RPC_for_SingleInstance\LocalIpcChannelHelper.cs" />
     <Compile Include="RPC_for_SingleInstance\LocalConsts.cs" />
+    <Compile Include="Language\English\Alphabet.cs" />
+    <Compile Include="Language\Russian\Alphabet.cs" />
+    <Compile Include="Language\Russian\Register.cs" />
+    <Compile Include="Language\Russian\CharDrawing.cs" />
+    <Compile Include="Language\Russian\Character.cs" />
+    <Compile Include="Language\Russian\Letter.cs" />
+    <Compile Include="Language\Russian\Digit.cs" />
+    <Compile Include="Language\Russian\PunctuationMark.cs" />
+    <Compile Include="Language\Indian\Alphabet.cs" />
+    <Compile Include="Language\English\Letter.cs" />
+    <Compile Include="Language\English\Character.cs" />
+    <Compile Include="Language\Russian\TranscriptionFromEnglish.cs" />
+    <Compile Include="Language\Russian\Sounds.cs" />
+    <Compile Include="Language\English\TransliterationFromRussian.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
@@ -212,6 +226,13 @@
     <Folder Include="RPC_for_SingleInstance\" />
     <Folder Include="Template_Engine\" />
     <Folder Include="Resources\" />
+    <Folder Include="Language\" />
+    <Folder Include="Language\Greek\" />
+    <Folder Include="Language\English\" />
+    <Folder Include="Language\Russian\" />
+    <Folder Include="Language\Chinese\" />
+    <Folder Include="Language\Indian\" />
+    <Folder Include="Language\_Transcriptions\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

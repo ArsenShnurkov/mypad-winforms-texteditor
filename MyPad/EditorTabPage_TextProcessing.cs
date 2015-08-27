@@ -129,6 +129,8 @@ namespace MyPad
 
                 if (textOfHref.IndexOf (".") < 0)
                 {
+                    hyperlink.Replace (' ', '-');
+                    hyperlink.Replace (':', '_');
                     hyperlink.Append(".htm");
                 }
 
