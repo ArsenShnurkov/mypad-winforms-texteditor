@@ -53,9 +53,10 @@ namespace MyPad.RemotingIpcChannel
             }
             catch (RemotingException ex)
             {
+                Trace.WriteLine (ex);
                 // Connection refused
                 // error code -2146233087 = 0x80131501 (Failed to connect to server)
-                Trace.WriteLine(ex.ToString());
+                //Trace.WriteLine(ex.ToString());
                 return false;
             }
             finally
