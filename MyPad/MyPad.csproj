@@ -68,6 +68,7 @@
       <HintPath>..\packages\NDepend.Path.1.0.0\lib\net40\NDepend.Path.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\AboutDialog.cs">
@@ -199,6 +200,22 @@
     <Compile Include="Language\Russian\TranscriptionFromEnglish.cs" />
     <Compile Include="Language\Russian\Sounds.cs" />
     <Compile Include="Language\English\TransliterationFromRussian.cs" />
+    <Compile Include="Dialogs\Syndication\EntriesListDialog.cs" />
+    <Compile Include="Dialogs\Syndication\EntryCreateOrEditDialog.cs" />
+    <EmbeddedResource Include="Dialogs\Syndication\EntriesListDialog.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EntriesListDialog.Designer.cs</LastGenOutput>
+      <DependentUpon>EntriesListDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Dialogs\Syndication\EntriesListDialog.Designer.cs">
+      <DependentUpon>EntriesListDialog.cs</DependentUpon>
+    </Compile>
+    <None Include="Dialogs\Syndication\EntryCreateOrEditDialog.resx">
+      <DependentUpon>EntryCreateOrEditDialog.cs</DependentUpon>
+    </None>
+    <Compile Include="Dialogs\Syndication\EntryCreateOrEditDialog.Designer.cs">
+      <DependentUpon>EntryCreateOrEditDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
@@ -235,6 +252,7 @@
     <Folder Include="Language\Chinese\" />
     <Folder Include="Language\Indian\" />
     <Folder Include="Language\_Transcriptions\" />
+    <Folder Include="Dialogs\Syndication\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
