@@ -216,6 +216,15 @@
     <Compile Include="Dialogs\Syndication\EntryCreateOrEditDialog.Designer.cs">
       <DependentUpon>EntryCreateOrEditDialog.cs</DependentUpon>
     </Compile>
+    <None Include="Resources\AtomFeedIcon.svg" />
+    <Compile Include="Resources\AtomFeedIcon.Designer.cs">
+      <DependentUpon>AtomFeedIcon.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Resources\AtomFeedIcon.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AtomFeedIcon.Designer.cs</LastGenOutput>
+      <LogicalName>Resources.AtomFeedIcon.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">

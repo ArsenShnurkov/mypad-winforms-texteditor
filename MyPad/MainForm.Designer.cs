@@ -863,7 +863,7 @@
             // 
             // atomFeedEditorToolStripMenuItem
             // 
-            this.atomFeedEditorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("AtomFeedEditorToolStripMenuItem.Image")));
+            this.atomFeedEditorToolStripMenuItem.Image = AtomFeedIcon.AtomFeedEditorToolStripMenuItem_16x16_Image;
             this.atomFeedEditorToolStripMenuItem.Name = "atomFeedEditorToolStripMenuItem";
             this.atomFeedEditorToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.atomFeedEditorToolStripMenuItem.Text = "ATOM feed editor";
