@@ -105,18 +105,34 @@
             listView1.Width = listView1.Parent.Width - 3 * formSpacing - maxWidth;
             listView1.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
             listView1.View = View.Details;
-            listView1.Columns.Add("Index", -2, HorizontalAlignment.Left);
-            listView1.Columns.Add("URL", -2, HorizontalAlignment.Left);
-            for (int i = 0; i < 5; ++i)
-            {
-                var it = new ListViewItem (i.ToString ());
-                it.Tag = i;
-                it.SubItems.Add ("item text " + i.ToString());
-                listView1.Items.Add (it);
-            }
+
+            var chSeq = new ColumnHeader ();
+            chSeq.Tag = "Seq";;
+            chSeq.Text = "Seq";
+            listView1.Columns.Add(chSeq);
+
+            var chPublished = new ColumnHeader ();
+            chPublished.Tag = "Published";;
+            chPublished.Text = "Published";
+            listView1.Columns.Add(chPublished);
+
+            var chUpdated = new ColumnHeader ();
+            chUpdated.Tag = "Updated";;
+            chUpdated.Text = "Updated";
+            listView1.Columns.Add(chUpdated);
+
+            var chTitle = new ColumnHeader ();
+            chTitle.Tag = "Title";
+            chTitle.Text = "Title";
+            listView1.Columns.Add(chTitle);
+
+            var chURL = new ColumnHeader ();
+            chURL.Tag = "URL";
+            chURL.Text = "URL";
+            listView1.Columns.Add(chURL);
+
             listView1.FullRowSelect = true;
             listView1.HideSelection = false;
-            listView1.Items[0].Selected = true;
             listView1.ClientSizeChanged += (object sender, EventArgs e) => {
                 int total = 0;
                 ColumnHeader last = null;

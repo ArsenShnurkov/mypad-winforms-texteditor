@@ -16,51 +16,11 @@ namespace MyPad.Dialogs
         {
             InitializeComponent();
 
-            // вычисление пути до файла конфига в пользовательской директории
-            StringBuilder location = new StringBuilder("${SpecialFolder.LocalApplicationData}/${AssemblyProduct}/${AssemblyTitle}.config");
-            // roaming
-            location.Replace ("${SpecialFolder.ApplicationData}", System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData));
-            // local
-            location.Replace ("${SpecialFolder.LocalApplicationData}", System.Environment.GetFolderPath (System.Environment.SpecialFolder.LocalApplicationData));
-            location.Replace ("${AssemblyProduct}", Globals.AssemblyProduct);
-            location.Replace ("${AssemblyTitle}", Globals.AssemblyTitle);
-            var filename = location.ToString ();
-            Globals.EnsureDirectoryExists (filename);
-            if (false == File.Exists (filename))
-            {
-                CreateDefaultConfig (filename);
-            }
-            for (;;)
-            {
-                try
-                {
-                    cfg = Get (filename);
-                    CopySettingsIntoControls();
-                    break;
-                } catch (Exception ex)
-                {
-                    Trace.WriteLine (ex.ToString ());
-                    CreateDefaultConfig (filename);
-                    continue;
-                }
-            }
+            cfg = Globals.LoadConfiguration ();
+
+            CopySettingsIntoControls();
         }
 
-        // http://stackoverflow.com/questions/453161/best-practice-to-save-application-settings-in-a-windows-forms-application
-        void CreateDefaultConfig(string filename)
-        {
-            // ConfigurationManager
-            var cfg = Get(filename);
-            cfg.AppSettings.Settings.Add ("AtomFeedLocation", "/var/calculate/remote/distfiles/egit-src/blog/notifications.atom");
-            cfg.Save ();
-        }
-
-        public Configuration Get(string fileName)
-        {
-            var fileMap = new ExeConfigurationFileMap { ExeConfigFilename = fileName };
-            var cfg = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
-            return cfg;
-        }
 
         protected override void OnLoad(EventArgs e)
         {
