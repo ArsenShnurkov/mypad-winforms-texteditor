@@ -11,6 +11,7 @@
     <FileAlignment>512</FileAlignment>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,7 +59,7 @@
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web" />
     <Reference Include="ICSharpCode.TextEditor">
-      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.2\lib\net40\ICSharpCode.TextEditor.dll</HintPath>
+      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.2\lib\net45\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
     <Reference Include="NDepend.Path">
       <HintPath>..\packages\NDepend.Path.1.0.0\lib\net40\NDepend.Path.dll</HintPath>
@@ -174,7 +175,6 @@
     <Compile Include="EditorTabPage_TextProcessing.cs">
       <SubType>Component</SubType>
     </Compile>
-    <None Include="packages.config" />
     <Compile Include="Globals.cs" />
     <Compile Include="RPC_for_SingleInstance\LocalIpcChannel.cs" />
     <Compile Include="RPC_for_SingleInstance\LocalUnixIpcChannel.cs" />
@@ -197,6 +197,7 @@
     <Compile Include="Language\Russian\TranscriptionFromEnglish.cs" />
     <Compile Include="Language\Russian\Sounds.cs" />
     <Compile Include="Language\English\TransliterationFromRussian.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
