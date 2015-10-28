@@ -58,9 +58,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web" />
-    <Reference Include="ICSharpCode.TextEditor">
-      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.2\lib\net40\ICSharpCode.TextEditor.dll</HintPath>
-    </Reference>
     <Reference Include="NDepend.Path">
       <HintPath>..\packages\NDepend.Path.1.0.0\lib\net40\NDepend.Path.dll</HintPath>
     </Reference>
@@ -69,6 +66,9 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="ICSharpCode.TextEditor">
+      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.2\lib\net45\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\AboutDialog.cs">

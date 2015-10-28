@@ -16,7 +16,15 @@ namespace MyPad
         public EntriesListDialog ()
         {
             InitializeComponent();
+            try
+            {
             FillItems ();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine (ex.ToString ());
+                // supress
+            }
         }
 
         void CreateNewEntry_Click (object sender, EventArgs e)
