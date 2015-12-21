@@ -66,9 +66,6 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="ICSharpCode.TextEditor">
-      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.2\lib\net45\ICSharpCode.TextEditor.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\AboutDialog.cs">
@@ -273,4 +270,10 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ICSharpCode.TextEditor.git\Project\ICSharpCode.TextEditor.csproj">
+      <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
