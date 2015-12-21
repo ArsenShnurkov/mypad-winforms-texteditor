@@ -76,7 +76,8 @@
             this.wrapInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.findAndReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findAndReplaceRegExToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findAndReplaceRawToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -493,9 +494,11 @@
             // searchToolStripMenuItem
             // 
             this.searchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.findToolStripMenuItem,
-            this.findNextToolStripMenuItem,
-            this.findAndReplaceToolStripMenuItem});
+                this.findToolStripMenuItem,
+                this.findNextToolStripMenuItem,
+                this.findAndReplaceRegExToolStripMenuItem,
+                this.findAndReplaceRawToolStripMenuItem,
+            });
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
             this.searchToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.searchToolStripMenuItem.Text = "Search";
@@ -508,14 +511,23 @@
             this.findNextToolStripMenuItem.Text = "Find Next";
             this.findNextToolStripMenuItem.Click += new System.EventHandler(this.findNextToolStripMenuItem_Click);
             // 
-            // findAndReplaceToolStripMenuItem
+            // findAndReplaceRegExToolStripMenuItem
             // 
-            this.findAndReplaceToolStripMenuItem.Name = "findAndReplaceToolStripMenuItem";
-            this.findAndReplaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.findAndReplaceRegExToolStripMenuItem.Name = "findAndReplaceRegExToolStripMenuItem";
+            this.findAndReplaceRegExToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.F)));
-            this.findAndReplaceToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
-            this.findAndReplaceToolStripMenuItem.Text = "Find and Replace";
-            this.findAndReplaceToolStripMenuItem.Click += new System.EventHandler(this.findAndReplaceToolStripMenuItem_Click);
+            this.findAndReplaceRegExToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.findAndReplaceRegExToolStripMenuItem.Text = "Find and Replace RegEx";
+            this.findAndReplaceRegExToolStripMenuItem.Click += new System.EventHandler(this.findAndReplaceRegExToolStripMenuItem_Click);
+            // 
+            // findAndReplaceRawToolStripMenuItem
+            // 
+            this.findAndReplaceRawToolStripMenuItem.Name = "findAndReplaceRawToolStripMenuItem";
+            this.findAndReplaceRawToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control)
+                | System.Windows.Forms.Keys.H)));
+            this.findAndReplaceRawToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.findAndReplaceRawToolStripMenuItem.Text = "Find and Replace raw";
+            this.findAndReplaceRawToolStripMenuItem.Click += new System.EventHandler(this.findAndReplaceRawToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -951,7 +963,8 @@
         private System.Windows.Forms.ToolStripMenuItem MakeH6ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem findAndReplaceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem findAndReplaceRegExToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem findAndReplaceRawToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;

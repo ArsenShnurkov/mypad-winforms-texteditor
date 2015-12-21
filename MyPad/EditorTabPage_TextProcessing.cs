@@ -55,6 +55,57 @@ namespace MyPad
             textArea.Caret.UpdateCaretPosition ();*/
         }
 
+        bool FindAdReplaceByRegexps(string search, string replacement, RegexOptions options)
+        {
+            textEditorControl.Document.UndoStack.StartUndoGroup ();
+            try {
+                Regex regex = new Regex(search, options);
+
+                MatchCollection matches = regex.Matches(textEditorControl.Text);
+
+                for (int i = matches.Count - 1; i >= 0; i--)
+                {
+                    Match m = matches[i];
+
+                    string find = m.Value;
+                    string replace = regex.Replace(find, replacement);
+                    textEditorControl.Document.Replace(
+                        m.Index,
+                        m.Length,
+                        replace);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // suppress compilation error, search for raw text instead
+                Trace.WriteLine (ex.ToString ());
+                textEditorControl.Document.UndoStack.EndUndoGroup ();
+                textEditorControl.Document.UndoStack.Undo ();
+                return false;
+            }
+            textEditorControl.Document.UndoStack.EndUndoGroup ();
+            return true;
+        }
+
+        void FindAdReplaceRaw(string search, string replacement, RegexOptions options/*not used*/)
+        {
+            textEditorControl.Document.UndoStack.StartUndoGroup ();
+            var positions = new List<int> ();
+            int pos = textEditorControl.Text.IndexOf (search);
+            for (; pos >= 0; pos = textEditorControl.Text.IndexOf (search, pos + search.Length))
+            {
+                positions.Add (pos);
+            }
+            for (int i = positions.Count - 1; i >= 0; i--)
+            {
+                textEditorControl.Document.Replace(
+                    positions[i],
+                    search.Length,
+                    replacement);
+            }
+            textEditorControl.Document.UndoStack.EndUndoGroup ();
+        }
+
         public void EnchanceHyperlink()
         {
 

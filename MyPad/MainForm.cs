@@ -668,16 +668,32 @@ namespace MyPad
             }
         }
 
-        private void findAndReplaceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void findAndReplaceRegExToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EditorTabPage etb = GetActiveTab();
 
             if (etb != null)
             {
                 findReplaceDialog.SetFocusOnSearchTextField();
+                findReplaceDialog.Text += " RegEx";
                 if (findReplaceDialog.ShowDialog() == DialogResult.OK)
                 {
-                    etb.FindAndReplace(findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
+                    etb.FindAndReplaceRegEx(findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
+                }
+            }
+        }
+
+        private void findAndReplaceRawToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                findReplaceDialog.SetFocusOnSearchTextField();
+                findReplaceDialog.Text += " Raw";
+                if (findReplaceDialog.ShowDialog() == DialogResult.OK)
+                {
+                    etb.FindAndReplaceRaw(findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
                 }
             }
         }
