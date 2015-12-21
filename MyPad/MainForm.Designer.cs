@@ -46,6 +46,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.enchanceHyperlinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enchanceImagelinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertTextToHtmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MakeBoldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MakeSelectionRedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MakeBRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -277,6 +278,14 @@
             this.enchanceImagelinkToolStripMenuItem.Text = "Enchance Imagelink";
             this.enchanceImagelinkToolStripMenuItem.Click += new System.EventHandler(this.enchanceImagelinkToolStripMenuItem_Click);
             // 
+            // convertTextToHtmlToolStripMenuItem
+            // 
+            this.convertTextToHtmlToolStripMenuItem.Name = "convertTextToHtmlToolStripMenuItem";
+            this.convertTextToHtmlToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
+            this.convertTextToHtmlToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.convertTextToHtmlToolStripMenuItem.Text = "Create &&lt;, &&gt; and &&quot;";
+            this.convertTextToHtmlToolStripMenuItem.Click += new System.EventHandler(this.convertTextToHtmlToolStripMenuItem_Click);
+            // 
             // MakeBoldToolStripMenuItem
             // 
             this.MakeBoldToolStripMenuItem.Name = "MakeBoldToolStripMenuItem";
@@ -446,6 +455,7 @@
             this.toolStripSeparator8,
             this.enchanceHyperlinkToolStripMenuItem,
             this.enchanceImagelinkToolStripMenuItem,
+            this.convertTextToHtmlToolStripMenuItem,
             this.MakeBoldToolStripMenuItem,
             this.MakeSelectionRedToolStripMenuItem,
             this.MakeBRToolStripMenuItem,
@@ -929,6 +939,7 @@
         private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enchanceHyperlinkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enchanceImagelinkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertTextToHtmlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeBoldToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeSelectionRedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeBRToolStripMenuItem;

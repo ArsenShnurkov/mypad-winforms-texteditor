@@ -461,6 +461,16 @@ namespace MyPad
                 etb.EnchanceImagelink();
             }
         }
+
+        private void convertTextToHtmlToolStripMenuItem_Click (object sender, EventArgs e)
+        {
+            EditorTabPage etb = GetActiveTab();
+
+            if (etb != null)
+            {
+                etb.ConvertTextToHtml();
+            }
+        }
         private void MakeBoldToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EditorTabPage etb = GetActiveTab();

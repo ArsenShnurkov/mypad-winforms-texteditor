@@ -25,6 +25,7 @@ namespace MyPad
         public void InsertTextAtCursor(string textToInsert)
         {
             var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
+            textArea.BeginUpdate();
 
             // Save selected text
             string text = textArea.SelectionManager.SelectedText;
@@ -37,16 +38,21 @@ namespace MyPad
                 // deselect text
                 textArea.SelectionManager.ClearSelection();
             }
+
+            //var startLocation = textArea.Caret.Position;
+
             // Replace() takes the arguments: start offset to replace, length of the text to remove, new text
             textArea.Document.Replace(textArea.Caret.Offset,
                 text.Length,
                 textToInsert);
 
-            textArea.Caret.Position = new TextLocation(textArea.Caret.Position.Column + textToInsert.Length, textArea.Caret.Position.Line);
+            textArea.Caret.Position = textArea.Document.OffsetToPosition(textArea.Caret.Offset + textToInsert.Length);
 
             // Redraw:
+            textArea.EndUpdate();
+            /*textArea.Caret.ValidateCaretPos ();
             textArea.Refresh(); 
-
+            textArea.Caret.UpdateCaretPosition ();*/
         }
 
         public void EnchanceHyperlink()
@@ -223,6 +229,24 @@ namespace MyPad
 
             InsertTextAtCursor(sb.ToString());
         }
+
+        public void ConvertTextToHtml()
+        {
+            var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
+
+            // Get selected text
+            string text = textArea.SelectionManager.SelectedText;
+
+            var sb = new StringBuilder(text, text.Length + text.Length / 5); // 20% estimate (not based on facts)
+
+            sb.Replace ("&", "&amp;");
+            sb.Replace ("<", "&lt;");
+            sb.Replace (">", "&gt;");
+            sb.Replace ("\"", "&quot;");
+
+            InsertTextAtCursor(sb.ToString());
+        }
+
 
         public void MakeBold()
         {
