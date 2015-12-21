@@ -62,11 +62,37 @@ namespace MyPad
             string mainFile = cfg.AppSettings.Settings ["AtomFeedLocation"].Value;
 
             SyndicationFeed feed;
-            using (var reader = XmlReader.Create (mainFile))
+            try
             {
-                feed = SyndicationFeed.Load (reader);
-                reader.Close ();
+                    using (var reader = XmlReader.Create (mainFile))
+                    {
+                        feed = SyndicationFeed.Load (reader);
+                        reader.Close ();
+                    }
             }
+            catch (Exception ex)
+            {
+                var msg = string.Format ("Error, while reading ATOM-file {0}", mainFile);
+                throw new ApplicationException (msg, ex);
+                // ReadElementContentAs() methods cannot be called on an element that has child elements.
+                // Line 19, position 40.
+/*
+                The summary xml-node contains nested brackets.
+                So, there should be another parser, which can process this.
+                SyndicationFeed's parser is from "System.ServiceModel.Syndication"
+                
+                <summary type="xhtml" xml:lang="ru"><div xmlns="http://www.w3.org/1999/xhtml">
+                        <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <a xlink:href="http://www.w3schools.com/svg/" target="_blank">
+                                  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="yellow" />
+                                  <circle cx="50" cy="50" r="14" stroke="black" stroke-width="3" fill="magenta" />
+                                </a>
+                                svg-картинки отключены. В Thunderbird выбрать View -&gt; Feed message body as -&gt; Original HTML.
+                        </svg>
+                </div></summary>
+*/
+            }
+
             int index = 1;
             foreach (SyndicationItem item in feed.Items)
             {
