@@ -5,11 +5,24 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+
+// this attribute will be used to determine the folder name in SpecialFolder.ApplicationData
+// (i.e. /home/${user}/.config/${AssemblyProduct}/${AssemblyTitle}.config )
+[assembly: AssemblyProduct("MyPad")]
+
+// MSDN says that it specifies a description for an assembly and that
+// the assembly title is a friendly name which can include spaces.
+// Visual Studio asks for the assembly name in the properties window of the project along with the default namespace.
+// http://stackoverflow.com/questions/23144872/assemblytitle-attribute-in-the-net-framework
+// "I don't see how AssemblyTitle differs from AssemblyProduct"
+// [AssemblyTitle] is a pretty big deal,
+// it is directly visible when you right-click on the assembly and use Properties + Details.
 [assembly: AssemblyTitle("MyPad")]
+
 [assembly: AssemblyDescription("Simple lightweight text editor written in C# (based on ICSharpCode.TextEditor control)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
+
 [assembly: AssemblyCopyright("MIT X11, https://en.wikipedia.org/wiki/MIT_License")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

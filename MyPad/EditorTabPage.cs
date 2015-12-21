@@ -309,43 +309,88 @@ namespace MyPad
             textEditorControl.ActiveTextAreaControl.TextArea.ClipboardHandler.Delete(null, null);
         }
 
-
         public int Find(string search, RegexOptions options)
         {
             if (lastFindOffset == -1) {
                 lastFindOffset = 0; // restart from top, otherwise it will be exception
             }
 
-            Regex regex = new Regex(search, options);
-
-            if (regex.IsMatch(textEditorControl.Text, lastFindOffset))
+            try
             {
-                Match m = regex.Match(textEditorControl.Text, lastFindOffset);
+                    Regex regex = new Regex(search, options);
+                    if (regex.IsMatch(textEditorControl.Text, lastFindOffset))
+                    {
+                        Match m = regex.Match(textEditorControl.Text, lastFindOffset);
 
-                TextLocation start = textEditorControl.Document.OffsetToPosition(m.Index);
-                TextLocation end = textEditorControl.Document.OffsetToPosition((m.Index + m.Length));
-                textEditorControl.ActiveTextAreaControl.TextArea.SelectionManager.SetSelection(start, end);
+                        TextLocation start = textEditorControl.Document.OffsetToPosition(m.Index);
+                        TextLocation end = textEditorControl.Document.OffsetToPosition((m.Index + m.Length));
+                        textEditorControl.ActiveTextAreaControl.TextArea.SelectionManager.SetSelection(start, end);
 
-                lastFindOffset = (m.Index + m.Length);
+                        lastFindOffset = (m.Index + m.Length);
+                    }
+                    else
+                        lastFindOffset = -1;
             }
-            else
-                lastFindOffset = -1;
+            catch (ArgumentException ex)
+            {
+                // suppress compilation error, search for raw text instead
+                Trace.WriteLine (ex.ToString ());
 
+                int newpos = textEditorControl.Text.IndexOf(search, lastFindOffset);
+                if (newpos >= 0)
+                {
+                    int newpos_tail = newpos + search.Length;
+                    TextLocation start = textEditorControl.Document.OffsetToPosition(newpos);
+                    TextLocation end = textEditorControl.Document.OffsetToPosition(newpos_tail);
+                    textEditorControl.ActiveTextAreaControl.TextArea.SelectionManager.SetSelection(start, end);
+                    lastFindOffset = newpos_tail;
+                }
+                else
+                {
+                    lastFindOffset = -1;
+                }
+            }
             return lastFindOffset;
         }
 
         public void FindAndReplace(string search, string replacement, RegexOptions options)
         {
-            Regex regex = new Regex(search, options);
-
-            MatchCollection matches = regex.Matches(textEditorControl.Text);
-
-            foreach (Match m in matches)
+            StringBuilder newText = new StringBuilder (textEditorControl.Text.Length);
+            int lastProcessed = 0; // position in src
+            try
             {
-                string find = m.Value;
-                string replace = regex.Replace(find, replacement);
-                textEditorControl.Document.Replace(m.Index, m.Length, replace);
+                Regex regex = new Regex(search, options);
+
+                MatchCollection matches = regex.Matches(textEditorControl.Text);
+
+                foreach (Match m in matches)
+                {
+                    string find = m.Value;
+                    string replace = regex.Replace(find, replacement);
+                    string copyText = textEditorControl.Text.Substring(lastProcessed, m.Index - lastProcessed);
+                    lastProcessed = m.Index + m.Length;
+                    newText.Append(copyText); 
+                    newText.Append(replace);
+                }
             }
+            catch (ArgumentException ex)
+            {
+                // suppress compilation error, search for raw text instead
+                Trace.WriteLine (ex.ToString ());
+                newText.Clear (); lastProcessed = 0;
+
+                int pos = 0;
+                for (; pos >= 0; pos = textEditorControl.Text.IndexOf (search, pos))
+                {
+                    string copyText = textEditorControl.Text.Substring(lastProcessed, pos - lastProcessed);
+                    lastProcessed = pos + replacement.Length;
+                    newText.Append(copyText); 
+                    newText.Append(replacement);
+                }
+            }
+            string endText = textEditorControl.Text.Substring(lastProcessed);
+            newText.Append(endText);
+            textEditorControl.Text = newText.ToString();
         }
 
         public void HighlightMatchingTokens(string text)

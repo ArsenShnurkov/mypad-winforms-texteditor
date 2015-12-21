@@ -6,6 +6,8 @@ using System.IO;
 using System.Text;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Reflection;
+using System.Configuration;
 
 namespace MyPad
 {
@@ -76,6 +78,100 @@ namespace MyPad
         {
             var form = (MainForm)Application.OpenForms[0];
             return form;
+        }
+
+        /// <summary>
+        /// Gets the assembly product.
+        /// </summary>
+        /// <remarks>http://stackoverflow.com/questions/7320078/read-assemblytitle-attribute-in-asp-net</remarks>
+        /// <value>The assembly product.</value>
+        public static string AssemblyTitle
+        {
+            get
+            {
+                var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    var titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                    if (titleAttribute.Title.Length > 0)
+                        return titleAttribute.Title;
+                }
+                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().CodeBase);
+            }
+        }
+
+        public static string AssemblyProduct
+        {
+            get
+            {
+                var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    var titleAttribute = (AssemblyProductAttribute)attributes[0];
+                    if (titleAttribute.Product.Length > 0)
+                        return titleAttribute.Product;
+                }
+                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().CodeBase);
+            }
+        }
+
+        // http://stackoverflow.com/questions/10941657/creating-files-recursively-creating-directories
+        public static void EnsureDirectoryExists(string targetFilename)
+        {
+            var dir = Path.GetDirectoryName (targetFilename);
+            if (false == Directory.Exists (dir))
+            {
+                Directory.CreateDirectory (dir);
+            }
+        }
+
+        // http://stackoverflow.com/questions/453161/best-practice-to-save-application-settings-in-a-windows-forms-application
+        public static void CreateDefaultConfig(string filename)
+        {
+            // ConfigurationManager
+            var cfg = Get(filename);
+            cfg.AppSettings.Settings.Add ("AtomFeedLocation", "/var/calculate/remote/distfiles/egit-src/blog/notifications.atom");
+            cfg.Save ();
+        }
+
+        public static Configuration Get(string fileName)
+        {
+            var fileMap = new ExeConfigurationFileMap { ExeConfigFilename = fileName };
+            var cfg = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+            return cfg;
+        }
+
+        public static Configuration LoadConfiguration()
+        {
+            Configuration cfg;
+            // вычисление пути до файла конфига в пользовательской директории
+            StringBuilder location = new StringBuilder("${SpecialFolder.LocalApplicationData}/${AssemblyProduct}/${AssemblyTitle}.config");
+            // roaming
+            location.Replace ("${SpecialFolder.ApplicationData}", System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData));
+            // local
+            location.Replace ("${SpecialFolder.LocalApplicationData}", System.Environment.GetFolderPath (System.Environment.SpecialFolder.LocalApplicationData));
+            location.Replace ("${AssemblyProduct}", Globals.AssemblyProduct);
+            location.Replace ("${AssemblyTitle}", Globals.AssemblyTitle);
+            var filename = location.ToString ();
+            Globals.EnsureDirectoryExists (filename);
+            if (false == File.Exists (filename))
+            {
+                CreateDefaultConfig (filename);
+            }
+            for (;;)
+            {
+                try
+                {
+                    cfg = Get (filename);
+                    break;
+                } catch (Exception ex)
+                {
+                    Trace.WriteLine (ex.ToString ());
+                    CreateDefaultConfig (filename);
+                    continue;
+                }
+            }
+            return cfg;
         }
 
         public static string GetDefaultTemplateText(string targetFilename, string caption, string sourceFilename)

@@ -2,15 +2,25 @@
 using System.Text.RegularExpressions;
 using System;
 using System.Drawing;
+using System.Text;
+using System.IO;
+using System.Configuration;
+using System.Diagnostics;
 
 namespace MyPad.Dialogs
 {
     public partial class OptionsDialog : Form
     {
+        Configuration cfg;
         public OptionsDialog()
         {
             InitializeComponent();
+
+            cfg = Globals.LoadConfiguration ();
+
+            CopySettingsIntoControls();
         }
+
 
         protected override void OnLoad(EventArgs e)
         {
@@ -26,24 +36,30 @@ namespace MyPad.Dialogs
             base.OnLoad(e);
         }
 
+        void CopySettingsIntoControls ()
+        {
+            checkBox1.Checked = SettingsManager.ReadValue<bool> ("AllowCaretBeyondEOL");
+            checkBox2.Checked = SettingsManager.ReadValue<bool> ("ShowEOLMarkers");
+            checkBox3.Checked = SettingsManager.ReadValue<bool> ("ShowSpaces");
+            checkBox4.Checked = SettingsManager.ReadValue<bool> ("ShowTabs");
+            checkBox5.Checked = SettingsManager.ReadValue<bool> ("ShowVRuler");
+            checkBox6.Checked = SettingsManager.ReadValue<bool> ("ShowHRuler");
+            checkBox7.Checked = SettingsManager.ReadValue<bool> ("ShowInvalidLines");
+            checkBox8.Checked = SettingsManager.ReadValue<bool> ("ShowLineNumbers");
+            checkBox9.Checked = SettingsManager.ReadValue<bool> ("ShowMatchingBrackets");
+            checkBox10.Checked = SettingsManager.ReadValue<bool> ("AutoInsertBrackets");
+            checkBox11.Checked = SettingsManager.ReadValue<bool> ("EnableFolding");
+            checkBox12.Checked = SettingsManager.ReadValue<bool> ("ConvertTabsToSpaces");
+            comboBox1.Text = SettingsManager.ReadValue<string> ("FontName");
+            comboBox2.Text = SettingsManager.ReadValue<string> ("FontSize");
+            this.textBoxAtomFeedFileLocation.Text = cfg.AppSettings.Settings ["AtomFeedLocation"].Value;
+        }
+
         protected override void OnVisibleChanged(EventArgs e)
         {
             if (this.Visible)
             {
-                checkBox1.Checked = SettingsManager.ReadValue<bool>("AllowCaretBeyondEOL");
-                checkBox2.Checked = SettingsManager.ReadValue<bool>("ShowEOLMarkers");
-                checkBox3.Checked = SettingsManager.ReadValue<bool>("ShowSpaces");
-                checkBox4.Checked = SettingsManager.ReadValue<bool>("ShowTabs");
-                checkBox5.Checked = SettingsManager.ReadValue<bool>("ShowVRuler");
-                checkBox6.Checked = SettingsManager.ReadValue<bool>("ShowHRuler");
-                checkBox7.Checked = SettingsManager.ReadValue<bool>("ShowInvalidLines");
-                checkBox8.Checked = SettingsManager.ReadValue<bool>("ShowLineNumbers");
-                checkBox9.Checked = SettingsManager.ReadValue<bool>("ShowMatchingBrackets");
-                checkBox10.Checked = SettingsManager.ReadValue<bool>("AutoInsertBrackets");
-                checkBox11.Checked = SettingsManager.ReadValue<bool>("EnableFolding");
-                checkBox12.Checked = SettingsManager.ReadValue<bool>("ConvertTabsToSpaces");
-                comboBox1.Text = SettingsManager.ReadValue<string>("FontName");
-                comboBox2.Text = SettingsManager.ReadValue<string>("FontSize");
+                CopySettingsIntoControls ();
             }
 
             base.OnVisibleChanged(e);
@@ -63,6 +79,7 @@ namespace MyPad.Dialogs
             SettingsManager.Settings["AutoInsertBrackets"] = checkBox10.Checked;
             SettingsManager.Settings["EnableFolding"] = checkBox11.Checked;
             SettingsManager.Settings["ConvertTabsToSpaces"] = checkBox12.Checked;
+            cfg.AppSettings.Settings ["AtomFeedLocation"].Value = this.textBoxAtomFeedFileLocation.Text;
 
             if (comboBox1.Text != string.Empty && comboBox2.Text != string.Empty)
             {
@@ -77,7 +94,7 @@ namespace MyPad.Dialogs
                     string err = ex.Message;
                 }
             }
-
+            cfg.Save ();
             DialogResult = DialogResult.OK;
         }
 

@@ -45,9 +45,22 @@ namespace MyPad.Dialogs
             InitializeComponent();
         }
 
+        bool bSetFocusRequired = false;
+
         public void SetFocusOnSearchTextField()
         {
-            ActiveControl = textBox1;
+            bSetFocusRequired = true;
+        }
+
+        protected override void OnActivated (EventArgs e)
+        {
+            base.OnActivated (e);
+            if (bSetFocusRequired)
+            {
+                ActiveControl = textBox1;
+                textBox1.SelectAll ();
+                bSetFocusRequired = false;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)

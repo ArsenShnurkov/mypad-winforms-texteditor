@@ -58,15 +58,14 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web" />
-    <Reference Include="ICSharpCode.TextEditor">
-      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.2\lib\net45\ICSharpCode.TextEditor.dll</HintPath>
-    </Reference>
     <Reference Include="NDepend.Path">
       <HintPath>..\packages\NDepend.Path.1.0.0\lib\net40\NDepend.Path.dll</HintPath>
     </Reference>
     <Reference Include="NDepend.Path.Interfaces">
       <HintPath>..\packages\NDepend.Path.1.0.0\lib\net40\NDepend.Path.Interfaces.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\AboutDialog.cs">
@@ -197,6 +196,31 @@
     <Compile Include="Language\Russian\TranscriptionFromEnglish.cs" />
     <Compile Include="Language\Russian\Sounds.cs" />
     <Compile Include="Language\English\TransliterationFromRussian.cs" />
+    <Compile Include="Dialogs\Syndication\EntriesListDialog.cs" />
+    <Compile Include="Dialogs\Syndication\EntryCreateOrEditDialog.cs" />
+    <EmbeddedResource Include="Dialogs\Syndication\EntriesListDialog.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EntriesListDialog.Designer.cs</LastGenOutput>
+      <DependentUpon>EntriesListDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Dialogs\Syndication\EntriesListDialog.Designer.cs">
+      <DependentUpon>EntriesListDialog.cs</DependentUpon>
+    </Compile>
+    <None Include="Dialogs\Syndication\EntryCreateOrEditDialog.resx">
+      <DependentUpon>EntryCreateOrEditDialog.cs</DependentUpon>
+    </None>
+    <Compile Include="Dialogs\Syndication\EntryCreateOrEditDialog.Designer.cs">
+      <DependentUpon>EntryCreateOrEditDialog.cs</DependentUpon>
+    </Compile>
+    <None Include="Resources\AtomFeedIcon.svg" />
+    <Compile Include="Resources\AtomFeedIcon.Designer.cs">
+      <DependentUpon>AtomFeedIcon.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Resources\AtomFeedIcon.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AtomFeedIcon.Designer.cs</LastGenOutput>
+      <LogicalName>Resources.AtomFeedIcon.resources</LogicalName>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +258,7 @@
     <Folder Include="Language\Chinese\" />
     <Folder Include="Language\Indian\" />
     <Folder Include="Language\_Transcriptions\" />
+    <Folder Include="Dialogs\Syndication\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
@@ -245,4 +270,10 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ICSharpCode.TextEditor.git\Project\ICSharpCode.TextEditor.csproj">
+      <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

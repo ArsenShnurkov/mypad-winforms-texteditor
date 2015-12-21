@@ -21,6 +21,7 @@ namespace English
     // Standard transcription schemes for linguistic purposes include the International Phonetic Alphabet (IPA), and its ASCII equivalent, SAMPA.
     //
     // Official transliteration ISO 9 (GOST 7.79-2000)
+    // транслитерация поддерживает два формата — ГОСТ 16876-71 и ISO 9-95.
     //
     // After transcribing a word from one language to the script of another language:
     //

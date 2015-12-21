@@ -23,6 +23,7 @@ namespace MyPad
     public partial class MainForm : Form
     {
         OptionsDialog optionsDialog;
+        EntriesListDialog entriesListDialog;
         AboutDialog aboutDialog;
 
         FindReplaceDialog findReplaceDialog = new FindReplaceDialog();
@@ -47,6 +48,7 @@ namespace MyPad
 
             unsavedDocumentsDialog = new UnsavedDocumentsDialog();
             optionsDialog = new OptionsDialog();
+            entriesListDialog = new EntriesListDialog();
             aboutDialog = new AboutDialog();
 
             int x = SettingsManager.ReadValue<int>("MainWindowX");
@@ -694,6 +696,13 @@ namespace MyPad
                 {
                     etb.ReloadSettings();
                 }
+            }
+        }
+
+        private void atomFeedEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (entriesListDialog.ShowDialog() == DialogResult.OK)
+            {
             }
         }
 

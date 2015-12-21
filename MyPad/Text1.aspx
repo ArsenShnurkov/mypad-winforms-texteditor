@@ -7,9 +7,9 @@
 </head>
 <body>
 
-<table><tr><td valign="top">
+<table><tr><td style="vertical-align:top;">
 <h1><% =Request["header"] %></h1>
-</td><td valign="top">
+</td><td style="vertical-align:top;">
 <% =Request["links"] %>
 <br />
 &nbsp;

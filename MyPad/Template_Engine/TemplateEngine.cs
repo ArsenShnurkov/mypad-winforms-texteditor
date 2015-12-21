@@ -129,6 +129,7 @@ namespace MyPad
             get { 
                 if (myHost == null)
                 {
+                    // System.IO.FileNotFoundException: Could not load file or assembly 'MyPad, Version=1.0.3.0, Culture=neutral, PublicKeyToken=null' or one of its dependencies
                     myHost = (MyExeHost)ApplicationHost.CreateApplicationHost(typeof(MyExeHost), GetVirtualRoot(), GetPhysicalRoot());
                 } 
                 return myHost;
