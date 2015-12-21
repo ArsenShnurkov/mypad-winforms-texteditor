@@ -174,7 +174,6 @@
     <Compile Include="EditorTabPage_TextProcessing.cs">
       <SubType>Component</SubType>
     </Compile>
-    <None Include="packages.config" />
     <Compile Include="Globals.cs" />
     <Compile Include="RPC_for_SingleInstance\LocalIpcChannel.cs" />
     <Compile Include="RPC_for_SingleInstance\LocalUnixIpcChannel.cs" />
@@ -222,6 +221,7 @@
       <LastGenOutput>AtomFeedIcon.Designer.cs</LastGenOutput>
       <LogicalName>Resources.AtomFeedIcon.resources</LogicalName>
     </EmbeddedResource>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
