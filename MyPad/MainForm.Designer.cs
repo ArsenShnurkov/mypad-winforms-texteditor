@@ -221,8 +221,6 @@
             this.deleteToolStripMenuItem,
             this.toolStripSeparator4,
             this.selectAllToolStripMenuItem,
-            this.toolStripSeparator6,
-            this.highlightingToolStripMenuItem,
             this.toolStripSeparator13,
             this.insertNbspToolStripMenuItem,
             this.toolStripSeparator13a,
@@ -512,6 +510,8 @@
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.highlightingToolStripMenuItem,
+                this.toolStripSeparator6,
             this.toolbarToolStripMenuItem,
             this.statusbarToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
