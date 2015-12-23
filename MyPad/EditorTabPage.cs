@@ -353,44 +353,21 @@ namespace MyPad
             return lastFindOffset;
         }
 
-        public void FindAndReplace(string search, string replacement, RegexOptions options)
+        public void FindAndReplaceRegEx(string search, string replacement, RegexOptions options)
         {
-            StringBuilder newText = new StringBuilder (textEditorControl.Text.Length);
-            int lastProcessed = 0; // position in src
-            try
+            textEditorControl.BeginUpdate ();
+            if (FindAdReplaceByRegexps (search, replacement, options) == false)
             {
-                Regex regex = new Regex(search, options);
-
-                MatchCollection matches = regex.Matches(textEditorControl.Text);
-
-                foreach (Match m in matches)
-                {
-                    string find = m.Value;
-                    string replace = regex.Replace(find, replacement);
-                    string copyText = textEditorControl.Text.Substring(lastProcessed, m.Index - lastProcessed);
-                    lastProcessed = m.Index + m.Length;
-                    newText.Append(copyText); 
-                    newText.Append(replace);
-                }
+                MessageBox.Show ("Exception while replacing with RegExps");
             }
-            catch (ArgumentException ex)
-            {
-                // suppress compilation error, search for raw text instead
-                Trace.WriteLine (ex.ToString ());
-                newText.Clear (); lastProcessed = 0;
+            textEditorControl.EndUpdate ();
+        }
 
-                int pos = 0;
-                for (; pos >= 0; pos = textEditorControl.Text.IndexOf (search, pos))
-                {
-                    string copyText = textEditorControl.Text.Substring(lastProcessed, pos - lastProcessed);
-                    lastProcessed = pos + replacement.Length;
-                    newText.Append(copyText); 
-                    newText.Append(replacement);
-                }
-            }
-            string endText = textEditorControl.Text.Substring(lastProcessed);
-            newText.Append(endText);
-            textEditorControl.Text = newText.ToString();
+        public void FindAndReplaceRaw(string search, string replacement, RegexOptions options)
+        {
+            textEditorControl.BeginUpdate ();
+            FindAdReplaceRaw (search, replacement, options);
+            textEditorControl.EndUpdate ();
         }
 
         public void HighlightMatchingTokens(string text)

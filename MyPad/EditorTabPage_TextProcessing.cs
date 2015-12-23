@@ -25,6 +25,7 @@ namespace MyPad
         public void InsertTextAtCursor(string textToInsert)
         {
             var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
+            textArea.BeginUpdate();
 
             // Save selected text
             string text = textArea.SelectionManager.SelectedText;
@@ -37,16 +38,72 @@ namespace MyPad
                 // deselect text
                 textArea.SelectionManager.ClearSelection();
             }
+
+            //var startLocation = textArea.Caret.Position;
+
             // Replace() takes the arguments: start offset to replace, length of the text to remove, new text
             textArea.Document.Replace(textArea.Caret.Offset,
                 text.Length,
                 textToInsert);
 
-            textArea.Caret.Position = new TextLocation(textArea.Caret.Position.Column + textToInsert.Length, textArea.Caret.Position.Line);
+            textArea.Caret.Position = textArea.Document.OffsetToPosition(textArea.Caret.Offset + textToInsert.Length);
 
             // Redraw:
+            textArea.EndUpdate();
+            /*textArea.Caret.ValidateCaretPos ();
             textArea.Refresh(); 
+            textArea.Caret.UpdateCaretPosition ();*/
+        }
 
+        bool FindAdReplaceByRegexps(string search, string replacement, RegexOptions options)
+        {
+            textEditorControl.Document.UndoStack.StartUndoGroup ();
+            try {
+                Regex regex = new Regex(search, options);
+
+                MatchCollection matches = regex.Matches(textEditorControl.Text);
+
+                for (int i = matches.Count - 1; i >= 0; i--)
+                {
+                    Match m = matches[i];
+
+                    string find = m.Value;
+                    string replace = regex.Replace(find, replacement);
+                    textEditorControl.Document.Replace(
+                        m.Index,
+                        m.Length,
+                        replace);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // suppress compilation error, search for raw text instead
+                Trace.WriteLine (ex.ToString ());
+                textEditorControl.Document.UndoStack.EndUndoGroup ();
+                textEditorControl.Document.UndoStack.Undo ();
+                return false;
+            }
+            textEditorControl.Document.UndoStack.EndUndoGroup ();
+            return true;
+        }
+
+        void FindAdReplaceRaw(string search, string replacement, RegexOptions options/*not used*/)
+        {
+            textEditorControl.Document.UndoStack.StartUndoGroup ();
+            var positions = new List<int> ();
+            int pos = textEditorControl.Text.IndexOf (search);
+            for (; pos >= 0; pos = textEditorControl.Text.IndexOf (search, pos + search.Length))
+            {
+                positions.Add (pos);
+            }
+            for (int i = positions.Count - 1; i >= 0; i--)
+            {
+                textEditorControl.Document.Replace(
+                    positions[i],
+                    search.Length,
+                    replacement);
+            }
+            textEditorControl.Document.UndoStack.EndUndoGroup ();
         }
 
         public void EnchanceHyperlink()
@@ -223,6 +280,24 @@ namespace MyPad
 
             InsertTextAtCursor(sb.ToString());
         }
+
+        public void ConvertTextToHtml()
+        {
+            var textArea = textEditorControl.ActiveTextAreaControl.TextArea;
+
+            // Get selected text
+            string text = textArea.SelectionManager.SelectedText;
+
+            var sb = new StringBuilder(text, text.Length + text.Length / 5); // 20% estimate (not based on facts)
+
+            sb.Replace ("&", "&amp;");
+            sb.Replace ("<", "&lt;");
+            sb.Replace (">", "&gt;");
+            sb.Replace ("\"", "&quot;");
+
+            InsertTextAtCursor(sb.ToString());
+        }
+
 
         public void MakeBold()
         {
