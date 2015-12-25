@@ -1,4 +1,5 @@
 ﻿// portions of rss code sample by Steve Lautenschlager at CambiaResearch.com
+using System.Net;
 
 namespace MyPad
 {
@@ -32,25 +33,35 @@ namespace MyPad
             var dlg = new EntryCreateOrEditDialog ();
             if (dlg.ShowDialog () == DialogResult.OK)
             {
-                // create a new entry
-                // create new entry for feed
-                SyndicationItem item = new SyndicationItem();
+                try
+                {
+                    // create a new entry
+                    // create new entry for feed
+                    SyndicationItem item = new SyndicationItem();
 
-                var urlOfArticle = new Uri(dlg.URL);
-                // set the entry id to the URL for the item
-                string url = urlOfArticle.AbsoluteUri;  // TODO: create the GetArticleUrl method
-                item.Id = url;
+                    var urlOfArticle = new Uri(dlg.URL);
+                    // set the entry id to the URL for the item
+                    string url = urlOfArticle.AbsoluteUri;  // TODO: create the GetArticleUrl method
+                    item.Id = url;
 
-                // Add the URL for the item as a link
-                var link = new SyndicationLink(urlOfArticle);
-                item.Links.Add(link);
+                    // Add the URL for the item as a link
+                    var link = new SyndicationLink(urlOfArticle);
+                    item.Links.Add(link);
 
-                // Fill some properties for the item
-                item.Title = new TextSyndicationContent(dlg.TITLE);
-                item.Summary = new TextSyndicationContent(dlg.MSG);
-                var dateTime = DateTime.Now;
-                item.LastUpdatedTime = dateTime;
-                item.PublishDate = dateTime;
+                    // Fill some properties for the item
+                    item.Title = new TextSyndicationContent(dlg.TITLE);
+                    item.Summary = new TextSyndicationContent(WebUtility.HtmlEncode(dlg.MSG));
+                    var dateTime = DateTime.Now;
+                    item.LastUpdatedTime = dateTime;
+                    item.PublishDate = dateTime;
+
+                    var it = CreateItem (item, 1 + listView1.Items.Count);
+                    listView1.Items.Add (it);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show (ex.ToString ());
+                }
             }
         }
 
@@ -66,12 +77,12 @@ namespace MyPad
             var entry = (SyndicationItem)item.Tag;
             dlg.URL = entry.Id;
             dlg.TITLE = entry.Title.Text;
-            dlg.MSG = entry.Summary.Text;
+            dlg.MSG = WebUtility.HtmlDecode(entry.Summary.Text);
             if (dlg.ShowDialog () == DialogResult.OK)
             {
                 // change selected entry
                 entry.BaseUri = new Uri(dlg.URL);
-                entry.Content = new TextSyndicationContent(dlg.MSG);
+                entry.Content = new TextSyndicationContent(WebUtility.HtmlEncode(dlg.MSG));
             }
         }
 
@@ -91,6 +102,7 @@ namespace MyPad
                 listView1.Items.Remove (item);
             }
         }
+
         readonly string baseUrl = "http://vsyachepuz.github.io/blog";
         void FillItems()
         {
@@ -132,26 +144,7 @@ namespace MyPad
             int index = 1;
             foreach (SyndicationItem item in feed.Items)
             {
-                var it = new ListViewItem ();
-                it.Tag = item;
-                it.Text = index.ToString (); index++;
-
-                var published = new System.Windows.Forms.ListViewItem.ListViewSubItem();
-                published.Text = item.PublishDate.ToString();
-                it.SubItems.Add (published);
-
-                var updated = new System.Windows.Forms.ListViewItem.ListViewSubItem();
-                updated.Text = item.LastUpdatedTime.ToString();
-                it.SubItems.Add (updated);
-
-                var title = new System.Windows.Forms.ListViewItem.ListViewSubItem();
-                title.Text = item.Title.Text;
-                it.SubItems.Add(title);
-
-                var url = new System.Windows.Forms.ListViewItem.ListViewSubItem();
-                url.Text = item.Id;
-                it.SubItems.Add (url);
-
+                var it = CreateItem (item, index++);
                 listView1.Items.Add (it);
             }
             if (listView1.Items.Count > 0)
@@ -159,6 +152,36 @@ namespace MyPad
                 listView1.Items [0].Selected = true;
             }
         }
+
+        static ListViewItem CreateItem (SyndicationItem item, int index)
+        {
+            var it = new ListViewItem ();
+            it.Tag = item;
+            it.Text = index.ToString ();
+
+            var published = new System.Windows.Forms.ListViewItem.ListViewSubItem ();
+            published.Text = item.PublishDate.ToString ();
+            it.SubItems.Add (published);
+
+            var updated = new System.Windows.Forms.ListViewItem.ListViewSubItem ();
+            updated.Text = item.LastUpdatedTime.ToString ();
+            it.SubItems.Add (updated);
+
+            var title = new System.Windows.Forms.ListViewItem.ListViewSubItem ();
+            title.Text = item.Title.Text;
+            it.SubItems.Add (title);
+
+            var url = new System.Windows.Forms.ListViewItem.ListViewSubItem ();
+            url.Text = item.Id;
+            it.SubItems.Add (url);
+
+            var summary = new System.Windows.Forms.ListViewItem.ListViewSubItem ();
+            summary.Text = WebUtility.HtmlDecode(item.Summary.Text);
+            it.SubItems.Add (summary);
+
+            return it;
+        }
+
         SyndicationFeed GetFeed()
         {
             #region -- Create Feed --
@@ -207,6 +230,7 @@ namespace MyPad
                 string titleOfArticle = GetColumnValue(it, "Title");
                 DateTime published = DateTime.Parse(GetColumnValue(it, "Published"));
                 DateTime updated = DateTime.Parse(GetColumnValue(it, "Updated"));
+                string summary = GetColumnValue(it, "Summary");
 
                 // create new entry for feed
                 SyndicationItem item = new SyndicationItem();
@@ -223,6 +247,7 @@ namespace MyPad
                 item.Title = new TextSyndicationContent(titleOfArticle);
                 item.LastUpdatedTime = published;
                 item.PublishDate = updated;
+                item.Summary = new TextSyndicationContent(WebUtility.HtmlEncode(summary));
 
                 /*
                 // Fill the item content            

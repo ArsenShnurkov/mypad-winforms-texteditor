@@ -114,11 +114,13 @@
             var chPublished = new ColumnHeader ();
             chPublished.Tag = "Published";;
             chPublished.Text = "Published";
+            chPublished.Width = 0;
             listView1.Columns.Add(chPublished);
 
             var chUpdated = new ColumnHeader ();
             chUpdated.Tag = "Updated";;
             chUpdated.Text = "Updated";
+            chUpdated.Width = 0;
             listView1.Columns.Add(chUpdated);
 
             var chTitle = new ColumnHeader ();
@@ -130,6 +132,12 @@
             chURL.Tag = "URL";
             chURL.Text = "URL";
             listView1.Columns.Add(chURL);
+
+            var chSummary = new ColumnHeader ();
+            chSummary.Tag = "Summary";
+            chSummary.Text = "Summary";
+            chSummary.Width = 0;
+            listView1.Columns.Add(chSummary);
 
             listView1.FullRowSelect = true;
             listView1.HideSelection = false;

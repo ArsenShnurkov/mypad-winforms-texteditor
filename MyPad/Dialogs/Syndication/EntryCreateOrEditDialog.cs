@@ -11,6 +11,9 @@
             // this.urlText.Text = url;
             // this.msgText.Text = msg;
             // this is not necessary, because member variables are empty strings
+            this.urlText.TextChanged += (object sender, EventArgs e) => { url = urlText.Text; };
+            this.titleText.TextChanged += (object sender, EventArgs e) => { title = titleText.Text; };
+            this.msgText.TextChanged += (object sender, EventArgs e) => { msg = msgText.Text; };
         }
 
         private string url = string.Empty;
@@ -25,14 +28,7 @@
             }
             get
             {
-                if (this.urlText != null)
-                {
-                    return this.urlText.Text;
-                }
-                else
-                {
-                    return url;
-                }
+                return url;
             }
         }
 
@@ -48,14 +44,7 @@
             }
             get
             {
-                if (this.titleText != null)
-                {
-                    return this.titleText.Text;
-                }
-                else
-                {
-                    return title;
-                }
+                return title;
             }
         }
 
@@ -71,14 +60,7 @@
             }
             get
             {
-                if (this.msgText != null)
-                {
-                    return this.msgText.Text;
-                }
-                else
-                {
-                    return msg;
-                }
+                return msg;
             }
         }
     }
