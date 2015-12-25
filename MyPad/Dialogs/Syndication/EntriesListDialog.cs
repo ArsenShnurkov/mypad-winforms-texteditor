@@ -30,13 +30,49 @@ namespace MyPad
         void CreateNewEntry_Click (object sender, EventArgs e)
         {
             var dlg = new EntryCreateOrEditDialog ();
-            dlg.ShowDialog ();
+            if (dlg.ShowDialog () == DialogResult.OK)
+            {
+                // create a new entry
+                // create new entry for feed
+                SyndicationItem item = new SyndicationItem();
+
+                var urlOfArticle = new Uri(dlg.URL);
+                // set the entry id to the URL for the item
+                string url = urlOfArticle.AbsoluteUri;  // TODO: create the GetArticleUrl method
+                item.Id = url;
+
+                // Add the URL for the item as a link
+                var link = new SyndicationLink(urlOfArticle);
+                item.Links.Add(link);
+
+                // Fill some properties for the item
+                item.Title = new TextSyndicationContent(dlg.TITLE);
+                item.Summary = new TextSyndicationContent(dlg.MSG);
+                var dateTime = DateTime.Now;
+                item.LastUpdatedTime = dateTime;
+                item.PublishDate = dateTime;
+            }
         }
 
         void EditExistingEntry_Click (object sender, EventArgs e)
         {
+            if (listView1.SelectedItems.Count == 0)
+            {
+                return;
+            }
             var dlg = new EntryCreateOrEditDialog ();
-            dlg.ShowDialog ();
+            // prepare dialog fields
+            var item = listView1.SelectedItems[0];
+            var entry = (SyndicationItem)item.Tag;
+            dlg.URL = entry.Id;
+            dlg.TITLE = entry.Title.Text;
+            dlg.MSG = entry.Summary.Text;
+            if (dlg.ShowDialog () == DialogResult.OK)
+            {
+                // change selected entry
+                entry.BaseUri = new Uri(dlg.URL);
+                entry.Content = new TextSyndicationContent(dlg.MSG);
+            }
         }
 
         void DeleteEntry_Click (object sender, EventArgs e)
