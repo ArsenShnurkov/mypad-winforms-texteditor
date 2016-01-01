@@ -167,7 +167,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="MainForm_ContextMenu.cs" />
-    <Compile Include="TextClipboard.cs" />
     <Compile Include="MainForm_OpenFromCommandline.cs" />
     <Compile Include="MainForm_Saving.cs" />
     <Compile Include="MainForm_Closing.cs" />
@@ -222,6 +221,7 @@
       <LogicalName>Resources.AtomFeedIcon.resources</LogicalName>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <Compile Include="Clipboard\TextClipboard.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
@@ -259,6 +259,7 @@
     <Folder Include="Language\Indian\" />
     <Folder Include="Language\_Transcriptions\" />
     <Folder Include="Dialogs\Syndication\" />
+    <Folder Include="Clipboard\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
