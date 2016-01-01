@@ -77,7 +77,7 @@ namespace MyPad
                 }
                 else
                 {
-                    Globals.TextClipboard.CopyTextToClipboard("./", false);
+                    Globals.TextClipboard.CopyTextToClipboard("." + Path.DirectorySeparatorChar, false);
                 }
             }
         }
