@@ -84,6 +84,26 @@ namespace MyPad
             }
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+            int oldIndex = tabControl1.SelectedIndex;
+            int newIndex = oldIndex;
+            int tc = tabControl1.Controls.Count;
+            switch (keyData)
+            {
+            case Keys.Control | Keys.Tab:
+                newIndex = (tabControl1.SelectedIndex + 1) % tc;
+                break;
+            case Keys.Control | Keys.Shift | Keys.Tab:
+                newIndex = (tabControl1.SelectedIndex - 1 + tc) % tc;
+                break;
+            }
+            if (oldIndex != newIndex)
+            {
+                tabControl1.SelectedIndex = newIndex;
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
 
         public void UpdateMainWindowTitle()
         {
