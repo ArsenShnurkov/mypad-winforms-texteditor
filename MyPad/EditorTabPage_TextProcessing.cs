@@ -16,7 +16,6 @@ using System.Globalization;
 using System.Web;
 
 using NDepend.Path;
-using NDepend.Path.Interface.Core;
 
 namespace MyPad
 {

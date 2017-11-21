@@ -58,14 +58,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web" />
-    <Reference Include="NDepend.Path">
-      <HintPath>..\packages\NDepend.Path.1.0.0\lib\net40\NDepend.Path.dll</HintPath>
-    </Reference>
-    <Reference Include="NDepend.Path.Interfaces">
-      <HintPath>..\packages\NDepend.Path.1.0.0\lib\net40\NDepend.Path.Interfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="NDepend.Path" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\AboutDialog.cs">
@@ -220,7 +215,6 @@
       <LastGenOutput>AtomFeedIcon.Designer.cs</LastGenOutput>
       <LogicalName>Resources.AtomFeedIcon.resources</LogicalName>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <Compile Include="Clipboard\TextClipboard.cs" />
     <Compile Include="Globals_exceptions.cs" />
   </ItemGroup>

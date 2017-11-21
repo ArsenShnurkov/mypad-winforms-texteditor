@@ -16,7 +16,6 @@ using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 using NDepend.Path;
-using NDepend.Path.Interface.Core;
 using System.Diagnostics;
 
 namespace MyPad
