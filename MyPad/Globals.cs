@@ -8,10 +8,11 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Configuration;
+using System.Threading;
 
 namespace MyPad
 {
-    static class Globals
+    static partial class Globals
     {
         public static readonly string DefaultIndexFileName = "index.htm";
         public static TextClipboard TextClipboard = new TextClipboard();
@@ -23,6 +24,20 @@ namespace MyPad
         [STAThread]
         static void Main(string[] args)
         {
+#if DEBUG
+            var nameCurrentCulture = System.Globalization.CultureInfo.CurrentCulture.Name;
+            Console.WriteLine($"Name (current) = {nameCurrentCulture}");
+            var name = Thread.CurrentThread.CurrentCulture.Name;
+            Console.WriteLine($"Name (thread) = {name}");
+            var lcid = Thread.CurrentThread.CurrentCulture.LCID;
+            Console.WriteLine($"LCID = {lcid}");
+            /*var cultureName = Thread.CurrentThread.CurrentCulture.DisplayName;
+            Console.WriteLine($"CultureName = {cultureName}");
+            var englishName = Thread.CurrentThread.CurrentCulture.EnglishName;
+            Console.WriteLine($"EnglishName = {englishName}");*/
+#endif
+            RegisterGlobalExceptionHandlers ();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

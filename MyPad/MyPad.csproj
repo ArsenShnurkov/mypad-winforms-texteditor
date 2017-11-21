@@ -222,6 +222,7 @@
     </EmbeddedResource>
     <None Include="packages.config" />
     <Compile Include="Clipboard\TextClipboard.cs" />
+    <Compile Include="Globals_exceptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
