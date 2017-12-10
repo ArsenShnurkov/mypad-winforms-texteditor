@@ -242,8 +242,12 @@
       <SubType>Component</SubType>
       <DependentUpon>TabControl\EditorTabPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.NewFile %28copy%29.cs">
+    <Compile Include="MainForm.Search.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TabControl\SearchTabPage.Background.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>TabControl\SearchTabPage.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
