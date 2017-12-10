@@ -79,9 +79,29 @@ namespace MyPad
             }
 
             cf.Start();
+            ApplicationContext ctx = new ApplicationContext (new MainForm(file));
             try
             {
-                Application.Run(new MainForm(file));
+                do
+                {
+                    try
+                    {
+                        Application.Run(ctx);
+                    }
+                    catch (Exception ex)
+                    {
+                        var res = MessageBox.Show(ex.ToString(), "around Application.Run", MessageBoxButtons.RetryCancel);
+                        if (res == DialogResult.Cancel)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            // don't retrow exception and go next run
+                        }
+                    }
+                }
+                while (ctx.MainForm != null);
             }
             finally
             {

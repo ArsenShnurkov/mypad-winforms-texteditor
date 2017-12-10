@@ -93,9 +93,6 @@
     <Compile Include="Dialogs\UnsavedDocumentsDialog.Designer.cs">
       <DependentUpon>UnsavedDocumentsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditorTabPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,18 +154,28 @@
     <None Include="web.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="MainForm_NewFile.cs" />
+    <Compile Include="MainForm.NewFile.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+	</Compile>		
     <None Include="Text1.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="MainForm_ContextMenu.cs" />
-    <Compile Include="MainForm_OpenFromCommandline.cs" />
-    <Compile Include="MainForm_Saving.cs" />
-    <Compile Include="MainForm_Closing.cs" />
-    <Compile Include="EditorTabPage_TextProcessing.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="MainForm.ContextMenu.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+	</Compile>
+    <Compile Include="MainForm.OpenFromCommandline.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+	</Compile>
+    <Compile Include="MainForm.Saving.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+	</Compile>
+    <Compile Include="MainForm.Closing.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+	</Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Globals.Exceptions.cs">
+      <DependentUpon>Globals.cs</DependentUpon>
+	</Compile>
     <Compile Include="RPC_for_SingleInstance\LocalIpcChannel.cs" />
     <Compile Include="RPC_for_SingleInstance\LocalUnixIpcChannel.cs" />
     <Compile Include="RPC_for_SingleInstance\LocalUnixIpcServerChannel.cs" />
@@ -216,7 +223,28 @@
       <LogicalName>Resources.AtomFeedIcon.resources</LogicalName>
     </EmbeddedResource>
     <Compile Include="Clipboard\TextClipboard.cs" />
-    <Compile Include="Globals_exceptions.cs" />
+    <Compile Include="TabControl\EditorTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\EditorTabPage.TextProcessing.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>TabControl\EditorTabPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TabControl\TabControlExtensions.cs" />
+    <Compile Include="TabControl\SearchTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\SearchTabPage.Designer.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>TabControl\SearchTabPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TabControl\EditorTabPage.Designer.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>TabControl\EditorTabPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.NewFile %28copy%29.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
@@ -255,6 +283,7 @@
     <Folder Include="Language\_Transcriptions\" />
     <Folder Include="Dialogs\Syndication\" />
     <Folder Include="Clipboard\" />
+    <Folder Include="TabControl\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\ICSharpCode.TextEditor\ArsenShnurkov\Project\ICSharpCode.TextEditor.csproj">

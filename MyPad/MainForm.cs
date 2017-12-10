@@ -26,70 +26,65 @@ namespace MyPad
         EntriesListDialog entriesListDialog;
         AboutDialog aboutDialog;
 
-        FindReplaceDialog findReplaceDialog = new FindReplaceDialog();
-        FindDialog findDialog = new FindDialog();
+        FindReplaceDialog findReplaceDialog = new FindReplaceDialog ();
+        FindDialog findDialog = new FindDialog ();
         string fileToLoad = String.Empty;
 
-        public MainForm()
+        public MainForm ()
         {
-            InitializeComponent();
+            InitializeComponent ();
 
-            SettingsManager.Init();
+            SettingsManager.Init ();
 
-            if (SettingsManager.MRUList.Count > 0)
-            {
-                foreach (string file in SettingsManager.MRUList)
-                {
-                    ToolStripItem tsi = new ToolStripMenuItem(file);
-                    tsi.Click += new EventHandler(RecentFiles_Click);
-                    recentFilesToolStripMenuItem.DropDown.Items.Add(tsi);
+            if (SettingsManager.MRUList.Count > 0) {
+                foreach (string file in SettingsManager.MRUList) {
+                    ToolStripItem tsi = new ToolStripMenuItem (file);
+                    tsi.Click += new EventHandler (RecentFiles_Click);
+                    recentFilesToolStripMenuItem.DropDown.Items.Add (tsi);
                 }
             }
 
-            unsavedDocumentsDialog = new UnsavedDocumentsDialog();
-            optionsDialog = new OptionsDialog();
-            entriesListDialog = new EntriesListDialog();
-            aboutDialog = new AboutDialog();
+            unsavedDocumentsDialog = new UnsavedDocumentsDialog ();
+            optionsDialog = new OptionsDialog ();
+            entriesListDialog = new EntriesListDialog ();
+            aboutDialog = new AboutDialog ();
 
-            int x = SettingsManager.ReadValue<int>("MainWindowX");
-            int y = SettingsManager.ReadValue<int>("MainWindowY");
-            int width = SettingsManager.ReadValue<int>("MainWindowWidth");
-            int height = SettingsManager.ReadValue<int>("MainWindowHeight");
+            int x = SettingsManager.ReadValue<int> ("MainWindowX");
+            int y = SettingsManager.ReadValue<int> ("MainWindowY");
+            int width = SettingsManager.ReadValue<int> ("MainWindowWidth");
+            int height = SettingsManager.ReadValue<int> ("MainWindowHeight");
 
-            if (width < 100)
-            {
+            if (width < 100) {
                 width = 800;
             }
-            if (height < 100)
-            {
+            if (height < 100) {
                 height = 600;
             }
 
-            this.Location = new Point(x, y);
-            this.Size = new Size(width, height);
+            this.Location = new Point (x, y);
+            this.Size = new Size (width, height);
 
             tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
-            tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControl1_DrawItem);
-            tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
-            tabControl1.DragEnter += new DragEventHandler(tabControl1_DragEnter);
-            tabControl1.DragDrop += new DragEventHandler(tabControl1_DragDrop);
+            tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler (this.tabControl1_DrawItem);
+            tabControl1.SelectedIndexChanged += new EventHandler (tabControl1_SelectedIndexChanged);
+            tabControl1.DragEnter += new DragEventHandler (tabControl1_DragEnter);
+            tabControl1.DragDrop += new DragEventHandler (tabControl1_DragDrop);
         }
 
-        public MainForm(string file)
-            : this()
+        public MainForm (string file)
+            : this ()
         {
-            if (File.Exists(file))
-            {
+            if (File.Exists (file)) {
                 fileToLoad = file;
             }
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+        protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
+        {
             int oldIndex = tabControl1.SelectedIndex;
             int newIndex = oldIndex;
             int tc = tabControl1.Controls.Count;
-            switch (keyData)
-            {
+            switch (keyData) {
             case Keys.Control | Keys.Tab:
                 newIndex = (tabControl1.SelectedIndex + 1) % tc;
                 break;
@@ -97,102 +92,92 @@ namespace MyPad
                 newIndex = (tabControl1.SelectedIndex - 1 + tc) % tc;
                 break;
             }
-            if (oldIndex != newIndex)
-            {
+            if (oldIndex != newIndex) {
                 tabControl1.SelectedIndex = newIndex;
                 return true;
             }
-            return base.ProcessCmdKey(ref msg, keyData);
+            return base.ProcessCmdKey (ref msg, keyData);
         }
 
-        public void UpdateMainWindowTitle()
+        public void UpdateMainWindowTitle ()
         {
-            EditorTabPage etb = GetActiveTab();
-            if (etb != null)
-            {
-                this.Text = string.Format("MyPad - {0} [{1}]", etb.Text, etb.GetFileFullPathAndName());
+            EditorTabPage etb = GetActiveTab ();
+            if (etb != null) {
+                this.Text = string.Format ("MyPad - {0} [{1}]", etb.Text, etb.GetFileFullPathAndName ());
             }
         }
 
-        public void SetupActiveTab()
+        public void SetupActiveTab ()
         {
-            EditorTabPage etb = GetActiveTab();
-            if (etb != null)
-            {
-                etb.Show();
+            EditorTabPage etb = GetActiveTab ();
+            if (etb != null) {
+                etb.Show ();
 
-                UpdateMainWindowTitle();
-                etb.Editor.Focus();
+                UpdateMainWindowTitle ();
+                etb.Editor.Focus ();
 
-                toolStripStatusLabel2.Text = string.Format("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString());
-                toolStripStatusLabel3.Text = string.Format("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString());
+                toolStripStatusLabel2.Text = string.Format ("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString ());
+                toolStripStatusLabel3.Text = string.Format ("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString ());
 
                 string highlighter = etb.Editor.Document.HighlightingStrategy.Name;
 
-                foreach (ToolStripMenuItem tsi in highlightingToolStripMenuItem.DropDownItems)
-                {
-                    if (tsi.Name == highlighter)
-                    {
+                foreach (ToolStripMenuItem tsi in highlightingToolStripMenuItem.DropDownItems) {
+                    if (tsi.Name == highlighter) {
                         tsi.Checked = true;
-                    }
-                    else
-                    {
+                    } else {
                         tsi.Checked = false;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 this.Text = "MyPad";
             }
         }
 
-        public EditorTabPage GetActiveTab()
+        public EditorTabPage GetActiveTab ()
         {
-            if (tabControl1.SelectedTab != null)
-            {
-                return (EditorTabPage)tabControl1.SelectedTab;
-            }
-            return null;
-        }
-
-        public EditorTabPage GetTabByTitle(string title)
-        {
-            foreach (EditorTabPage etb in tabControl1.TabPages)
-            {
-                if (etb.Text == title || etb.Text.StartsWith(title))
-                {
-                    return etb;
+            if (tabControl1.SelectedTab != null) {
+                if (tabControl1.SelectedTab is EditorTabPage) {
+                    return (EditorTabPage)tabControl1.SelectedTab;
                 }
             }
             return null;
         }
 
-        public TextEditorControl GetActiveEditor()
+        public EditorTabPage GetTabByTitle (string title)
         {
-            EditorTabPage etb = GetActiveTab();
+            foreach (TabPage tb in tabControl1.TabPages) {
+                if (tb is EditorTabPage) {
+                    EditorTabPage etb = tb as EditorTabPage;
+                    if (etb.Text == title || etb.Text.StartsWith (title)) {
+                        return etb;
+                    }
+                }
+            }
+            return null;
+        }
 
-            if (etb != null)
-            {
+        public TextEditorControl GetActiveEditor ()
+        {
+            EditorTabPage etb = GetActiveTab ();
+
+            if (etb != null) {
                 return etb.Editor;
             }
             return null;
         }
 
-        public void ClearCheckedHighlighters()
+        public void ClearCheckedHighlighters ()
         {
-            foreach (ToolStripMenuItem item in highlightingToolStripMenuItem.DropDown.Items)
-            {
+            foreach (ToolStripMenuItem item in highlightingToolStripMenuItem.DropDown.Items) {
                 item.Checked = false;
             }
         }
 
-        public ToolStripMenuItem GetRecentMenuItem(string text)
+        public ToolStripMenuItem GetRecentMenuItem (string text)
         {
             ToolStripMenuItem tsi = null;
 
-            foreach (ToolStripMenuItem tsmi in recentFilesToolStripMenuItem.DropDownItems)
-            {
+            foreach (ToolStripMenuItem tsmi in recentFilesToolStripMenuItem.DropDownItems) {
                 if (tsmi.Text == text)
                     tsi = tsmi;
             }
@@ -201,625 +186,572 @@ namespace MyPad
         }
 
 
-        public EditorTabPage FindTabByPath(string fileToLoad)
+        public EditorTabPage FindTabByPath (string fileToLoad)
         {
-            foreach (var tab in tabControl1.TabPages)
-            {
+            foreach (var tab in tabControl1.TabPages) {
                 var t = (EditorTabPage)tab;
                 string file = t.GetFileFullPathAndName ();
-                if (string.Compare(file, fileToLoad) == 0)
-                {
+                if (string.Compare (file, fileToLoad) == 0) {
                     return t;
                 }
             }
             return null;
         }
 
-        delegate void InternalOpenFileDelegate(string fileToLoad);
+        delegate void InternalOpenFileDelegate (string fileToLoad);
 
-        internal void InvokeOpenFile(string fileToLoad)
+        internal void InvokeOpenFile (string fileToLoad)
         {
-            if (this.InvokeRequired)
-            {
-                base.Invoke (new InternalOpenFileDelegate (this.InternalOpenFile), new object[]{ fileToLoad });
-            } else
-            {
+            if (this.InvokeRequired) {
+                base.Invoke (new InternalOpenFileDelegate (this.InternalOpenFile), new object [] { fileToLoad });
+            } else {
                 this.InternalOpenFile (fileToLoad);
             }
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad (EventArgs e)
         {
-            FileSyntaxModeProvider provider = new FileSyntaxModeProvider(Path.Combine(Application.StartupPath, "Modes"));
-            HighlightingManager.Manager.AddSyntaxModeFileProvider(provider);
+            FileSyntaxModeProvider provider = new FileSyntaxModeProvider (Path.Combine (Application.StartupPath, "Modes"));
+            HighlightingManager.Manager.AddSyntaxModeFileProvider (provider);
 
-            foreach (string hl in HighlightingManager.Manager.HighlightingDefinitions.Keys)
-            {
-                ToolStripItem tsi = new ToolStripMenuItem(hl);
-                tsi.Click += new EventHandler(Highlighting_Click);
-                highlightingToolStripMenuItem.DropDown.Items.Add(tsi);
+            foreach (string hl in HighlightingManager.Manager.HighlightingDefinitions.Keys) {
+                ToolStripItem tsi = new ToolStripMenuItem (hl);
+                tsi.Click += new EventHandler (Highlighting_Click);
+                highlightingToolStripMenuItem.DropDown.Items.Add (tsi);
             }
 
-            base.OnLoad(e);
+            base.OnLoad (e);
 
-            if (string.IsNullOrWhiteSpace(fileToLoad) == false && File.Exists(fileToLoad))
-            {
-                InternalOpenFile(fileToLoad);
-            }
-            else
-            {
-                newToolStripMenuItem_Click(null, null);
+            if (string.IsNullOrWhiteSpace (fileToLoad) == false && File.Exists (fileToLoad)) {
+                InternalOpenFile (fileToLoad);
+            } else {
+                newToolStripMenuItem_Click (null, null);
             }
         }
 
-        protected override void OnMove(EventArgs e)
+        protected override void OnMove (EventArgs e)
         {
-            base.OnMove(e);
+            base.OnMove (e);
 
-            if (SettingsManager.Settings != null)
-            {
-                SettingsManager.Settings["MainWindowX"] = this.Location.X;
-                SettingsManager.Settings["MainWindowY"] = this.Location.Y;
+            if (SettingsManager.Settings != null) {
+                SettingsManager.Settings ["MainWindowX"] = this.Location.X;
+                SettingsManager.Settings ["MainWindowY"] = this.Location.Y;
             }
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize (EventArgs e)
         {
-            base.OnResize(e);
+            base.OnResize (e);
 
-            if (SettingsManager.Settings != null)
-            {
-                SettingsManager.Settings["MainWindowWidth"] = this.Size.Width;
-                SettingsManager.Settings["MainWindowHeight"] = this.Size.Height;
+            if (SettingsManager.Settings != null) {
+                SettingsManager.Settings ["MainWindowWidth"] = this.Size.Width;
+                SettingsManager.Settings ["MainWindowHeight"] = this.Size.Height;
             }
         }
 
-        protected override void OnDragEnter(DragEventArgs drgevent)
+        protected override void OnDragEnter (DragEventArgs drgevent)
         {
-            if ((drgevent.AllowedEffect & DragDropEffects.Link) == DragDropEffects.Link)
-            {
+            if ((drgevent.AllowedEffect & DragDropEffects.Link) == DragDropEffects.Link) {
                 drgevent.Effect = DragDropEffects.Link;
             }
 
-            base.OnDragEnter(drgevent);
+            base.OnDragEnter (drgevent);
         }
 
-        protected override void OnDragDrop(DragEventArgs drgevent)
+        protected override void OnDragDrop (DragEventArgs drgevent)
         {
-            if ((drgevent.AllowedEffect & DragDropEffects.Link) == DragDropEffects.Link)
-            {
+            if ((drgevent.AllowedEffect & DragDropEffects.Link) == DragDropEffects.Link) {
                 drgevent.Effect = DragDropEffects.Link;
             }
 
             IDataObject iData = drgevent.Data;
 
-            if (iData.GetDataPresent(DataFormats.FileDrop))
-            {
-                string[] files = (string[])iData.GetData(DataFormats.FileDrop);
+            if (iData.GetDataPresent (DataFormats.FileDrop)) {
+                string [] files = (string [])iData.GetData (DataFormats.FileDrop);
 
-                foreach (string file in files)
-                {
-                    if (File.Exists(file))
-                    {
-                        InternalOpenFile(file);
+                foreach (string file in files) {
+                    if (File.Exists (file)) {
+                        InternalOpenFile (file);
                     }
                 }
             }
 
-            base.OnDragDrop(drgevent);
+            base.OnDragDrop (drgevent);
         }
 
-        void RecentFiles_Click(object sender, EventArgs e)
+        void RecentFiles_Click (object sender, EventArgs e)
         {
             ToolStripMenuItem tsi = (ToolStripMenuItem)sender;
 
-            InternalOpenFile(tsi.Text);
+            InternalOpenFile (tsi.Text);
 
-            recentFilesToolStripMenuItem.DropDown.Items.Remove(tsi);
-            recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
+            recentFilesToolStripMenuItem.DropDown.Items.Remove (tsi);
+            recentFilesToolStripMenuItem.DropDown.Items.Insert (0, tsi);
 
-            SettingsManager.MRUList.Remove(tsi.Text);
-            SettingsManager.MRUList.Insert(0, tsi.Text);
+            SettingsManager.MRUList.Remove (tsi.Text);
+            SettingsManager.MRUList.Insert (0, tsi.Text);
         }
 
-        void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        void tabControl1_SelectedIndexChanged (object sender, EventArgs e)
         {
-            SetupActiveTab();
+            SetupActiveTab ();
         }
 
-        void tabControl1_DragDrop(object sender, DragEventArgs e)
+        void tabControl1_DragDrop (object sender, DragEventArgs e)
         {
-            OnDragDrop(e);
+            OnDragDrop (e);
         }
 
-        void tabControl1_DragEnter(object sender, DragEventArgs e)
+        void tabControl1_DragEnter (object sender, DragEventArgs e)
         {
-            OnDragEnter(e);
+            OnDragEnter (e);
         }
 
-        private void Highlighting_Click(object sender, EventArgs e)
+        private void Highlighting_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
             ToolStripMenuItem tsi = (ToolStripMenuItem)sender;
 
-            if (etb != null)
-            {
-                etb.SetHighlighting(tsi.Text);
-                string name = etb.GetHighlighting();
+            if (etb != null) {
+                etb.SetHighlighting (tsi.Text);
+                string name = etb.GetHighlighting ();
 
-                if (tsi.Text.Equals(name))
-                {
+                if (tsi.Text.Equals (name)) {
                     tsi.Checked = true;
                 }
             }
         }
 
-        void etb_TextChanged(object sender, EventArgs e)
+        void etb_TextChanged (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                toolStripStatusLabel2.Text = string.Format("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString());
-                toolStripStatusLabel3.Text = string.Format("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString());
+            if (etb != null) {
+                toolStripStatusLabel2.Text = string.Format ("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString ());
+                toolStripStatusLabel3.Text = string.Format ("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString ());
             }
         }
 
-        void TabControl_TabCaptionUpdate(object sender, EventArgs e)
+        void TabControl_TabCaptionUpdate (object sender, EventArgs e)
         {
-            tabControl1.Invalidate(); // redraw tab captions if required
-            UpdateMainWindowTitle();
+            tabControl1.Invalidate (); // redraw tab captions if required
+            UpdateMainWindowTitle ();
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
+            if (openFileDialog1.ShowDialog () == DialogResult.OK) {
                 string file = openFileDialog1.FileName;
 
-                InternalOpenFile(file);
+                InternalOpenFile (file);
 
-                if (!SettingsManager.MRUList.Contains(file))
-                {
+                if (!SettingsManager.MRUList.Contains (file)) {
                     if (SettingsManager.MRUList.Count >= 15)
-                        SettingsManager.MRUList.RemoveAt(14);
-                    SettingsManager.MRUList.Insert(0, file);
+                        SettingsManager.MRUList.RemoveAt (14);
+                    SettingsManager.MRUList.Insert (0, file);
 
-                    ToolStripMenuItem tsi = new ToolStripMenuItem(file, null, new EventHandler(RecentFiles_Click));
-                    recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
-                }
-                else
-                {
-                    SettingsManager.MRUList.Remove(file);
-                    SettingsManager.MRUList.Insert(0, file);
+                    ToolStripMenuItem tsi = new ToolStripMenuItem (file, null, new EventHandler (RecentFiles_Click));
+                    recentFilesToolStripMenuItem.DropDown.Items.Insert (0, tsi);
+                } else {
+                    SettingsManager.MRUList.Remove (file);
+                    SettingsManager.MRUList.Insert (0, file);
 
-                    ToolStripMenuItem tsi = GetRecentMenuItem(file);
-                    recentFilesToolStripMenuItem.DropDown.Items.Remove(tsi);
-                    recentFilesToolStripMenuItem.DropDown.Items.Insert(0, tsi);
+                    ToolStripMenuItem tsi = GetRecentMenuItem (file);
+                    recentFilesToolStripMenuItem.DropDown.Items.Remove (tsi);
+                    recentFilesToolStripMenuItem.DropDown.Items.Insert (0, tsi);
                 }
             }
         }
 
-        private void reloadFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void reloadFileToolStripMenuItem_Click (object sender, EventArgs e)
         {
             /*EditorTabPage etb = */
-            GetActiveTab();
+            GetActiveTab ();
         }
 
 
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void undoToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
             if (etb != null)
-                etb.Undo();
+                etb.Undo ();
         }
 
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void redoToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
             if (etb != null)
-                etb.Redo();
+                etb.Redo ();
         }
 
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cutToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
             if (etb != null)
-                etb.Cut();
+                etb.Cut ();
         }
 
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void copyToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
             if (etb != null)
-                etb.Copy();
+                etb.Copy ();
         }
 
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pasteToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
             if (etb != null)
-                etb.Paste();
+                etb.Paste ();
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void deleteToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
             if (etb != null)
-                etb.Delete();
+                etb.Delete ();
         }
 
-        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        private void selectAllToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
             if (etb != null)
-                etb.SelectAll();
+                etb.SelectAll ();
         }
 
-        private void enchanceHyperlinkToolStripMenuItem_Click(object sender, EventArgs e)
+        private void enchanceHyperlinkToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.EnchanceHyperlink();
+            if (etb != null) {
+                etb.EnchanceHyperlink ();
             }
         }
-        private void enchanceImagelinkToolStripMenuItem_Click(object sender, EventArgs e)
+        private void enchanceImagelinkToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.EnchanceImagelink();
+            if (etb != null) {
+                etb.EnchanceImagelink ();
             }
         }
 
         private void convertTextToHtmlToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.ConvertTextToHtml();
+            if (etb != null) {
+                etb.ConvertTextToHtml ();
             }
         }
-        private void MakeBoldToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeBoldToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeBold();
+            if (etb != null) {
+                etb.MakeBold ();
             }
         }
-        private void MakeSelectionRedToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeSelectionRedToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeSelectionRed();
+            if (etb != null) {
+                etb.MakeSelectionRed ();
             }
         }
-        private void MakeBRToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeBRToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeBR();
+            if (etb != null) {
+                etb.MakeBR ();
             }
         }
-        private void MakeH1ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeH1ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeH("1");
+            if (etb != null) {
+                etb.MakeH ("1");
             }
         }
-        private void MakeH2ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeH2ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeH("2");
+            if (etb != null) {
+                etb.MakeH ("2");
             }
         }
-        private void MakeH3ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeH3ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeH("3");
+            if (etb != null) {
+                etb.MakeH ("3");
             }
         }
-        private void MakeH4ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeH4ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeH("4");
+            if (etb != null) {
+                etb.MakeH ("4");
             }
         }
-        private void MakeH5ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeH5ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeH("5");
+            if (etb != null) {
+                etb.MakeH ("5");
             }
         }
-        private void MakeH6ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeH6ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MakeH("6");
+            if (etb != null) {
+                etb.MakeH ("6");
             }
         }
-        private void insertNbspToolStripMenuItem_Click(object sender, EventArgs e)
+        private void insertNbspToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.InsertTextAtCursor("&nbsp;");
+            if (etb != null) {
+                etb.InsertTextAtCursor ("&nbsp;");
             }
         }
 
-        private void moveLineUpToolStripMenuItem_Click(object sender, EventArgs e)
+        private void moveLineUpToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MoveLineUp(etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
+            if (etb != null) {
+                etb.MoveLineUp (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
             }
         }
 
-        private void moveLineDownToolStripMenuItem_Click(object sender, EventArgs e)
+        private void moveLineDownToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.MoveLineDown(etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
+            if (etb != null) {
+                etb.MoveLineDown (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
             }
         }
 
-        private void cutLineToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cutLineToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.SelectLine(etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
-                etb.Cut();
+            if (etb != null) {
+                etb.SelectLine (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
+                etb.Cut ();
             }
         }
 
-        private void copyLineToolStripMenuItem_Click(object sender, EventArgs e)
+        private void copyLineToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.SelectLine(etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
-                etb.Copy();
+            if (etb != null) {
+                etb.SelectLine (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
+                etb.Copy ();
 
-                clearSelectionToolStripMenuItem_Click(null, null);
+                clearSelectionToolStripMenuItem_Click (null, null);
             }
         }
 
-        private void commentLineToolStripMenuItem_Click(object sender, EventArgs e)
+        private void commentLineToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
+            if (etb != null) {
 
             }
         }
 
-        private void clearSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void clearSelectionToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                etb.Editor.ActiveTextAreaControl.TextArea.SelectionManager.ClearSelection();
+            if (etb != null) {
+                etb.Editor.ActiveTextAreaControl.TextArea.SelectionManager.ClearSelection ();
             }
         }
 
-        private void wrapInToolStripMenuItem_Click(object sender, EventArgs e)
+        private void wrapInToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
+            if (etb != null) {
 
             }
         }
 
-        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        private void findToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                findDialog.SetFocusOnSearchTextField();
-                if (findDialog.ShowDialog() == DialogResult.OK)
-                {
-                    int index = etb.Find(findDialog.Search, findDialog.Options);
-                    if (index >= 0)
-                    {
-                        etb.ScrollToOffset(index);
+            if (etb != null) {
+                findDialog.SetFocusOnSearchTextField ();
+                if (findDialog.ShowDialog () == DialogResult.OK) {
+                    int index = etb.Find (findDialog.Search, findDialog.Options);
+                    if (index >= 0) {
+                        etb.ScrollToOffset (index);
                     }
                 }
             }
         }
 
-        private void findNextToolStripMenuItem_Click(object sender, EventArgs e)
+        private void findNextToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                int index = etb.Find(findDialog.Search, findDialog.Options);
-                if (index >= 0)
-                {
-                    etb.ScrollToOffset(index);
+            if (etb != null) {
+                int index = etb.Find (findDialog.Search, findDialog.Options);
+                if (index >= 0) {
+                    etb.ScrollToOffset (index);
                 }
             }
         }
 
-        private void findAndReplaceRegExToolStripMenuItem_Click(object sender, EventArgs e)
+        private void findAndReplaceRegExToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                findReplaceDialog.SetFocusOnSearchTextField();
+            if (etb != null) {
+                findReplaceDialog.SetFocusOnSearchTextField ();
                 findReplaceDialog.Text += " RegEx";
-                if (findReplaceDialog.ShowDialog() == DialogResult.OK)
-                {
-                    etb.FindAndReplaceRegEx(findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
+                if (findReplaceDialog.ShowDialog () == DialogResult.OK) {
+                    etb.FindAndReplaceRegEx (findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
                 }
             }
         }
 
-        private void findAndReplaceRawToolStripMenuItem_Click(object sender, EventArgs e)
+        private void findAndReplaceRawToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
+            EditorTabPage etb = GetActiveTab ();
 
-            if (etb != null)
-            {
-                findReplaceDialog.SetFocusOnSearchTextField();
+            if (etb != null) {
+                findReplaceDialog.SetFocusOnSearchTextField ();
                 findReplaceDialog.Text += " Raw";
-                if (findReplaceDialog.ShowDialog() == DialogResult.OK)
-                {
-                    etb.FindAndReplaceRaw(findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
+                if (findReplaceDialog.ShowDialog () == DialogResult.OK) {
+                    etb.FindAndReplaceRaw (findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
                 }
             }
         }
 
-        private void toolbarToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolbarToolStripMenuItem_Click (object sender, EventArgs e)
         {
             if (toolStrip1.Visible)
-                toolStrip1.Hide();
+                toolStrip1.Hide ();
             else
-                toolStrip1.Show();
+                toolStrip1.Show ();
         }
 
-        private void statusbarToolStripMenuItem_Click(object sender, EventArgs e)
+        private void statusbarToolStripMenuItem_Click (object sender, EventArgs e)
         {
             if (statusStrip1.Visible)
-                statusStrip1.Hide();
+                statusStrip1.Hide ();
             else
-                statusStrip1.Show();
+                statusStrip1.Show ();
         }
 
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void optionsToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            if (optionsDialog.ShowDialog() == DialogResult.OK)
-            {
-                foreach (EditorTabPage etb in tabControl1.TabPages)
-                {
-                    etb.ReloadSettings();
+            if (optionsDialog.ShowDialog () == DialogResult.OK) {
+                foreach (TabPage tb in tabControl1.TabPages) {
+                    if (tb is EditorTabPage) {
+                        EditorTabPage etb = tb as EditorTabPage;
+                        etb.ReloadSettings ();
+                    }
                 }
             }
         }
 
-        private void atomFeedEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void atomFeedEditorToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            if (entriesListDialog.ShowDialog() == DialogResult.OK)
-            {
+            if (entriesListDialog.ShowDialog () == DialogResult.OK) {
             }
         }
 
-        private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void helpToolStripMenuItem1_Click (object sender, EventArgs e)
         {
 
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void aboutToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            aboutDialog.ShowDialog();
+            aboutDialog.ShowDialog ();
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void toolStripButton1_Click (object sender, EventArgs e)
         {
-            newToolStripMenuItem_Click(null, null);
+            newToolStripMenuItem_Click (null, null);
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void toolStripButton2_Click (object sender, EventArgs e)
         {
-            openToolStripMenuItem_Click(null, null);
+            openToolStripMenuItem_Click (null, null);
         }
 
-        private void toolStripButton5_Click(object sender, EventArgs e)
+        private void toolStripButton5_Click (object sender, EventArgs e)
         {
-            undoToolStripMenuItem_Click(null, null);
+            undoToolStripMenuItem_Click (null, null);
         }
 
-        private void toolStripButton6_Click(object sender, EventArgs e)
+        private void toolStripButton6_Click (object sender, EventArgs e)
         {
-            redoToolStripMenuItem_Click(null, null);
+            redoToolStripMenuItem_Click (null, null);
         }
 
-        private void toolStripButton7_Click(object sender, EventArgs e)
+        private void toolStripButton7_Click (object sender, EventArgs e)
         {
-            cutToolStripMenuItem_Click(null, null);
+            cutToolStripMenuItem_Click (null, null);
         }
 
-        private void toolStripButton8_Click(object sender, EventArgs e)
+        private void toolStripButton8_Click (object sender, EventArgs e)
         {
-            copyToolStripMenuItem_Click(null, null);
+            copyToolStripMenuItem_Click (null, null);
         }
 
-        private void toolStripButton9_Click(object sender, EventArgs e)
+        private void toolStripButton9_Click (object sender, EventArgs e)
         {
-            pasteToolStripMenuItem_Click(null, null);
+            pasteToolStripMenuItem_Click (null, null);
         }
 
-        private void toolStripButton10_Click(object sender, EventArgs e)
+        private void toolStripButton10_Click (object sender, EventArgs e)
         {
-            findToolStripMenuItem_Click(null, null);
+            findToolStripMenuItem_Click (null, null);
         }
 
-        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        private void tabControl1_DrawItem (object sender, DrawItemEventArgs e)
         {
-            var tab = (sender as TabControl).TabPages[e.Index];
+            var tab = (sender as TabControl).TabPages [e.Index];
             //e.DrawBackground();
             Color c = tab.ForeColor;
-            using (Brush fore = new SolidBrush(tab.ForeColor))
-            {
-                using (Brush back = new SolidBrush(tab.BackColor))
-                {
-                    e.Graphics.FillRectangle(back, e.Bounds);
-                    SizeF sz = e.Graphics.MeasureString(tabControl1.TabPages[e.Index].Text, e.Font);
-                    e.Graphics.DrawString(tabControl1.TabPages[e.Index].Text, e.Font, fore, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
+            using (Brush fore = new SolidBrush (tab.ForeColor)) {
+                using (Brush back = new SolidBrush (tab.BackColor)) {
+                    e.Graphics.FillRectangle (back, e.Bounds);
+                    SizeF sz = e.Graphics.MeasureString (tabControl1.TabPages [e.Index].Text, e.Font);
+                    e.Graphics.DrawString (tabControl1.TabPages [e.Index].Text, e.Font, fore, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
 
                     Rectangle rect = e.Bounds;
-                    rect.Offset(0, 1);
-                    rect.Inflate(0, -1);
-                    e.Graphics.DrawRectangle(Pens.DarkGray, rect);
-                    e.DrawFocusRectangle();
+                    rect.Offset (0, 1);
+                    rect.Inflate (0, -1);
+                    e.Graphics.DrawRectangle (Pens.DarkGray, rect);
+                    e.DrawFocusRectangle ();
                 }
             }
         }
@@ -829,48 +761,46 @@ namespace MyPad
             // Tro to find in tabs
             try {
                 filename = new FileInfo (filename).FullName;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Trace.WriteLine (ex.ToString ());
             }
             return filename;
         }
 
-        public bool AlreadyOpen(string filename)
+        public bool AlreadyOpen (string filename)
         {
-            if (string.IsNullOrWhiteSpace (filename))
-            {
+            if (string.IsNullOrWhiteSpace (filename)) {
                 return false;
             }
 
             filename = GetFullFilename (filename);
 
-            foreach (EditorTabPage etb in tabControl1.TabPages) {
-                if (etb.GetFileFullPathAndName ().CompareTo (filename) == 0) {
-                    return true;
+            foreach (TabPage tb in tabControl1.TabPages) {
+                if (tb is EditorTabPage) {
+                    EditorTabPage etb = tb as EditorTabPage;
+                    if (etb.GetFileFullPathAndName ().CompareTo (filename) == 0) {
+                        return true;
+                    }
                 }
             }
 
             return false;
         }
 
-        public bool Exists(string filename)
+        public bool Exists (string filename)
         {
-            if (string.IsNullOrWhiteSpace (filename))
-            {
+            if (string.IsNullOrWhiteSpace (filename)) {
                 return false;
             }
 
-            if (AlreadyOpen (filename))
-            {
+            if (AlreadyOpen (filename)) {
                 return true;
             }
 
             filename = GetFullFilename (filename);
 
             // try to find on disk
-            if (File.Exists (filename))
-            {
+            if (File.Exists (filename)) {
                 return true;
             }
 

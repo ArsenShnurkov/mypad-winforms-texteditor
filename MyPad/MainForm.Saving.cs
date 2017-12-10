@@ -111,10 +111,12 @@ namespace MyPad
         {
             EditorTabPage currentActiveTab = GetActiveTab();
 
-            foreach (EditorTabPage etb in tabControl1.TabPages)
-            {
-                tabControl1.SelectedTab = etb;
-                SaveTabToDisk(etb); 
+            foreach (TabPage tb in tabControl1.TabPages) {
+                                if (tb is EditorTabPage) {
+                                        EditorTabPage etb = tb as EditorTabPage;
+                                        tabControl1.SelectedTab = etb;
+                    SaveTabToDisk(etb); 
+                                }
             }
 
             tabControl1.SelectedTab = currentActiveTab;

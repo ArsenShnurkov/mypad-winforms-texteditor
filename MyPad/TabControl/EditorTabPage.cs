@@ -296,7 +296,14 @@ namespace MyPad
 
         public void Paste()
         {
-            textEditorControl.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(null, null);
+            try
+            {
+                textEditorControl.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(null, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show (ex.ToString(), "Exception during paste", MessageBoxButtons.OK);
+            }
         }
 
         public void SelectAll()
@@ -510,24 +517,6 @@ namespace MyPad
                 ClearHighlightedTokens();
                 this.Refresh();
             }
-        }
-    }
-
-    public static class TabControlExtensions
-    {
-        public static int GetUntitledTabCount(this TabControl tabControl1)
-        {
-            int count = 0;
-
-            foreach (EditorTabPage etb in tabControl1.TabPages)
-            {
-                if (etb.HasSomethingOnDisk == false)
-                {
-                    count++;
-                }
-            }
-
-            return count;
         }
     }
 }
