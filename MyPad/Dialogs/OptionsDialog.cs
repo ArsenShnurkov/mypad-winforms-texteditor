@@ -5,100 +5,109 @@ using System.Drawing;
 using System.Text;
 using System.IO;
 using System.Configuration;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace MyPad.Dialogs
 {
     public partial class OptionsDialog : Form
     {
         Configuration cfg;
-        public OptionsDialog()
+        public OptionsDialog ()
         {
-            InitializeComponent();
+            InitializeComponent ();
 
             cfg = Globals.LoadConfiguration ();
 
-            CopySettingsIntoControls();
+            CopySettingsIntoControls ();
         }
 
-
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad (EventArgs e)
         {
-            FontFamily[] fonts = FontFamily.Families;
+            comboBox1.Items.Clear();
+            FontFamily [] fonts = FontFamily.Families;
 
-            foreach (FontFamily font in fonts)
-            {
-                comboBox1.Items.Add(font.Name);
+            var sortedList = new SortedList<string, FontFamily> ();
+            foreach (FontFamily font in fonts) {
+                if (sortedList.ContainsKey (font.Name) == false) {
+                    sortedList.Add (font.Name, font);
+                }
             }
 
-            comboBox2.Items.AddRange(new object[] { 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 18, 20, 22 });
+            foreach (var item in sortedList.Keys) {
+                int index = comboBox1.Items.Add (item);
+            }
 
-            base.OnLoad(e);
+            comboBox2.Items.Clear();
+            comboBox2.Items.AddRange (new object [] { 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 18, 20, 22 });
+
+            base.OnLoad (e);
         }
 
         void CopySettingsIntoControls ()
         {
-            checkBox1.Checked = SettingsManager.ReadValue<bool> ("AllowCaretBeyondEOL");
-            checkBox2.Checked = SettingsManager.ReadValue<bool> ("ShowEOLMarkers");
-            checkBox3.Checked = SettingsManager.ReadValue<bool> ("ShowSpaces");
-            checkBox4.Checked = SettingsManager.ReadValue<bool> ("ShowTabs");
-            checkBox5.Checked = SettingsManager.ReadValue<bool> ("ShowVRuler");
-            checkBox6.Checked = SettingsManager.ReadValue<bool> ("ShowHRuler");
-            checkBox7.Checked = SettingsManager.ReadValue<bool> ("ShowInvalidLines");
-            checkBox8.Checked = SettingsManager.ReadValue<bool> ("ShowLineNumbers");
-            checkBox9.Checked = SettingsManager.ReadValue<bool> ("ShowMatchingBrackets");
-            checkBox10.Checked = SettingsManager.ReadValue<bool> ("AutoInsertBrackets");
-            checkBox11.Checked = SettingsManager.ReadValue<bool> ("EnableFolding");
-            checkBox12.Checked = SettingsManager.ReadValue<bool> ("ConvertTabsToSpaces");
-            comboBox1.Text = SettingsManager.ReadValue<string> ("FontName");
-            comboBox2.Text = SettingsManager.ReadValue<string> ("FontSize");
-            this.textBoxAtomFeedFileLocation.Text = cfg.AppSettings.Settings ["AtomFeedLocation"].Value;
+            EditorConfigurationSection section = cfg.GetEditorConfiguration ();
+            checkBox1.Checked = section.AllowCaretBeyondEOL.Value;
+            checkBox2.Checked = section.ShowEOLMarkers.Value;
+            checkBox3.Checked = section.ShowSpaces.Value;
+            checkBox4.Checked = section.ShowTabs.Value;
+            checkBox5.Checked = section.ShowVRuler.Value;
+            checkBox6.Checked = section.ShowHRuler.Value;
+            checkBox7.Checked = section.ShowInvalidLines.Value;
+            checkBox8.Checked = section.ShowLineNumbers.Value;
+            checkBox9.Checked = section.ShowMatchingBrackets.Value;
+            checkBox10.Checked = section.AutoInsertBrackets.Value;
+            checkBox11.Checked = section.EnableFolding.Value;
+            checkBox12.Checked = section.ConvertTabsToSpaces.Value;
+            comboBox1.Text = section.FontName.Value;
+            comboBox2.Text = section.FontSize.Value.ToString (CultureInfo.InvariantCulture);
+            this.textBoxAtomFeedFileLocation.Text = cfg.AppSettings.Settings ["AtomFeedLocation"]?.Value;
+            this.textBoxSearchDirectory.Text = cfg.AppSettings.Settings ["SearchDirectory"]?.Value;
         }
 
-        protected override void OnVisibleChanged(EventArgs e)
+        protected override void OnVisibleChanged (EventArgs e)
         {
-            if (this.Visible)
-            {
+            if (this.Visible) {
                 CopySettingsIntoControls ();
             }
 
-            base.OnVisibleChanged(e);
+            base.OnVisibleChanged (e);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click (object sender, EventArgs e)
         {
-            SettingsManager.Settings["AllowCaretBeyondEOL"] = checkBox1.Checked;
-            SettingsManager.Settings["ShowEOLMarker"] = checkBox2.Checked;
-            SettingsManager.Settings["ShowSpaces"] = checkBox3.Checked;
-            SettingsManager.Settings["ShowTabs"] = checkBox4.Checked;
-            SettingsManager.Settings["ShowVRuler"] = checkBox5.Checked;
-            SettingsManager.Settings["ShowHRuler"] = checkBox6.Checked;
-            SettingsManager.Settings["ShowInvalidLines"] = checkBox7.Checked;
-            SettingsManager.Settings["ShowLineNumbers"] = checkBox8.Checked;
-            SettingsManager.Settings["ShowMatchingBrackets"] = checkBox9.Checked;
-            SettingsManager.Settings["AutoInsertBrackets"] = checkBox10.Checked;
-            SettingsManager.Settings["EnableFolding"] = checkBox11.Checked;
-            SettingsManager.Settings["ConvertTabsToSpaces"] = checkBox12.Checked;
-            cfg.AppSettings.Settings ["AtomFeedLocation"].Value = this.textBoxAtomFeedFileLocation.Text;
+            EditorConfigurationSection section = cfg.GetEditorConfiguration ();
+            section.AllowCaretBeyondEOL.Value = checkBox1.Checked;
+            section.ShowEOLMarkers.Value = checkBox2.Checked;
+            section.ShowSpaces.Value = checkBox3.Checked;
+            section.ShowTabs.Value = checkBox4.Checked;
+            section.ShowVRuler.Value = checkBox5.Checked;
+            section.ShowHRuler.Value = checkBox6.Checked;
+            section.ShowInvalidLines.Value = checkBox7.Checked;
+            section.ShowLineNumbers.Value = checkBox8.Checked;
+            section.ShowMatchingBrackets.Value = checkBox9.Checked;
+            section.AutoInsertBrackets.Value = checkBox10.Checked;
+            section.EnableFolding.Value = checkBox11.Checked;
+            section.ConvertTabsToSpaces.Value = checkBox12.Checked;
+            cfg.AppSettings.Settings.Add ("AtomFeedLocation", this.textBoxAtomFeedFileLocation.Text);
+            cfg.AppSettings.Settings.Add ("SearchDirectory", this.textBoxSearchDirectory.Text);
 
-            if (comboBox1.Text != string.Empty && comboBox2.Text != string.Empty)
-            {
-                try
-                {
-                    new Font(new FontFamily(comboBox1.Text), (float)Convert.ToDouble(comboBox2.Text), FontStyle.Regular);
-                    SettingsManager.Settings["FontName"] = comboBox1.Text;
-                    SettingsManager.Settings["FontSize"] = (float)Convert.ToDouble(comboBox2.Text);
-                }
-                catch (Exception ex)
-                {
+            if (comboBox1.Text != string.Empty && comboBox2.Text != string.Empty) {
+                try {
+                    var fontSize = (float)Convert.ToDouble (comboBox2.Text, CultureInfo.InvariantCulture);
+                    var f = new Font (new FontFamily (comboBox1.Text), fontSize, FontStyle.Regular);
+                    section.FontName.Value = f.Name;
+                    section.FontSize.Value = fontSize;
+                } catch (Exception ex) {
                     string err = ex.Message;
                 }
             }
-            cfg.Save ();
+            cfg.SaveAll ();
             DialogResult = DialogResult.OK;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click (object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }

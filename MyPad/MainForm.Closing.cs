@@ -69,7 +69,14 @@ namespace MyPad
 
         protected override void OnClosing (CancelEventArgs e)
         {
-            SettingsManager.Save ();
+            EditorConfigurationSection section = cfg.GetEditorConfiguration ();
+
+            section.MainWindowX.Value = this.Location.X;
+            section.MainWindowY.Value = this.Location.Y;
+            section.MainWindowWidth.Value = this.Size.Width;
+            section.MainWindowHeight.Value = this.Size.Height;
+
+            cfg.SaveAll ();
 
             unsavedDocumentsDialog.ClearDocuments ();
 

@@ -17,11 +17,13 @@ using ICSharpCode.TextEditor.Document;
 
 //using LuaInterface;
 using System.Diagnostics;
+using System.Configuration;
 
 namespace MyPad
 {
     public partial class MainForm : Form
     {
+        Configuration cfg;
         OptionsDialog optionsDialog;
         EntriesListDialog entriesListDialog;
         AboutDialog aboutDialog;
@@ -32,14 +34,14 @@ namespace MyPad
 
         public MainForm ()
         {
+            cfg = Globals.LoadConfiguration ();
             InitializeComponent ();
-            InitializeTabContextMenu();
+            InitializeTabContextMenu ();
 
-            SettingsManager.Init ();
-
-            if (SettingsManager.MRUList.Count > 0) {
-                foreach (string file in SettingsManager.MRUList) {
-                    ToolStripItem tsi = new ToolStripMenuItem (file);
+            MRUListConfigurationSection mruList = cfg.GetMRUList ();
+            if (mruList.Instances.Count > 0) {
+                foreach (MRUListElement record in mruList.Instances) {
+                    ToolStripItem tsi = new ToolStripMenuItem (record.FileName);
                     tsi.Click += new EventHandler (RecentFiles_Click);
                     recentFilesToolStripMenuItem.DropDown.Items.Add (tsi);
                 }
@@ -50,26 +52,28 @@ namespace MyPad
             entriesListDialog = new EntriesListDialog ();
             aboutDialog = new AboutDialog ();
 
-            int x = SettingsManager.ReadValue<int> ("MainWindowX");
-            int y = SettingsManager.ReadValue<int> ("MainWindowY");
-            int width = SettingsManager.ReadValue<int> ("MainWindowWidth");
-            int height = SettingsManager.ReadValue<int> ("MainWindowHeight");
+                        tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+                        tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler (this.tabControl1_DrawItem);
+                        tabControl1.SelectedIndexChanged += new EventHandler (tabControl1_SelectedIndexChanged);
+                        tabControl1.DragEnter += new DragEventHandler (tabControl1_DragEnter);
+                        tabControl1.DragDrop += new DragEventHandler (tabControl1_DragDrop);
 
+            var editorConfiguration = cfg.GetEditorConfiguration ();
+            int x = editorConfiguration.MainWindowX.Value;
+            int y = editorConfiguration.MainWindowY.Value;
+            int width = editorConfiguration.MainWindowWidth.Value;
             if (width < 100) {
                 width = 800;
             }
+
+            int height = editorConfiguration.MainWindowHeight.Value;
             if (height < 100) {
                 height = 600;
             }
 
+            this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point (x, y);
             this.Size = new Size (width, height);
-
-            tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
-            tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler (this.tabControl1_DrawItem);
-            tabControl1.SelectedIndexChanged += new EventHandler (tabControl1_SelectedIndexChanged);
-            tabControl1.DragEnter += new DragEventHandler (tabControl1_DragEnter);
-            tabControl1.DragDrop += new DragEventHandler (tabControl1_DragDrop);
         }
 
         public MainForm (string file)
@@ -226,26 +230,6 @@ namespace MyPad
             }
         }
 
-        protected override void OnMove (EventArgs e)
-        {
-            base.OnMove (e);
-
-            if (SettingsManager.Settings != null) {
-                SettingsManager.Settings ["MainWindowX"] = this.Location.X;
-                SettingsManager.Settings ["MainWindowY"] = this.Location.Y;
-            }
-        }
-
-        protected override void OnResize (EventArgs e)
-        {
-            base.OnResize (e);
-
-            if (SettingsManager.Settings != null) {
-                SettingsManager.Settings ["MainWindowWidth"] = this.Size.Width;
-                SettingsManager.Settings ["MainWindowHeight"] = this.Size.Height;
-            }
-        }
-
         protected override void OnDragEnter (DragEventArgs drgevent)
         {
             if ((drgevent.AllowedEffect & DragDropEffects.Link) == DragDropEffects.Link) {
@@ -285,8 +269,9 @@ namespace MyPad
             recentFilesToolStripMenuItem.DropDown.Items.Remove (tsi);
             recentFilesToolStripMenuItem.DropDown.Items.Insert (0, tsi);
 
-            SettingsManager.MRUList.Remove (tsi.Text);
-            SettingsManager.MRUList.Insert (0, tsi.Text);
+            // TODO: Reorder recent files list
+            //SettingsManager.MRUList.Remove (tsi.Text);
+            //SettingsManager.MRUList.Insert (0, tsi.Text);
         }
 
         void tabControl1_SelectedIndexChanged (object sender, EventArgs e)
@@ -345,16 +330,17 @@ namespace MyPad
 
                 InternalOpenFile (file);
 
-                if (!SettingsManager.MRUList.Contains (file)) {
-                    if (SettingsManager.MRUList.Count >= 15)
-                        SettingsManager.MRUList.RemoveAt (14);
-                    SettingsManager.MRUList.Insert (0, file);
+                MRUListConfigurationSection mruList = cfg.GetMRUList ();
+                if (!mruList.Contains (file)) {
+                    if (mruList.Instances.Count >= 15)
+                        mruList.RemoveAt (14);
+                    mruList.InsertAt (0, file);
 
                     ToolStripMenuItem tsi = new ToolStripMenuItem (file, null, new EventHandler (RecentFiles_Click));
                     recentFilesToolStripMenuItem.DropDown.Items.Insert (0, tsi);
                 } else {
-                    SettingsManager.MRUList.Remove (file);
-                    SettingsManager.MRUList.Insert (0, file);
+                    mruList.Remove (file);
+                    mruList.InsertAt (0, file);
 
                     ToolStripMenuItem tsi = GetRecentMenuItem (file);
                     recentFilesToolStripMenuItem.DropDown.Items.Remove (tsi);
@@ -621,83 +607,83 @@ namespace MyPad
 
         private void clearSelectionToolStripMenuItem_Click (object sender, EventArgs e)
         {
-                        TabPage tb = tabControl1.SelectedTab;
-                        if (tb as EditorTabPage == null) {
-                                return;
-                        }
-                        EditorTabPage etb = tb as EditorTabPage;
-                etb.Editor.ActiveTextAreaControl.TextArea.SelectionManager.ClearSelection ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.Editor.ActiveTextAreaControl.TextArea.SelectionManager.ClearSelection ();
         }
 
         private void wrapInToolStripMenuItem_Click (object sender, EventArgs e)
         {
-                        TabPage tb = tabControl1.SelectedTab;
-                        if (tb as EditorTabPage == null) {
-                                return;
-                        }
-                        EditorTabPage etb = tb as EditorTabPage;
-                        MessageBox.Show ("not implemented yet");
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            MessageBox.Show ("not implemented yet");
         }
 
         private void findToolStripMenuItem_Click (object sender, EventArgs e)
         {
-                        TabPage tb = tabControl1.SelectedTab;
-                        if (tb as EditorTabPage == null) {
-                                return;
-                        }
-                        EditorTabPage etb = tb as EditorTabPage;
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
 
-                findDialog.SetFocusOnSearchTextField ();
-                if (findDialog.ShowDialog () == DialogResult.OK) {
-                    int index = etb.Find (findDialog.Search, findDialog.Options);
-                    if (index >= 0) {
-                        etb.ScrollToOffset (index);
-                    }
-                }
-        }
-
-        private void findNextToolStripMenuItem_Click (object sender, EventArgs e)
-        {
-                        TabPage tb = tabControl1.SelectedTab;
-                        if (tb as EditorTabPage == null) {
-                                return;
-                        }
-                        EditorTabPage etb = tb as EditorTabPage;
-
+            findDialog.SetFocusOnSearchTextField ();
+            if (findDialog.ShowDialog () == DialogResult.OK) {
                 int index = etb.Find (findDialog.Search, findDialog.Options);
                 if (index >= 0) {
                     etb.ScrollToOffset (index);
                 }
+            }
+        }
+
+        private void findNextToolStripMenuItem_Click (object sender, EventArgs e)
+        {
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+
+            int index = etb.Find (findDialog.Search, findDialog.Options);
+            if (index >= 0) {
+                etb.ScrollToOffset (index);
+            }
         }
 
         private void findAndReplaceRegExToolStripMenuItem_Click (object sender, EventArgs e)
         {
-                        TabPage tb = tabControl1.SelectedTab;
-                        if (tb as EditorTabPage == null) {
-                                return;
-                        }
-                        EditorTabPage etb = tb as EditorTabPage;
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
 
-                findReplaceDialog.SetFocusOnSearchTextField ();
-                findReplaceDialog.Text += " RegEx";
-                if (findReplaceDialog.ShowDialog () == DialogResult.OK) {
-                    etb.FindAndReplaceRegEx (findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
-                }
+            findReplaceDialog.SetFocusOnSearchTextField ();
+            findReplaceDialog.Text += " RegEx";
+            if (findReplaceDialog.ShowDialog () == DialogResult.OK) {
+                etb.FindAndReplaceRegEx (findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
+            }
         }
 
         private void findAndReplaceRawToolStripMenuItem_Click (object sender, EventArgs e)
         {
-                        TabPage tb = tabControl1.SelectedTab;
-                        if (tb as EditorTabPage == null) {
-                                return;
-                        }
-                        EditorTabPage etb = tb as EditorTabPage;
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
 
-                        findReplaceDialog.SetFocusOnSearchTextField ();
-                findReplaceDialog.Text += " Raw";
-                if (findReplaceDialog.ShowDialog () == DialogResult.OK) {
-                    etb.FindAndReplaceRaw (findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
-                }
+            findReplaceDialog.SetFocusOnSearchTextField ();
+            findReplaceDialog.Text += " Raw";
+            if (findReplaceDialog.ShowDialog () == DialogResult.OK) {
+                etb.FindAndReplaceRaw (findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
+            }
         }
 
         private void toolbarToolStripMenuItem_Click (object sender, EventArgs e)

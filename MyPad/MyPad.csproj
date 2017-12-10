@@ -146,7 +146,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SettingsManager.cs" />
     <Compile Include="ScriptUtil.cs" />
     <Compile Include="RPC_for_SingleInstance\CommunicationFactory.cs" />
     <Compile Include="RPC_for_SingleInstance\RemotingIpcChannel.Engine.cs" />
@@ -249,6 +248,13 @@
       <SubType>Component</SubType>
       <DependentUpon>TabControl\SearchTabPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Globals.Configuration.cs">
+      <DependentUpon>Globals.cs</DependentUpon>
+    </Compile>
+    <None Include="app.config" />
+    <Compile Include="_Config\MRUList.cs" />
+    <Compile Include="_Config\EditorConfiguration.cs" />
+    <Compile Include="_Config\ConfigurationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">
@@ -288,6 +294,7 @@
     <Folder Include="Dialogs\Syndication\" />
     <Folder Include="Clipboard\" />
     <Folder Include="TabControl\" />
+    <Folder Include="_Config\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\ICSharpCode.TextEditor\ArsenShnurkov\Project\ICSharpCode.TextEditor.csproj">

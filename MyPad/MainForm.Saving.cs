@@ -139,10 +139,10 @@ namespace MyPad
         {
             TabPage tbA = tabControl1.SelectedTab;
             if (tbA as EditorTabPage == null) {
-                throw new ApplicationException("Shouldn't get here");
+                throw new ApplicationException ("Shouldn't get here");
             }
             EditorTabPage currentActiveTab = tbA as EditorTabPage;
-        
+
             if (AlreadyOpen (targetFilename)) {
                 return this.FindTabByPath (targetFilename);
             }
@@ -201,16 +201,17 @@ namespace MyPad
 
         private void AppendToMRU (string filename)
         {
-            if (!SettingsManager.MRUList.Contains (filename)) {
-                if (SettingsManager.MRUList.Count >= 15)
-                    SettingsManager.MRUList.RemoveAt (14);
-                SettingsManager.MRUList.Insert (0, filename);
+            MRUListConfigurationSection mruList = cfg.GetMRUList ();
+            if (!mruList.Contains (filename)) {
+                if (mruList.Instances.Count >= 15)
+                    mruList.RemoveAt (14);
+                mruList.InsertAt (0, filename);
 
                 ToolStripMenuItem tsi = new ToolStripMenuItem (filename, null, new EventHandler (RecentFiles_Click));
                 recentFilesToolStripMenuItem.DropDown.Items.Insert (0, tsi);
             } else {
-                SettingsManager.MRUList.Remove (filename);
-                SettingsManager.MRUList.Insert (0, filename);
+                mruList.Remove (filename);
+                mruList.InsertAt (0, filename);
 
                 ToolStripMenuItem tsi = GetRecentMenuItem (filename);
                 recentFilesToolStripMenuItem.DropDown.Items.Remove (tsi);
