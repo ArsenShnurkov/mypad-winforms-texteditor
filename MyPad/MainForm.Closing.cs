@@ -28,9 +28,18 @@ namespace MyPad
 
         private void closeToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb == null) {
+                return;
+            }
+            if (tb is SearchTabPage) {
+                tabControl1.TabPages.Remove (tb);
+                tb.Dispose ();
+                SetupActiveTab ();
+            }
+            if (tb is EditorTabPage) {
+                EditorTabPage etb = tb as EditorTabPage;
 
-            if (etb != null) {
                 if (etb.IsSavingNecessary == true) {
                     DialogResult dr = MessageBox.Show ("You are about to close an unsaved document, do you want to save it now?",
                         "MyPad - Save document", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -53,7 +62,7 @@ namespace MyPad
                 if (tb is EditorTabPage) {
                     EditorTabPage etb = tb as EditorTabPage;
                     tabControl1.SelectedTab = etb;
-                    closeToolStripMenuItem_Click (null, null);
+                    closeToolStripMenuItem_Click (sender, e);
                 }
             }
         }

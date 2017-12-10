@@ -21,64 +21,90 @@ namespace MyPad
 {
     public partial class MainForm : Form
     {
-        private void tabControl1_MouseClick(object sender, MouseEventArgs e)
-        {
-            EditorTabPage etb = GetActiveTab();
+        /// <remarks>
+        /// ContextMenuStrip replaces ContextMenu. You can associate a ContextMenuStrip with any control, 
+        /// and a right mouse click automatically displays the shortcut menu.
+        /// </remarks>
+        ContextMenuStrip contextMenuStrip1;
 
-            if (e.Button == MouseButtons.Middle)
-            {
-                if (etb != null)
-                    closeToolStripMenuItem_Click(null, null);
+        void InitializeTabContextMenu ()
+        {
+            contextMenuStrip1 = new ContextMenuStrip ();
+            contextMenuStrip1.Opening += contextMenuStrip1_Opening;
+            this.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        private void contextMenuStrip1_Opening (object sender, CancelEventArgs e)
+        {
+            Point p = this.tabControl1.PointToClient (Cursor.Position);
+            for (int i = 0; i < this.tabControl1.TabCount; i++) {
+                Rectangle r = this.tabControl1.GetTabRect (i);
+                if (r.Contains (p)) {
+                    this.tabControl1.SelectedIndex = i; // i is the index of tab under cursor
+                    contextMenuStrip1.Items.Clear ();
+                                        contextMenuStrip1.Items.Add ("Закрыть", null, closeToolStripMenuItem_Click);
+                    if (tabControl1.SelectedTab as EditorTabPage != null) {
+                        contextMenuStrip1.Items.Add ("-");
+                                                contextMenuStrip1.Items.Add ("Имя и путь файла скопировать", null, filepathnameToolStripMenuItem_Click);
+                                                contextMenuStrip1.Items.Add ("Директорию файла скопировать", null, foldernameToolStripMenuItem_Click);
+                    }
+                    return;
+                }
             }
-            if (e.Button == MouseButtons.Right)
-            {
+            e.Cancel = true;
+        }
+
+        /*private void tabControl1_MouseClick (object sender, MouseEventArgs e)
+        {
+            return;
+            if (e.Button == MouseButtons.Right) {
                 //Point pt = new Point(e.X, e.Y);
                 Point pt = Cursor.Position;
-                Point p = this.tabControl1.PointToClient(pt);
-                for (int i = 0; i < this.tabControl1.TabCount; i++)
-                {
-                    Rectangle r = this.tabControl1.GetTabRect(i);
-                    if (r.Contains(p))
-                    {
+                Point p = this.tabControl1.PointToClient (pt);
+                for (int i = 0; i < this.tabControl1.TabCount; i++) {
+                    Rectangle r = this.tabControl1.GetTabRect (i);
+                    if (r.Contains (p)) {
                         this.tabControl1.SelectedIndex = i; // i is the index of tab under cursor
-                        var menu = new ContextMenu();
-                        menu.MenuItems.Add("Закрыть", closeToolStripMenuItem_Click);
-                        menu.MenuItems.Add("-");
-                        menu.MenuItems.Add("Имя и путь файла скопировать", filepathnameToolStripMenuItem_Click);
-                        menu.MenuItems.Add("папку файла скопировать", foldernameToolStripMenuItem_Click);
-                        menu.Show(this.tabControl1, p);
-                        SetupActiveTab();
+                        var menu = new ContextMenu ();
+                        menu.MenuItems.Add ("Закрыть", closeToolStripMenuItem_Click);
+                        if (tabControl1.SelectedTab as EditorTabPage != null) {
+                            menu.MenuItems.Add ("-");
+                            menu.MenuItems.Add ("Имя и путь файла скопировать", filepathnameToolStripMenuItem_Click);
+                            menu.MenuItems.Add ("Директорию файла скопировать", foldernameToolStripMenuItem_Click);
+                        }
+                        menu.Show (this.tabControl1, p);
+                        SetupActiveTab ();
                         return;
                     }
                 }
                 //e.Cancel = true;
             }
-        }
+        }*/
 
-        private void filepathnameToolStripMenuItem_Click(object sender, EventArgs e)
+        private void filepathnameToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
-            if (etb != null)
-            {
-                Globals.TextClipboard.CopyTextToClipboard(etb.GetFileFullPathAndName(), false);
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            Globals.TextClipboard.CopyTextToClipboard (etb.GetFileFullPathAndName (), false);
         }
 
-        private void foldernameToolStripMenuItem_Click(object sender, EventArgs e)
+        private void foldernameToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab();
-            if (etb != null)
-            {
-                var fileFullPathAndName = etb.GetFileFullPathAndName ();
-                FileInfo fi = new FileInfo(fileFullPathAndName);
-                if (fileFullPathAndName.Contains(Path.DirectorySeparatorChar))
-                {
-                    Globals.TextClipboard.CopyTextToClipboard(fi.DirectoryName, false);
-                }
-                else
-                {
-                    Globals.TextClipboard.CopyTextToClipboard("." + Path.DirectorySeparatorChar, false);
-                }
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+
+            var fileFullPathAndName = etb.GetFileFullPathAndName ();
+            FileInfo fi = new FileInfo (fileFullPathAndName);
+            if (fileFullPathAndName.Contains (Path.DirectorySeparatorChar)) {
+                Globals.TextClipboard.CopyTextToClipboard (fi.DirectoryName, false);
+            } else {
+                Globals.TextClipboard.CopyTextToClipboard ("." + Path.DirectorySeparatorChar, false);
             }
         }
     }

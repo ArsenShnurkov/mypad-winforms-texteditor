@@ -33,6 +33,7 @@ namespace MyPad
         public MainForm ()
         {
             InitializeComponent ();
+            InitializeTabContextMenu();
 
             SettingsManager.Init ();
 
@@ -101,46 +102,42 @@ namespace MyPad
 
         public void UpdateMainWindowTitle ()
         {
-            EditorTabPage etb = GetActiveTab ();
-            if (etb != null) {
-                this.Text = string.Format ("MyPad - {0} [{1}]", etb.Text, etb.GetFileFullPathAndName ());
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb is EditorTabPage) {
+                EditorTabPage etb = tb as EditorTabPage;
+                if (etb != null) {
+                    this.Text = string.Format ("MyPad - {0} [{1}]", etb.Text, etb.GetFileFullPathAndName ());
+                }
             }
         }
 
         public void SetupActiveTab ()
         {
-            EditorTabPage etb = GetActiveTab ();
-            if (etb != null) {
-                etb.Show ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb is EditorTabPage) {
+                EditorTabPage etb = tb as EditorTabPage;
+                if (etb != null) {
+                    etb.Show ();
 
-                UpdateMainWindowTitle ();
-                etb.Editor.Focus ();
+                    UpdateMainWindowTitle ();
+                    etb.Editor.Focus ();
 
-                toolStripStatusLabel2.Text = string.Format ("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString ());
-                toolStripStatusLabel3.Text = string.Format ("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString ());
+                    toolStripStatusLabel2.Text = string.Format ("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString ());
+                    toolStripStatusLabel3.Text = string.Format ("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString ());
 
-                string highlighter = etb.Editor.Document.HighlightingStrategy.Name;
+                    string highlighter = etb.Editor.Document.HighlightingStrategy.Name;
 
-                foreach (ToolStripMenuItem tsi in highlightingToolStripMenuItem.DropDownItems) {
-                    if (tsi.Name == highlighter) {
-                        tsi.Checked = true;
-                    } else {
-                        tsi.Checked = false;
+                    foreach (ToolStripMenuItem tsi in highlightingToolStripMenuItem.DropDownItems) {
+                        if (tsi.Name == highlighter) {
+                            tsi.Checked = true;
+                        } else {
+                            tsi.Checked = false;
+                        }
                     }
-                }
-            } else {
-                this.Text = "MyPad";
-            }
-        }
-
-        public EditorTabPage GetActiveTab ()
-        {
-            if (tabControl1.SelectedTab != null) {
-                if (tabControl1.SelectedTab is EditorTabPage) {
-                    return (EditorTabPage)tabControl1.SelectedTab;
+                    return;
                 }
             }
-            return null;
+            this.Text = "MyPad";
         }
 
         public EditorTabPage GetTabByTitle (string title)
@@ -156,7 +153,7 @@ namespace MyPad
             return null;
         }
 
-        public TextEditorControl GetActiveEditor ()
+        /*public TextEditorControl GetActiveEditor ()
         {
             EditorTabPage etb = GetActiveTab ();
 
@@ -164,7 +161,7 @@ namespace MyPad
                 return etb.Editor;
             }
             return null;
-        }
+        }*/
 
         public void ClearCheckedHighlighters ()
         {
@@ -309,27 +306,30 @@ namespace MyPad
 
         private void Highlighting_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
             ToolStripMenuItem tsi = (ToolStripMenuItem)sender;
 
-            if (etb != null) {
-                etb.SetHighlighting (tsi.Text);
-                string name = etb.GetHighlighting ();
+            etb.SetHighlighting (tsi.Text);
+            string name = etb.GetHighlighting ();
 
-                if (tsi.Text.Equals (name)) {
-                    tsi.Checked = true;
-                }
+            if (tsi.Text.Equals (name)) {
+                tsi.Checked = true;
             }
         }
 
         void etb_TextChanged (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                toolStripStatusLabel2.Text = string.Format ("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString ());
-                toolStripStatusLabel3.Text = string.Format ("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString ());
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            toolStripStatusLabel2.Text = string.Format ("Line: {0}", (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line + 1).ToString ());
+            toolStripStatusLabel3.Text = string.Format ("Col: {0}", etb.Editor.ActiveTextAreaControl.TextArea.Caret.Column.ToString ());
         }
 
         void TabControl_TabCaptionUpdate (object sender, EventArgs e)
@@ -365,245 +365,288 @@ namespace MyPad
 
         private void reloadFileToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            /*EditorTabPage etb = */
-            GetActiveTab ();
+            MessageBox.Show ("text reloading is not implemented");
         }
 
 
         private void undoToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null)
-                etb.Undo ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.Undo ();
         }
 
         private void redoToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null)
-                etb.Redo ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.Redo ();
         }
 
         private void cutToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null)
-                etb.Cut ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.Cut ();
         }
 
         private void copyToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null)
-                etb.Copy ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.Copy ();
         }
 
         private void pasteToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null)
-                etb.Paste ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.Paste ();
         }
 
         private void deleteToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null)
-                etb.Delete ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.Delete ();
         }
 
         private void selectAllToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null)
-                etb.SelectAll ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
+            }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.SelectAll ();
         }
 
         private void enchanceHyperlinkToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.EnchanceHyperlink ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.EnchanceHyperlink ();
         }
         private void enchanceImagelinkToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.EnchanceImagelink ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.EnchanceImagelink ();
         }
 
         private void convertTextToHtmlToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.ConvertTextToHtml ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.ConvertTextToHtml ();
         }
         private void MakeBoldToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeBold ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeBold ();
         }
         private void MakeSelectionRedToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeSelectionRed ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeSelectionRed ();
         }
         private void MakeBRToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeBR ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeBR ();
         }
         private void MakeH1ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeH ("1");
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeH ("1");
         }
+
         private void MakeH2ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeH ("2");
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeH ("2");
         }
+
         private void MakeH3ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeH ("3");
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeH ("3");
         }
+
         private void MakeH4ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeH ("4");
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeH ("4");
         }
+
         private void MakeH5ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeH ("5");
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeH ("5");
         }
+
         private void MakeH6ToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MakeH ("6");
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MakeH ("6");
         }
+
         private void insertNbspToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.InsertTextAtCursor ("&nbsp;");
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.InsertTextAtCursor ("&nbsp;");
         }
 
         private void moveLineUpToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MoveLineUp (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MoveLineUp (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
         }
 
         private void moveLineDownToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.MoveLineDown (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.MoveLineDown (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
         }
 
         private void cutLineToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.SelectLine (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
-                etb.Cut ();
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            etb.SelectLine (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
+            etb.Cut ();
         }
 
         private void copyLineToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                etb.SelectLine (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
-                etb.Copy ();
-
-                clearSelectionToolStripMenuItem_Click (null, null);
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+
+            etb.SelectLine (etb.Editor.ActiveTextAreaControl.TextArea.Caret.Line);
+            etb.Copy ();
+
+            clearSelectionToolStripMenuItem_Click (null, null);
         }
 
         private void commentLineToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-
+            TabPage tb = tabControl1.SelectedTab;
+            if (tb as EditorTabPage == null) {
+                return;
             }
+            EditorTabPage etb = tb as EditorTabPage;
+            MessageBox.Show ("not implemented yet");
         }
 
         private void clearSelectionToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
+                        TabPage tb = tabControl1.SelectedTab;
+                        if (tb as EditorTabPage == null) {
+                                return;
+                        }
+                        EditorTabPage etb = tb as EditorTabPage;
                 etb.Editor.ActiveTextAreaControl.TextArea.SelectionManager.ClearSelection ();
-            }
         }
 
         private void wrapInToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-
-            }
+                        TabPage tb = tabControl1.SelectedTab;
+                        if (tb as EditorTabPage == null) {
+                                return;
+                        }
+                        EditorTabPage etb = tb as EditorTabPage;
+                        MessageBox.Show ("not implemented yet");
         }
 
         private void findToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
+                        TabPage tb = tabControl1.SelectedTab;
+                        if (tb as EditorTabPage == null) {
+                                return;
+                        }
+                        EditorTabPage etb = tb as EditorTabPage;
 
-            if (etb != null) {
                 findDialog.SetFocusOnSearchTextField ();
                 if (findDialog.ShowDialog () == DialogResult.OK) {
                     int index = etb.Find (findDialog.Search, findDialog.Options);
@@ -611,45 +654,50 @@ namespace MyPad
                         etb.ScrollToOffset (index);
                     }
                 }
-            }
         }
 
         private void findNextToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
+                        TabPage tb = tabControl1.SelectedTab;
+                        if (tb as EditorTabPage == null) {
+                                return;
+                        }
+                        EditorTabPage etb = tb as EditorTabPage;
 
-            if (etb != null) {
                 int index = etb.Find (findDialog.Search, findDialog.Options);
                 if (index >= 0) {
                     etb.ScrollToOffset (index);
                 }
-            }
         }
 
         private void findAndReplaceRegExToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
+                        TabPage tb = tabControl1.SelectedTab;
+                        if (tb as EditorTabPage == null) {
+                                return;
+                        }
+                        EditorTabPage etb = tb as EditorTabPage;
 
-            if (etb != null) {
                 findReplaceDialog.SetFocusOnSearchTextField ();
                 findReplaceDialog.Text += " RegEx";
                 if (findReplaceDialog.ShowDialog () == DialogResult.OK) {
                     etb.FindAndReplaceRegEx (findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
                 }
-            }
         }
 
         private void findAndReplaceRawToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            EditorTabPage etb = GetActiveTab ();
+                        TabPage tb = tabControl1.SelectedTab;
+                        if (tb as EditorTabPage == null) {
+                                return;
+                        }
+                        EditorTabPage etb = tb as EditorTabPage;
 
-            if (etb != null) {
-                findReplaceDialog.SetFocusOnSearchTextField ();
+                        findReplaceDialog.SetFocusOnSearchTextField ();
                 findReplaceDialog.Text += " Raw";
                 if (findReplaceDialog.ShowDialog () == DialogResult.OK) {
                     etb.FindAndReplaceRaw (findReplaceDialog.Search, findReplaceDialog.Replacement, findReplaceDialog.Options);
                 }
-            }
         }
 
         private void toolbarToolStripMenuItem_Click (object sender, EventArgs e)
