@@ -1,30 +1,90 @@
 ﻿using System.Threading;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace MyPad
 {
+    class SearchRequest
+    {
+        public string SearchDirectory;
+        public string query;
+    }
+
     class SearchResult
     {
-        public FileInfo fi;
+        public string filePathName;
         public int line;
     }
 
     public partial class SearchTabPage : TabPage
     {
-        private void backgroundWorker1_DoWork (object sender, DoWorkEventArgs e)
+        string searchQuery;
+        DoWorkEventArgs e;
+
+        void backgroundWorker1_DoWork (object sender, DoWorkEventArgs e)
         {
-            for (int i = 0; i < 1000; i++) {
-                Thread.Sleep (100);
-                int percentage = i * 100 / 1000;
-                // Periodically report progress to the main thread so that it can
-                // update the UI.  In most cases you'll just need to send an
-                // integer that will update a ProgressBar 
+            this.e = e;
+            SearchRequest req = e.Argument as SearchRequest;
+            this.searchQuery = req.query;
+            if (string.IsNullOrWhiteSpace (this.searchQuery)) {
+                return;
+            }
+
+            ProcessDirectory (new DirectoryInfo (req.SearchDirectory));
+        }
+
+        void ProcessDirectory (DirectoryInfo di)
+        {
+            FileInfo [] fileInfos = di.GetFiles ("*.htm");
+            var files = new SortedList<string, FileInfo> ();
+            for (int f1 = 0; f1 < fileInfos.Length; ++f1) {
+                FileInfo sf = fileInfos [f1];
+                files.Add (sf.Name, sf);
+            }
+            foreach (string fileName in files.Keys) {
+                if (this.backgroundWorker1.CancellationPending) {
+                    // Set the e.Cancel flag so that the WorkerCompleted event
+                    // knows that the process was cancelled.
+                    e.Cancel = true;
+                    this.backgroundWorker1.ReportProgress (0);
+                    return;
+                }
+                ProcessFile (files [fileName]);
+
+            }
+
+            DirectoryInfo [] subdirs = di.GetDirectories ();
+            var dirs = new SortedList<string, DirectoryInfo> ();
+            for (int d1 = 0; d1 < subdirs.Length; ++d1) {
+                DirectoryInfo sd = subdirs [d1];
+                dirs.Add (sd.Name, sd);
+            }
+            foreach (string shortName in dirs.Keys) {
+                if (this.backgroundWorker1.CancellationPending) {
+                    // Set the e.Cancel flag so that the WorkerCompleted event
+                    // knows that the process was cancelled.
+                    e.Cancel = true;
+                    this.backgroundWorker1.ReportProgress (0);
+                    return;
+                }
+                ProcessDirectory (dirs [shortName]);
+            }
+        }
+
+        void ProcessFile (FileInfo fi)
+        {
+            string content = File.ReadAllText (fi.FullName);
+            int start = 0;
+            while ((start = content.IndexOf (this.searchQuery, start, StringComparison.InvariantCulture)) >= 0) {
+                start += this.searchQuery.Length;
                 SearchResult res = new SearchResult ();
-                res.fi = new FileInfo (i.ToString ());
-                res.line = i;
-                this.backgroundWorker1.ReportProgress (percentage, res);
+                res.filePathName = fi.FullName;
+                res.line = start;
+                this.backgroundWorker1.ReportProgress (0, res);
+                Thread.Sleep (100);
                 // Periodically check if a cancellation request is pending.
                 // If the user clicks cancel the line
                 // m_AsyncWorker.CancelAsync(); if ran above.  This
@@ -42,3 +102,4 @@ namespace MyPad
         }
     }
 }
+
