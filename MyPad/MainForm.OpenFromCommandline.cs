@@ -21,7 +21,7 @@ namespace MyPad
 {
     public partial class MainForm : Form
     {
-        void InternalOpenFile (string fileToLoad)
+        internal void InternalOpenFile (string fileToLoad)
         {
             if (string.IsNullOrWhiteSpace (fileToLoad)) {
                 return;

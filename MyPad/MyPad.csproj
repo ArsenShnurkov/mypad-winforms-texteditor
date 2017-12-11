@@ -255,6 +255,10 @@
     <Compile Include="_Config\MRUList.cs" />
     <Compile Include="_Config\EditorConfiguration.cs" />
     <Compile Include="_Config\ConfigurationExtensions.cs" />
+    <Compile Include="TabControl\SearchTabPage.TreeNodeInfo.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>TabControl\SearchTabPage.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\MRUList.xml">

@@ -52,11 +52,11 @@ namespace MyPad
             entriesListDialog = new EntriesListDialog ();
             aboutDialog = new AboutDialog ();
 
-                        tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
-                        tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler (this.tabControl1_DrawItem);
-                        tabControl1.SelectedIndexChanged += new EventHandler (tabControl1_SelectedIndexChanged);
-                        tabControl1.DragEnter += new DragEventHandler (tabControl1_DragEnter);
-                        tabControl1.DragDrop += new DragEventHandler (tabControl1_DragDrop);
+            tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler (this.tabControl1_DrawItem);
+            tabControl1.SelectedIndexChanged += new EventHandler (tabControl1_SelectedIndexChanged);
+            tabControl1.DragEnter += new DragEventHandler (tabControl1_DragEnter);
+            tabControl1.DragDrop += new DragEventHandler (tabControl1_DragDrop);
 
             var editorConfiguration = cfg.GetEditorConfiguration ();
             int x = editorConfiguration.MainWindowX.Value;
@@ -190,10 +190,12 @@ namespace MyPad
         public EditorTabPage FindTabByPath (string fileToLoad)
         {
             foreach (var tab in tabControl1.TabPages) {
-                var t = (EditorTabPage)tab;
-                string file = t.GetFileFullPathAndName ();
-                if (string.Compare (file, fileToLoad) == 0) {
-                    return t;
+                if (tab is EditorTabPage) {
+                    var t = (EditorTabPage)tab;
+                    string file = t.GetFileFullPathAndName ();
+                    if (string.Compare (file, fileToLoad) == 0) {
+                        return t;
+                    }
                 }
             }
             return null;

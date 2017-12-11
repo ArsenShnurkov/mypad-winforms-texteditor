@@ -16,7 +16,8 @@ namespace MyPad
     class SearchResult
     {
         public string filePathName;
-        public int line;
+        public int lineNumber;
+        public string lineContent;
     }
 
     public partial class SearchTabPage : TabPage
@@ -76,30 +77,19 @@ namespace MyPad
 
         void ProcessFile (FileInfo fi)
         {
-            string content = File.ReadAllText (fi.FullName);
-            int start = 0;
-            while ((start = content.IndexOf (this.searchQuery, start, StringComparison.InvariantCulture)) >= 0) {
-                start += this.searchQuery.Length;
-                SearchResult res = new SearchResult ();
-                res.filePathName = fi.FullName;
-                res.line = start;
-                this.backgroundWorker1.ReportProgress (0, res);
-                Thread.Sleep (100);
-                // Periodically check if a cancellation request is pending.
-                // If the user clicks cancel the line
-                // m_AsyncWorker.CancelAsync(); if ran above.  This
-                // sets the CancellationPending to true.
-                // You must check this flag in here and react to it.
-                // We react to it by setting e.Cancel to true and leaving
-                if (this.backgroundWorker1.CancellationPending) {
-                    // Set the e.Cancel flag so that the WorkerCompleted event
-                    // knows that the process was cancelled.
-                    e.Cancel = true;
-                    this.backgroundWorker1.ReportProgress (0);
-                    return;
+            Thread.Sleep (10);
+            string [] fileLines = System.IO.File.ReadAllLines (fi.FullName);
+            for (int li = 0; li < fileLines.Length; ++li) {
+                if (fileLines [li].IndexOf (this.searchQuery, StringComparison.InvariantCulture) >= 0) {
+                    SearchResult res = new SearchResult ();
+                    res.filePathName = fi.FullName;
+                    res.lineNumber = li;
+                    res.lineContent = fileLines [li];
+                    this.backgroundWorker1.ReportProgress (0, res);
                 }
             }
         }
+
     }
 }
 

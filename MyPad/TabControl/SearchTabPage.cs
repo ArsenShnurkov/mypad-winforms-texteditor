@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace MyPad
 {
@@ -19,6 +20,8 @@ namespace MyPad
             SearchRequest req = new SearchRequest ();
             req.SearchDirectory = Globals.LoadConfiguration ().AppSettings.Settings ["SearchDirectory"]?.Value;
             req.query = this.textBoxSearchString.Text;
+            // set tab caption
+            this.Text = this.textBoxSearchString.Text;
             this.backgroundWorker1.RunWorkerAsync (req);
             for (int i = 0; i < 1000; i++) {
             }
@@ -43,10 +46,24 @@ namespace MyPad
             if (res == null) {
                 return;
             }
-            TreeNode fileNode = GetTreeNodeFromName (res.filePathName);
-            TreeNode newNode = fileNode.Nodes.Add (res.line.ToString ("000000"), res.filePathName + "(" + res.line.ToString () + ")");
-            newNode.Tag = res;
+            FileInfo fi = new FileInfo (res.filePathName);
+            TreeNode fileNode = GetTreeNodeFromName (fi.FullName);
+            try {
+                string nodeText = res.lineNumber.ToString () + ":" + res.lineContent;
+                string tag = "#L" + res.lineNumber.ToString ();
+                TreeNode newNode = new TreeNode (tag);
+                newNode.Text = nodeText.Substring (0, Math.Min (nodeText.Length, 100));
+                newNode.Tag = new TreeNodeInfo (fi.Name, fi.FullName, res.lineNumber);
+                fileNode.Nodes.Add (newNode);
+                //fileNode.Expand ();
+                //newNode.EnsureVisible ();
+                fileNode.EnsureVisible ();
+            } catch (Exception) {
+                fileNode.BackColor = Color.Red;
+            }
         }
+
+        //TreeNode fileNode = GetTreeNodeFromName (res.filePathName);
         TreeNode GetTreeNodeFromName (string name)
         {
             FileInfo fi = new FileInfo (name);
@@ -66,15 +83,22 @@ namespace MyPad
                 string part = parts.Pop ();
                 res = null;
                 for (int nc = 0; nc < currentSet.Count; ++nc) {
-                    if (string.Compare (currentSet [nc].Text, part) == 0) {
+                    if (string.Compare (((TreeNodeInfo)(currentSet [nc].Tag)).ShortName, part) == 0) {
                         res = currentSet [nc];
                         break;
                     }
                 }
                 if (res == null) {
                     res = new TreeNode (part);
+                    res.Tag = new TreeNodeInfo (part);
                     if (parts.Count > 0) {
                         res.Expand ();
+                    } else {
+                        ((TreeNodeInfo)res.Tag).LongName = fi.FullName;
+                        string title = Globals.GetTextTitleFromFile (fi.FullName);
+                        if (string.IsNullOrWhiteSpace (title) == false) {
+                            res.Text = fi.LastWriteTimeUtc.ToString ("yyyy") + ", \"" + title + "\", " + part;
+                        }
                     }
                     currentSet.Add (res);
                 }
@@ -96,6 +120,31 @@ namespace MyPad
                 MessageBox.Show ("Error while performing background operation.");
                 return;
             }
+        }
+
+        // If a node is double-clicked, open the file indicated by the TreeNode.
+        void treeViewResults_NodeMouseDoubleClick (object sender, TreeNodeMouseClickEventArgs e)
+        {
+            TreeNodeInfo tag = (TreeNodeInfo)e.Node.Tag;
+            if (string.IsNullOrWhiteSpace (tag.LongName) == false) {
+                Globals.GetMainForm ().InternalOpenFile (tag.LongName);
+            }
+        }
+
+        void treeViewResults_KeyPress (object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == Convert.ToChar (Keys.Enter)) {
+                TreeViewEventArgs args = new TreeViewEventArgs (treeViewResults.SelectedNode, TreeViewAction.ByKeyboard);
+                if (treeViewResults.SelectedNode == null) {
+                    return;
+                }
+                TreeNodeInfo tag = (TreeNodeInfo)treeViewResults.SelectedNode.Tag;
+                if (string.IsNullOrWhiteSpace (tag.LongName) == false) {
+                    Globals.GetMainForm ().InternalOpenFile (tag.LongName);
+                }
+                e.Handled = true;
+            }
+            base.OnKeyPress (e);
         }
     }
 }

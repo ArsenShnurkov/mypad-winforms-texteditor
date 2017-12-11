@@ -83,6 +83,7 @@ namespace MyPad
             treeViewResults.Width = treeViewResults.Parent.Width - 10 * 2;
             treeViewResults.Height = treeViewResults.Parent.Height - 10 * 2;
             treeViewResults.ShowRootLines = false;
+            treeViewResults.NodeMouseDoubleClick += treeViewResults_NodeMouseDoubleClick;
 
             backgroundWorker1.DoWork += backgroundWorker1_DoWork;
             backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
@@ -90,6 +91,8 @@ namespace MyPad
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.WorkerSupportsCancellation = true;
+
+            this.treeViewResults.KeyPress += treeViewResults_KeyPress;
         }
     }
 }
