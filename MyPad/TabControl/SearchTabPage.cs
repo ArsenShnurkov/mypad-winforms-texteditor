@@ -8,11 +8,22 @@ using System.Drawing;
 
 namespace MyPad
 {
-    public partial class SearchTabPage : TabPage
+    public partial class SearchTabPage : TabPage, IInitializable
     {
         public SearchTabPage ()
         {
             InitializeComponent ();
+        }
+
+        private bool _isInitialized;
+
+        public void Initialize ()
+        {
+            if (_isInitialized) {
+                return;
+            }
+            textBoxSearchString.Select ();
+            _isInitialized = true;
         }
 
         private void buttonStartSearch_Click (object sender, EventArgs e)
@@ -55,9 +66,6 @@ namespace MyPad
                 newNode.Text = nodeText.Substring (0, Math.Min (nodeText.Length, 100));
                 newNode.Tag = new TreeNodeInfo (fi.Name, fi.FullName, res.lineNumber);
                 fileNode.Nodes.Add (newNode);
-                //fileNode.Expand ();
-                //newNode.EnsureVisible ();
-                fileNode.EnsureVisible ();
             } catch (Exception) {
                 fileNode.BackColor = Color.Red;
             }
@@ -146,5 +154,15 @@ namespace MyPad
             }
             base.OnKeyPress (e);
         }
+
+        protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Enter) {
+                buttonStartSearch.PerformClick ();
+                return true;
+            }
+            return base.ProcessCmdKey (ref msg, keyData);
+        }
+
     }
 }

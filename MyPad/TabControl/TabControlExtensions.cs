@@ -21,5 +21,11 @@ namespace MyPad
             return count;
         }
     }
+
+    interface IInitializable
+    {
+        void Initialize ();
+    }
+
 }
 

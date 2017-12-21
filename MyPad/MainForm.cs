@@ -117,6 +117,12 @@ namespace MyPad
 
         public void SetupActiveTab ()
         {
+            var initializableTabPage = tabControl1.SelectedTab as IInitializable;
+            // In case you have other tab-pages.
+            if (initializableTabPage != null) {
+                initializableTabPage.Initialize ();
+            }
+
             TabPage tb = tabControl1.SelectedTab;
             if (tb is EditorTabPage) {
                 EditorTabPage etb = tb as EditorTabPage;
@@ -156,16 +162,6 @@ namespace MyPad
             }
             return null;
         }
-
-        /*public TextEditorControl GetActiveEditor ()
-        {
-            EditorTabPage etb = GetActiveTab ();
-
-            if (etb != null) {
-                return etb.Editor;
-            }
-            return null;
-        }*/
 
         public void ClearCheckedHighlighters ()
         {
