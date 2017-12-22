@@ -54,7 +54,6 @@ namespace MyPad
                     return;
                 }
                 ProcessFile (files [fileName]);
-
             }
 
             DirectoryInfo [] subdirs = di.GetDirectories ();

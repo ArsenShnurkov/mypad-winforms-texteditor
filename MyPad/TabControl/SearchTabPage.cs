@@ -10,9 +10,31 @@ namespace MyPad
 {
     public partial class SearchTabPage : TabPage, IInitializable
     {
+        ContextMenuStrip docMenu;
+        ToolStripMenuItem editLabel;
+        ToolStripSeparator separatorLabel;
+        ToolStripMenuItem firefoxLabel;
+
         public SearchTabPage ()
         {
             InitializeComponent ();
+
+            // Create the ContextMenuStrip.
+            docMenu = new ContextMenuStrip ();
+
+            //Create some menu items.
+            editLabel = new ToolStripMenuItem ();
+            editLabel.Text = "Edit";
+            editLabel.Click += editLabel_Click;
+            separatorLabel = new ToolStripSeparator ();
+            firefoxLabel = new ToolStripMenuItem ();
+            firefoxLabel.Text = "Firefox";
+            firefoxLabel.Click += firefoxLabel_Click;
+
+            //Add the menu items to the menu.
+            docMenu.Items.AddRange (
+                new ToolStripItem [] { editLabel, separatorLabel, firefoxLabel });
+
         }
 
         private bool _isInitialized;
@@ -28,14 +50,16 @@ namespace MyPad
 
         private void buttonStartSearch_Click (object sender, EventArgs e)
         {
+            if (this.backgroundWorker1.IsBusy) {
+                this.tabControlOutput.SelectedTab = this.tabPageSearchStatistics;
+                return;
+            }
             SearchRequest req = new SearchRequest ();
             req.SearchDirectory = Globals.LoadConfiguration ().AppSettings.Settings ["SearchDirectory"]?.Value;
             req.query = this.textBoxSearchString.Text;
             // set tab caption
             this.Text = this.textBoxSearchString.Text;
             this.backgroundWorker1.RunWorkerAsync (req);
-            for (int i = 0; i < 1000; i++) {
-            }
         }
 
         private void buttonStopSearch_Click (object sender, EventArgs e)
@@ -103,6 +127,7 @@ namespace MyPad
                         res.Expand ();
                     } else {
                         ((TreeNodeInfo)res.Tag).LongName = fi.FullName;
+                        res.ContextMenuStrip = docMenu;
                         string title = Globals.GetTextTitleFromFile (fi.FullName);
                         if (string.IsNullOrWhiteSpace (title) == false) {
                             res.Text = fi.LastWriteTimeUtc.ToString ("yyyy") + ", \"" + title + "\", " + part;
@@ -159,10 +184,54 @@ namespace MyPad
         {
             if (keyData == Keys.Enter) {
                 buttonStartSearch.PerformClick ();
+                treeViewResults.Select ();
                 return true;
             }
             return base.ProcessCmdKey (ref msg, keyData);
         }
 
+        private void editLabel_Click (object sender, EventArgs e)
+        {
+            TreeNode item = this.treeViewResults.SelectedNode;
+            TreeNodeInfo info = item.Tag as TreeNodeInfo;
+            if (info == null) {
+                return;
+            }
+            var filename = info.LongName;
+            if (string.IsNullOrEmpty (filename)) {
+
+                return;
+            }
+            Globals.GetMainForm ().InternalOpenFile (filename);
+        }
+
+        private void firefoxLabel_Click (object sender, EventArgs e)
+        {
+            TreeNode item = this.treeViewResults.SelectedNode;
+            TreeNodeInfo info = item.Tag as TreeNodeInfo;
+            if (info == null) {
+                return;
+            }
+            var filename = info.LongName;
+
+            // Prepare the process to run
+            ProcessStartInfo start = new ProcessStartInfo ();
+            // Enter in the command line arguments, everything you would enter after the executable name itself
+            start.Arguments = filename;
+            // Enter the executable to run, including the complete path
+            start.FileName = "/usr/bin/firefox";
+            // Do you want to show a console window?
+            start.WindowStyle = ProcessWindowStyle.Hidden;
+            start.CreateNoWindow = true;
+            int exitCode;
+
+            // Run the external process & wait for it to finish
+            using (Process proc = Process.Start (start)) {
+                proc.WaitForExit ();
+
+                // Retrieve the app's exit code
+                exitCode = proc.ExitCode;
+            }
+        }
     }
 }
