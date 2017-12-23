@@ -432,15 +432,6 @@ namespace MyPad
             EditorTabPage etb = tb as EditorTabPage;
             etb.EnchanceHyperlink ();
         }
-        private void enchanceImagelinkToolStripMenuItem_Click (object sender, EventArgs e)
-        {
-            TabPage tb = tabControl1.SelectedTab;
-            if (tb as EditorTabPage == null) {
-                return;
-            }
-            EditorTabPage etb = tb as EditorTabPage;
-            etb.EnchanceImagelink ();
-        }
 
         private void convertTextToHtmlToolStripMenuItem_Click (object sender, EventArgs e)
         {
