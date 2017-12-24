@@ -215,7 +215,7 @@ namespace MyPad
             } else // внутренняя ссылка
             {
                 // проводим разные преобразования
-                bool relativeLink = trimmedText.StartsWith (".");
+                bool relativeLink = trimmedText.StartsWith (".", StringComparison.InvariantCulture);
                 // а что если относительный путь начинается не с точки, а прямо с буквы?
                 // TODO: проверить, если ли такой файл по факту
                 bool justAFilename = string.IsNullOrEmpty (Path.GetDirectoryName (trimmedText));
