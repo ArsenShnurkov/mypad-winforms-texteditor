@@ -32,28 +32,20 @@ namespace MyPad
             if (tb == null) {
                 return;
             }
-            if (tb is SearchTabPage) {
-                tabControl1.TabPages.Remove (tb);
-                tb.Dispose ();
-                SetupActiveTab ();
-            }
-            if (tb is EditorTabPage) {
-                EditorTabPage etb = tb as EditorTabPage;
+            if (tb is IChangeableTab) {
+                var etb = tb as IChangeableTab;
 
                 if (etb.IsSavingNecessary == true) {
                     DialogResult dr = MessageBox.Show ("You are about to close an unsaved document, do you want to save it now?",
                         "MyPad - Save document", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                     if (dr == DialogResult.Yes) {
-                        saveToolStripMenuItem_Click (null, null);
-                        etb.Dispose ();
-                    } else if (dr == DialogResult.No)
-                        etb.Dispose ();
-                } else {
-                    etb.Dispose ();
+                        saveToolStripMenuItem.PerformClick ();
+                    }
                 }
-                SetupActiveTab ();
             }
+            tb.Dispose ();
+            SetupActiveTab ();
         }
 
         private void closeAllToolStripMenuItem_Click (object sender, EventArgs e)
