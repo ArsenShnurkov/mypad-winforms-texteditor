@@ -37,13 +37,14 @@ namespace MyPad
         private void saveToolStripMenuItem_Click (object sender, EventArgs e)
         {
             TabPage tb = tabControl1.SelectedTab;
-            if (tb as EditorTabPage == null) {
+            if (tb as ISaveableTab == null) {
                 return;
             }
-            EditorTabPage etb = tb as EditorTabPage;
+            ISaveableTab etb = tb as ISaveableTab;
 
             SaveTabToDisk (etb);
         }
+
         /// <summary>
         /// Вызывается из главного меню, когда надо сохранить файл
         /// </summary>
@@ -103,23 +104,13 @@ namespace MyPad
 
         private void saveAllToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            TabPage tbA = tabControl1.SelectedTab;
-            if (tbA as EditorTabPage == null) {
-                return;
-            }
-            EditorTabPage currentActiveTab = tbA as EditorTabPage;
-
             foreach (TabPage tb in tabControl1.TabPages) {
-                if (tb is EditorTabPage) {
-                    EditorTabPage etb = tb as EditorTabPage;
-                    tabControl1.SelectedTab = etb;
+                if (tb is ISaveableTab) {
+                    var etb = tb as ISaveableTab;
                     SaveTabToDisk (etb);
                 }
             }
-
-            tabControl1.SelectedTab = currentActiveTab;
         }
-
 
         string GetNewNameInSaveAsDialogFromProposedName (string proposedFileName)
         {
@@ -134,7 +125,7 @@ namespace MyPad
         /// <summary>
         /// Создаёт новую вкладку, размещает в ней текст
         /// </summary>
-        /// <param name="fileName">File name.</param>
+        /// <param name="targetFilename">File name.</param>
         private EditorTabPage CreateNewTabWithProposedFileName (string targetFilename, string title)
         {
             TabPage tbA = tabControl1.SelectedTab;
@@ -174,12 +165,12 @@ namespace MyPad
             return etb;
         }
 
-        void SaveTabToDisk (EditorTabPage etb)
+        void SaveTabToDisk (ISaveableTab etb)
         {
             string fileName = etb.GetFileFullPathAndName ();
             // tooltip is exact name of file, and Text property of tab may contain "*" if file is modified and unsaved
             FileInfo fi = new FileInfo (fileName);
-            if (fi.Name.StartsWith ("Untitled")) {
+            if (fi.Name.StartsWith ("Untitled", StringComparison.InvariantCulture)) {
                 // propose to reneame file
                 var newPageName = GetNewNameInSaveAsDialogFromProposedName (fi.FullName);
                 if (string.IsNullOrWhiteSpace (newPageName)) {

@@ -18,7 +18,7 @@ using System.Configuration;
 
 namespace MyPad
 {
-    public partial class EditorTabPage : TabPage
+    public partial class EditorTabPage : TabPage, IChangeableTab, ISaveableTab
     {
         Configuration cfg;
         public event EventHandler OnEditorTextChanged;
