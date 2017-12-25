@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System;
+using System.Net;
 
 namespace MyPad.Dialogs
 {
@@ -26,6 +27,30 @@ namespace MyPad.Dialogs
 
         private void textBoxURL_TextChanged (object sender, EventArgs e)
         {
+            WebResponse response;
+            try {
+                HttpWebRequest webrequest = WebRequest.Create (textBoxURL.Text.ToString ()) as HttpWebRequest;
+                webrequest.Method = "HEAD";
+                response = webrequest.GetResponse ();
+            } catch {
+                return;
+            }
+
+            switch (response.ContentType) {
+            case "image/png":
+                this.textBoxFileName.Text = this.FileName + ".png";
+                return;
+            case "image/gif":
+                this.textBoxFileName.Text = this.FileName + ".gif";
+                return;
+            case "image/jpg":
+                this.textBoxFileName.Text = this.FileName + ".jpg";
+                return;
+            case "image/svg":
+                this.textBoxFileName.Text = this.FileName + ".svg";
+                return;
+            }
+
             int idx = textBoxURL.Text.LastIndexOf (".", StringComparison.InvariantCulture);
             if (idx >= 0) {
                 string extension = textBoxURL.Text.Substring (idx);
