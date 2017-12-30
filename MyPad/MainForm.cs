@@ -138,7 +138,8 @@ namespace MyPad
                     string highlighter = etb.Editor.Document.HighlightingStrategy.Name;
 
                     foreach (ToolStripMenuItem tsi in highlightingToolStripMenuItem.DropDownItems) {
-                        if (tsi.Name == highlighter) {
+                        var nameInTag = tsi.Tag as string;
+                        if (string.Compare (nameInTag, highlighter, StringComparison.InvariantCulture) == 0) {
                             tsi.Checked = true;
                         } else {
                             tsi.Checked = false;
@@ -215,6 +216,7 @@ namespace MyPad
 
             foreach (string hl in HighlightingManager.Manager.HighlightingDefinitions.Keys) {
                 ToolStripItem tsi = new ToolStripMenuItem (hl);
+                tsi.Tag = hl;
                 tsi.Click += new EventHandler (Highlighting_Click);
                 highlightingToolStripMenuItem.DropDown.Items.Add (tsi);
             }
@@ -295,11 +297,13 @@ namespace MyPad
             }
             EditorTabPage etb = tb as EditorTabPage;
             ToolStripMenuItem tsi = (ToolStripMenuItem)sender;
+            var oldName = tsi.Tag as string;
 
-            etb.SetHighlighting (tsi.Text);
-            string name = etb.GetHighlighting ();
+            etb.SetHighlighting (oldName);
+            string name = etb.GetHighlightingStrategyName ();
 
-            if (tsi.Text.Equals (name)) {
+            if (string.Compare (oldName, name, StringComparison.InvariantCulture) == 0) {
+                ClearCheckedHighlighters();
                 tsi.Checked = true;
             }
         }

@@ -232,7 +232,7 @@ namespace MyPad
             textEditorControl.SetHighlighting (name);
         }
 
-        public string GetHighlighting ()
+        public string GetHighlightingStrategyName ()
         {
             return textEditorControl.Document.HighlightingStrategy.Name;
         }
