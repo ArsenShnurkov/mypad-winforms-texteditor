@@ -73,16 +73,15 @@
             this.clearSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator ();
             this.wrapInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
-            this.searchInFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.showSearchTabPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.simpleFindAndReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.findNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.findAndReplaceRegExToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.findAndReplaceRawToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.toolbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.statusbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip ();
@@ -120,7 +119,7 @@
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.atomFeedEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem ();
             this.menuStrip1.SuspendLayout ();
@@ -134,9 +133,9 @@
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.simpleFindAndReplaceToolStripMenuItem,
-            this.searchInFilesToolStripMenuItem,
-            this.viewToolStripMenuItem,
             this.toolsToolStripMenuItem,
+            this.highlightingToolStripMenuItem,
+            this.optionsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point (0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -497,19 +496,20 @@
             // 
             // searchInFilesToolStripMenuItem
             // 
-            this.searchInFilesToolStripMenuItem.DropDownItems.AddRange (new System.Windows.Forms.ToolStripItem [] {
+            this.toolsToolStripMenuItem.DropDownItems.AddRange (new System.Windows.Forms.ToolStripItem [] {
                 this.showSearchTabPageToolStripMenuItem,
+                this.atomFeedEditorToolStripMenuItem,
             });
-            this.searchInFilesToolStripMenuItem.Name = "searchInFilesToolStripMenuItem";
-            this.searchInFilesToolStripMenuItem.Size = new System.Drawing.Size (54, 20);
-            this.searchInFilesToolStripMenuItem.Text = "Search";
+            this.toolsToolStripMenuItem.Name = nameof(this.toolsToolStripMenuItem);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size (54, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // showSearchTabPageToolStripMenuItem
             // 
             this.showSearchTabPageToolStripMenuItem.Name = "showSearchTabPageToolStripMenuItem";
             this.showSearchTabPageToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F4;
             this.showSearchTabPageToolStripMenuItem.Size = new System.Drawing.Size (236, 22);
-            this.showSearchTabPageToolStripMenuItem.Text = "Show search tab";
+            this.showSearchTabPageToolStripMenuItem.Text = "Show search tool";
             this.showSearchTabPageToolStripMenuItem.Click += new System.EventHandler (this.showSearchTabPageToolStripMenuItem_Click);
             // 
             // searchToolStripMenuItem
@@ -550,17 +550,6 @@
             this.findAndReplaceRawToolStripMenuItem.Text = "Find and Replace raw";
             this.findAndReplaceRawToolStripMenuItem.Click += new System.EventHandler (this.findAndReplaceRawToolStripMenuItem_Click);
             // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange (new System.Windows.Forms.ToolStripItem [] {
-                this.highlightingToolStripMenuItem,
-                this.toolStripSeparator6,
-            this.toolbarToolStripMenuItem,
-            this.statusbarToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size (44, 20);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
             // toolbarToolStripMenuItem
             // 
             this.toolbarToolStripMenuItem.Checked = true;
@@ -580,14 +569,16 @@
             this.statusbarToolStripMenuItem.Size = new System.Drawing.Size (123, 22);
             this.statusbarToolStripMenuItem.Text = "Statusbar";
             this.statusbarToolStripMenuItem.Click += new System.EventHandler (this.statusbarToolStripMenuItem_Click);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange (new System.Windows.Forms.ToolStripItem [] {
-                this.optionsToolStripMenuItem, this.atomFeedEditorToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size (48, 20);
-            this.toolsToolStripMenuItem.Text = "Tools";
+
+            this.optionsToolStripMenuItem.DropDownItems.AddRange (new System.Windows.Forms.ToolStripItem [] {
+                this.settingsToolStripMenuItem,
+                this.toolStripSeparator6,
+                this.toolbarToolStripMenuItem,
+                this.statusbarToolStripMenuItem,
+                });
+            this.optionsToolStripMenuItem.Name = nameof(this.optionsToolStripMenuItem);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size (48, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
             // 
             // helpToolStripMenuItem
             // 
@@ -905,11 +896,11 @@
             // 
             // optionsToolStripMenuItem
             // 
-            this.optionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject ("optionsToolStripMenuItem.Image")));
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size (116, 22);
-            this.optionsToolStripMenuItem.Text = "Options";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler (this.optionsToolStripMenuItem_Click);
+            this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject ("optionsToolStripMenuItem.Image")));
+            this.settingsToolStripMenuItem.Name = nameof(this.settingsToolStripMenuItem);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size (116, 22);
+            this.settingsToolStripMenuItem.Text = "Settins";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler (this.settingsToolStripMenuItem_Click);
             // 
             // atomFeedEditorToolStripMenuItem
             // 
@@ -989,16 +980,15 @@
         private System.Windows.Forms.ToolStripMenuItem MakeH4ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeH5ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MakeH6ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem searchInFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showSearchTabPageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem simpleFindAndReplaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findAndReplaceRegExToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findAndReplaceRawToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem atomFeedEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;

@@ -695,7 +695,7 @@ namespace MyPad
                 statusStrip1.Show ();
         }
 
-        private void optionsToolStripMenuItem_Click (object sender, EventArgs e)
+        private void settingsToolStripMenuItem_Click (object sender, EventArgs e)
         {
             if (optionsDialog.ShowDialog () == DialogResult.OK) {
                 foreach (TabPage tb in tabControl1.TabPages) {
