@@ -27,7 +27,11 @@
         /// </summary>
         private void InitializeComponent ()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager (this.GetType ());
+            var t = this.GetType ();
+            var resources = new System.ComponentModel.ComponentResourceManager (t);
+            System.Diagnostics.Trace.WriteLine (resources.BaseName);
+            System.Diagnostics.Trace.WriteLine (resources.ResourceSetType.Name);
+            var v = resources.GetObject ("toolStripButton1.Image");
 
             this.menuStrip1 = new System.Windows.Forms.MenuStrip ();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem ();
@@ -500,7 +504,7 @@
                 this.showSearchTabPageToolStripMenuItem,
                 this.atomFeedEditorToolStripMenuItem,
             });
-            this.toolsToolStripMenuItem.Name = nameof(this.toolsToolStripMenuItem);
+            this.toolsToolStripMenuItem.Name = nameof (this.toolsToolStripMenuItem);
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size (54, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
@@ -576,7 +580,7 @@
                 this.toolbarToolStripMenuItem,
                 this.statusbarToolStripMenuItem,
                 });
-            this.optionsToolStripMenuItem.Name = nameof(this.optionsToolStripMenuItem);
+            this.optionsToolStripMenuItem.Name = nameof (this.optionsToolStripMenuItem);
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size (48, 20);
             this.optionsToolStripMenuItem.Text = "Options";
             // 
@@ -897,7 +901,7 @@
             // optionsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject ("optionsToolStripMenuItem.Image")));
-            this.settingsToolStripMenuItem.Name = nameof(this.settingsToolStripMenuItem);
+            this.settingsToolStripMenuItem.Name = nameof (this.settingsToolStripMenuItem);
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size (116, 22);
             this.settingsToolStripMenuItem.Text = "Settins";
             this.settingsToolStripMenuItem.Click += new System.EventHandler (this.settingsToolStripMenuItem_Click);

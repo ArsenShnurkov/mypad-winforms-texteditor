@@ -17,6 +17,7 @@ namespace MyPad.Dialogs
         public OptionsDialog ()
         {
             InitializeComponent ();
+            Initialize_SearchSettingsTab ();
 
             cfg = Globals.LoadConfiguration ();
 
@@ -25,7 +26,7 @@ namespace MyPad.Dialogs
 
         protected override void OnLoad (EventArgs e)
         {
-            comboBox1.Items.Clear();
+            comboBox1.Items.Clear ();
             FontFamily [] fonts = FontFamily.Families;
 
             var sortedList = new SortedList<string, FontFamily> ();
@@ -39,7 +40,7 @@ namespace MyPad.Dialogs
                 int index = comboBox1.Items.Add (item);
             }
 
-            comboBox2.Items.Clear();
+            comboBox2.Items.Clear ();
             comboBox2.Items.AddRange (new object [] { 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 18, 20, 22 });
 
             base.OnLoad (e);
@@ -64,6 +65,7 @@ namespace MyPad.Dialogs
             comboBox2.Text = section.FontSize.Value.ToString (CultureInfo.InvariantCulture);
             this.textBoxAtomFeedFileLocation.Text = cfg.AppSettings.Settings ["AtomFeedLocation"]?.Value;
             this.textBoxSearchDirectory.Text = cfg.AppSettings.Settings ["SearchDirectory"]?.Value;
+            LoadIndexSettings ();
         }
 
         protected override void OnVisibleChanged (EventArgs e)
@@ -92,6 +94,7 @@ namespace MyPad.Dialogs
             section.ConvertTabsToSpaces.Value = checkBox12.Checked;
             cfg.AppSettings.Settings.Add ("AtomFeedLocation", this.textBoxAtomFeedFileLocation.Text);
             cfg.AppSettings.Settings.Add ("SearchDirectory", this.textBoxSearchDirectory.Text);
+            SaveIndexSettings ();
 
             if (comboBox1.Text != string.Empty && comboBox2.Text != string.Empty) {
                 try {

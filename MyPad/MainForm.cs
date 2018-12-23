@@ -36,6 +36,7 @@ namespace MyPad
         {
             cfg = Globals.LoadConfiguration ();
             InitializeComponent ();
+            InitializeIndexedSearchTabPageMenuItem ();
             InitializeTabContextMenu ();
 
             MRUListConfigurationSection mruList = cfg.GetMRUList ();

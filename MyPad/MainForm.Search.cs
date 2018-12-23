@@ -7,11 +7,10 @@ namespace MyPad
     {
         private void showSearchTabPageToolStripMenuItem_Click (object sender, EventArgs e)
         {
-            SearchTabPage newSearchTab = new SearchTabPage ();
+            var newSearchTab = new SearchTabPage ();
             newSearchTab.Text = "Поиск";
             tabControl1.Controls.Add (newSearchTab);
             tabControl1.SelectTab (newSearchTab);
         }
     }
 }
-

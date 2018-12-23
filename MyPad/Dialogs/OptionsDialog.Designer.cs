@@ -33,10 +33,6 @@
             this.labelAtomFeedFileLocation = new Label ();
             this.textBoxAtomFeedFileLocation = new TextBox ();
 
-            this.tabPage3 = new TabPage ();
-            this.labelSearchDirectory = new Label ();
-            this.textBoxSearchDirectory = new TextBox ();
-
             this.label1 = new Label ();
             this.label2 = new Label ();
 
@@ -108,25 +104,6 @@
                 this.textBoxAtomFeedFileLocation.Height);
             this.textBoxAtomFeedFileLocation.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom | AnchorStyles.Top;
 
-            // 
-            // labelSearchDirectory
-            // 
-            this.labelSearchDirectory.Location = new System.Drawing.Point (6, 20);
-            this.labelSearchDirectory.AutoSize = true;
-            this.labelSearchDirectory.TabIndex = 0;
-            this.labelSearchDirectory.Text = "Директория поиска:";
-            this.labelSearchDirectory.Name = nameof (this.labelSearchDirectory);
-
-            // 
-            // textBoxSearchDirectory
-            // 
-            this.textBoxSearchDirectory.Location = new System.Drawing.Point (6, 40);
-            this.textBoxSearchDirectory.TabIndex = 1;
-            this.textBoxSearchDirectory.Name = nameof (this.textBoxSearchDirectory);
-            this.textBoxSearchDirectory.Size = new System.Drawing.Size (
-                    this.tabPage1.Width - 2 * this.textBoxSearchDirectory.Left,
-                    this.textBoxSearchDirectory.Height);
-            this.textBoxSearchDirectory.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom | AnchorStyles.Top;
 
             // 
             // panel1
@@ -166,7 +143,6 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add (this.tabPage2);
-            this.tabControl1.Controls.Add (this.tabPage3);
             this.tabControl1.Controls.Add (this.tabPage1);
             this.tabControl1.Dock = DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point (0, 0);
@@ -200,18 +176,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "ATOM Feed";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add (this.labelSearchDirectory);
-            this.tabPage3.Controls.Add (this.textBoxSearchDirectory);
-            this.tabPage3.Location = new System.Drawing.Point (4, 22);
-            this.tabPage3.Name = nameof (this.tabPage3);
-            this.tabPage3.Padding = new Padding (3);
-            this.tabPage3.Size = new System.Drawing.Size (505, 297);
-            this.tabPage3.TabIndex = 0;
-            this.tabPage3.Text = "Директория поиска";
-            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
@@ -456,9 +420,5 @@
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage tabPage2;
-
-        private TabPage tabPage3;
-        private Label labelSearchDirectory;
-        private TextBox textBoxSearchDirectory;
     }
 }
