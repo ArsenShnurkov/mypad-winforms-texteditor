@@ -44,7 +44,10 @@ namespace MyPad
                     }
                 }
             }
+            tabControl1.SelectedIndex = -1;
+            tabControl1.TabPages.Remove(tb);
             tb.Dispose ();
+            tabControl1.SelectedIndex = tabControl1.TabCount - 1;
             SetupActiveTab ();
         }
 
