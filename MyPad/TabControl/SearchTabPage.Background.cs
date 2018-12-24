@@ -76,7 +76,7 @@ namespace MyPad
 
         void ProcessFile (FileInfo fi)
         {
-            Thread.Sleep (10);
+            //Thread.Sleep (10);
             string [] fileLines = System.IO.File.ReadAllLines (fi.FullName);
             for (int li = 0; li < fileLines.Length; ++li) {
                 if (fileLines [li].IndexOf (this.searchQuery, StringComparison.InvariantCulture) >= 0) {

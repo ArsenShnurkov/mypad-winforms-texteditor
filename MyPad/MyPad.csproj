@@ -14,41 +14,41 @@
 		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	  <DebugSymbols>true</DebugSymbols>
-	  <DebugType>full</DebugType>
-	  <Optimize>false</Optimize>
-	  <OutputPath>bin\Debug\</OutputPath>
-	  <DefineConstants>DEBUG;TRACE</DefineConstants>
-	  <ErrorReport>prompt</ErrorReport>
-	  <WarningLevel>4</WarningLevel>
-	  <Commandlineparameters>/var/calculate/remote/distfiles/egit-src/gentoo-mono-handbook.git/index.htm</Commandlineparameters>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Debug\</OutputPath>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<Commandlineparameters>/var/calculate/remote/distfiles/egit-src/gentoo-mono-handbook.git/index.htm</Commandlineparameters>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-	  <DebugType>pdbonly</DebugType>
-	  <Optimize>true</Optimize>
-	  <OutputPath>bin\Release\</OutputPath>
-	  <DefineConstants>TRACE</DefineConstants>
-	  <ErrorReport>prompt</ErrorReport>
-	  <WarningLevel>4</WarningLevel>
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+		<OutputPath>bin\Release\</OutputPath>
+		<DefineConstants>TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-	  <DebugSymbols>true</DebugSymbols>
-	  <OutputPath>bin\x86\Debug\</OutputPath>
-	  <DefineConstants>DEBUG;TRACE</DefineConstants>
-	  <DebugType>full</DebugType>
-	  <PlatformTarget>x86</PlatformTarget>
-	  <ErrorReport>prompt</ErrorReport>
-	  <WarningLevel>4</WarningLevel>
-	  <Optimize>false</Optimize>
+		<DebugSymbols>true</DebugSymbols>
+		<OutputPath>bin\x86\Debug\</OutputPath>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<DebugType>full</DebugType>
+		<PlatformTarget>x86</PlatformTarget>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<Optimize>false</Optimize>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-	  <OutputPath>bin\x86\Release\</OutputPath>
-	  <DefineConstants>TRACE</DefineConstants>
-	  <Optimize>true</Optimize>
-	  <DebugType>pdbonly</DebugType>
-	  <PlatformTarget>x86</PlatformTarget>
-	  <ErrorReport>prompt</ErrorReport>
-	  <WarningLevel>4</WarningLevel>
+		<OutputPath>bin\x86\Release\</OutputPath>
+		<DefineConstants>TRACE</DefineConstants>
+		<Optimize>true</Optimize>
+		<DebugType>pdbonly</DebugType>
+		<PlatformTarget>x86</PlatformTarget>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
 	<ItemGroup>
 		<Reference Include="System" />
@@ -60,7 +60,10 @@
 		<Reference Include="System.Web" />
 		<Reference Include="System.Configuration" />
 		<Reference Include="System.ServiceModel" />
-		<Reference Include="NDepend.Path" />
+		<Reference Include="NDepend.Path">
+			<HintPath>/usr/lib/mono/gac/lib/mono/gac/NDepend.Path/1.0.0.0__0738eb9f132ed756/NDepend.Path.dll</HintPath>
+			<Private>True</Private>
+		</Reference>
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="Dialogs\AboutDialog.cs">
@@ -294,6 +297,7 @@
 			<SubType>Designer</SubType>
 			<LastGenOutput>MainForm.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+		<Compile Include="IndexedSearch\FileIndexerBackgroundWorker.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Data\MRUList.xml">

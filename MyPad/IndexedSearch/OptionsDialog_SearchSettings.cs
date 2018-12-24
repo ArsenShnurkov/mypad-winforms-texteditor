@@ -1,6 +1,8 @@
 ﻿namespace MyPad.Dialogs
 {
     using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Security;
     using System.Security.Permissions;
@@ -14,15 +16,26 @@
         protected Label labelIndexLocationDirectory;
         protected TextBox textBoxIndexLocationDirectory;
         protected Button buttonReindex;
+        protected Label currentFilesCount;
+
+        const string IndexFileName = "default-index.dat";
+        const string SearchIndexDirectory = "SearchIndexDirectory";
+
+        FileIndexerBackgroundWorker worker;
 
         protected void Initialize_SearchSettingsTab ()
         {
+            worker = new FileIndexerBackgroundWorker ();
+            worker.ProgressChanged += this.backgroundWorker1_OnProgressChanged;
+            worker.RunWorkerCompleted += this.backgroundWorker1_OnRunWorkerCompleted;
+
             this.tabPage3 = new TabPage ();
             this.labelSearchDirectory = new Label ();
             this.textBoxSearchDirectory = new TextBox ();
             this.labelIndexLocationDirectory = new Label ();
             this.textBoxIndexLocationDirectory = new TextBox ();
             this.buttonReindex = new Button ();
+            this.currentFilesCount = new Label ();
 
             int leftHint = 6;
             int widthHint = this.tabPage1.Width - 2 * leftHint;
@@ -86,6 +99,17 @@
 
             verticalHint += currentControl.Height + verticalSpacing;
             // 
+            // currentFilesCount
+            // 
+            currentControl = this.currentFilesCount;
+            this.currentFilesCount.Text = "0";
+            this.currentFilesCount.AutoSize = true;
+            this.currentFilesCount.TabIndex = 3;
+            this.currentFilesCount.Name = nameof (this.currentFilesCount);
+            currentControl.Location = new System.Drawing.Point (leftHint, verticalHint);
+
+            verticalHint += currentControl.Height + verticalSpacing;
+            // 
             // tabPage3
             // 
             tabPage3.Text = "Директория поиска";
@@ -94,6 +118,7 @@
             tabPage3.Controls.Add (labelIndexLocationDirectory);
             tabPage3.Controls.Add (textBoxIndexLocationDirectory);
             tabPage3.Controls.Add (buttonReindex);
+            tabPage3.Controls.Add (currentFilesCount);
             tabPage3.Location = new System.Drawing.Point (4, 22);
             tabPage3.Name = nameof (tabPage3);
             tabPage3.Padding = new Padding (3);
@@ -103,8 +128,6 @@
             tabControl1.Controls.Add (tabPage3);
         }
 
-        const string IndexFileName = "default-index.dat";
-        const string SearchIndexDirectory = "SearchIndexDirectory";
         protected void LoadIndexSettings ()
         {
             var dirname = cfg.AppSettings.Settings [SearchIndexDirectory]?.Value;
@@ -153,8 +176,40 @@
 
         private void buttonReindex_Click (object sender, EventArgs e)
         {
-            MessageBox.Show ("Ura!");
+            if (worker.IsBusy) {
+                // sends a message to the worker thread that work should be cancelled
+                // via BackgroundWorker.CancellationPending
+                worker.CancelAsync ();
+                /*while (worker.IsBusy) {
+                    Application.DoEvents ();
+                }*/
+                //MessageBox.Show ("Stopped!");
+                return;
+            }
+            var SearchDirectory = Globals.LoadConfiguration ().AppSettings.Settings ["SearchDirectory"]?.Value;
+            worker.RunWorkerAsync (new string [] { SearchDirectory, ".htm" });
+            //MessageBox.Show ("Started!");
+        }
+        void backgroundWorker1_OnProgressChanged (object sender, ProgressChangedEventArgs e)
+        {
+            this.currentFilesCount.Text = string.Format ("{0}", ((int)e.UserState));
         }
 
+        void backgroundWorker1_OnRunWorkerCompleted (object sender, RunWorkerCompletedEventArgs e)
+        {
+            try {
+                var text = string.Empty;
+                if (e.Cancelled) {
+                    text = this.currentFilesCount.Text + " - Cancelled";
+                } else {
+                    text = this.currentFilesCount.Text + " - Finished";
+                }
+                this.currentFilesCount.Text = text;
+                this.currentFilesCount.AutoSize = true;
+                this.currentFilesCount.Invalidate ();
+            } catch (Exception ex) {
+                Trace.WriteLine (ex.ToString ());
+            }
+        }
     }
 }
