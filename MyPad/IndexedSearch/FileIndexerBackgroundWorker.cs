@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MyPad
 {
@@ -20,8 +21,8 @@ namespace MyPad
             var args = (string [])e.Argument;
             var path = args [0];
             var ext = args [1];
+            InitGlobals ();
             int i = 0;
-            // Print the full path of all .wmv files that are somewhere in the C:\Windows directory or its subdirectories
             foreach (var file in TraverseDirectory (path, f => f.Extension == ext)) {
                 if (this.CancellationPending == true) {
                     e.Cancel = true;
@@ -29,7 +30,12 @@ namespace MyPad
                     break;
                 }
                 // Perform a time consuming operation and report progress.
-                Trace.WriteLine (file.FullName);
+                try {
+                    SplitFileIntoWords (file.FullName);
+                } catch (Exception ex) {
+                    Trace.WriteLine (file.FullName);
+                    Trace.WriteLine (ex.ToString ());
+                }
                 i++;
                 this.ReportProgress (0, i);
             }
@@ -51,6 +57,61 @@ namespace MyPad
                     yield return f;
             }
         }
+
+        void InitGlobals ()
+        {
+            Globals.allWords = new IndexOfWords ();
+            Globals.allFiles = new CollectionOfFileDescriptions ();
+        }
+
+        void SplitFileIntoWords (string fullName)
+        {
+            var dof = new DescriptionOfFile (fullName);
+            dof.Index = Globals.allFiles.Files.Count;
+            Globals.allFiles.Files.AddLast (dof);
+
+            var words = new Dictionary<string, int> ();
+            string content = File.ReadAllText (fullName);
+            var matches = Regex.Matches (content, @"([a-z_]+)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            foreach (var match in matches) {
+                string word = IndexOfWords.GetNormalizedString (match.ToString ());
+                if (words.ContainsKey (word)) {
+                    words [word]++;
+                } else {
+                    words.Add (word, 1);
+                }
+            }
+            var matchesRus = Regex.Matches (content, @"([а-яёА-ЯЁ_а́еёио́у́ы́э́ю́я́]+)", RegexOptions.Multiline);
+            foreach (var match in matchesRus) {
+                string word = IndexOfWords.GetNormalizedString (match.ToString ());
+                if (words.ContainsKey (word)) {
+                    words [word]++;
+                } else {
+                    words.Add (word, 1);
+                }
+            }
+            var matchesNum = Regex.Matches (content, @"([0-9]+)", RegexOptions.Multiline);
+            foreach (var match in matchesNum) {
+                string word = IndexOfWords.GetNormalizedString (match.ToString ());
+                if (words.ContainsKey (word)) {
+                    words [word]++;
+                } else {
+                    words.Add (word, 1);
+                }
+            }
+            var matchesWeird = Regex.Matches (content, @"([C][#])|([C][+][+])|([F][#])|([F][*])|([A][*])|([C][\-][\-])", RegexOptions.Multiline);
+            foreach (var match in matchesWeird) {
+                string word = IndexOfWords.GetNormalizedString (match.ToString ());
+                if (words.ContainsKey (word)) {
+                    words [word]++;
+                } else {
+                    words.Add (word, 1);
+                }
+            }
+            foreach (var uniqueWord in words.Keys) {
+                var wrappedWord = Globals.allWords.NormalizeAndAdd (uniqueWord);
+                wrappedWord.Occurences.Files.AddLast (dof);
+            }
+        }
     }
 }
-

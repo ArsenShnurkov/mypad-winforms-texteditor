@@ -168,10 +168,18 @@
                 }
             }
             this.textBoxIndexLocationDirectory.Text = dirname;
+            if (Globals.allFiles.Files.Count == 0) {
+                Globals.LoadIndexFromCSV (dirname);
+                this.currentFilesCount.Text = Globals.allFiles.Files.Count.ToString ();
+            }
         }
         protected void SaveIndexSettings ()
         {
-            cfg.AppSettings.Settings.Add (SearchIndexDirectory, this.textBoxIndexLocationDirectory.Text);
+            var dirname = Path.Combine (this.textBoxIndexLocationDirectory.Text, "");
+            cfg.AppSettings.Settings.Add (SearchIndexDirectory, dirname);
+            if (Globals.allFiles.Files.Count == 0) {
+                Globals.SaveIndexToCSV (dirname);
+            }
         }
 
         private void buttonReindex_Click (object sender, EventArgs e)
@@ -180,15 +188,13 @@
                 // sends a message to the worker thread that work should be cancelled
                 // via BackgroundWorker.CancellationPending
                 worker.CancelAsync ();
-                /*while (worker.IsBusy) {
+                while (worker.IsBusy) {
                     Application.DoEvents ();
-                }*/
-                //MessageBox.Show ("Stopped!");
+                }
                 return;
             }
             var SearchDirectory = Globals.LoadConfiguration ().AppSettings.Settings ["SearchDirectory"]?.Value;
             worker.RunWorkerAsync (new string [] { SearchDirectory, ".htm" });
-            //MessageBox.Show ("Started!");
         }
         void backgroundWorker1_OnProgressChanged (object sender, ProgressChangedEventArgs e)
         {
@@ -198,18 +204,19 @@
         void backgroundWorker1_OnRunWorkerCompleted (object sender, RunWorkerCompletedEventArgs e)
         {
             try {
-                var text = string.Empty;
+                var dirname = cfg.AppSettings.Settings [SearchIndexDirectory]?.Value;
+                Globals.SaveIndexToCSV (dirname);
+                string text;
                 if (e.Cancelled) {
                     text = this.currentFilesCount.Text + " - Cancelled";
                 } else {
                     text = this.currentFilesCount.Text + " - Finished";
                 }
                 this.currentFilesCount.Text = text;
-                this.currentFilesCount.AutoSize = true;
-                this.currentFilesCount.Invalidate ();
             } catch (Exception ex) {
-                Trace.WriteLine (ex.ToString ());
+                this.currentFilesCount.Text = ex.ToString ();
             }
+            this.currentFilesCount.AutoSize = true;
         }
     }
 }

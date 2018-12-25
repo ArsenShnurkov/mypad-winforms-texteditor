@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -12,6 +13,11 @@ namespace MyPad
                 return this.fullname;
             }
         }
+        public DescriptionOfFile (string filename)
+        {
+            this.fullname = filename;
+        }
+        public int Index;
     }
 
     public class CollectionOfFileDescriptions
@@ -53,15 +59,32 @@ namespace MyPad
         }
     }
 
-    public class IndexOfWords
+    public class IndexOfWords : IEnumerable<Word>
     {
-        protected Dictionary<string, Word> words = new Dictionary<string, Word> ();
+        protected SortedDictionary<string, Word> words = new SortedDictionary<string, Word> ();
+        public IEnumerable<Word> GetWords ()
+        {
+            return words.Values;
+        }
+        public IEnumerator<Word> GetEnumerator ()
+        {
+            return GetWords ().GetEnumerator ();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator ()
+        {
+            return GetEnumerator ();
+        }
         public Word NormalizeAndAdd (string wildWord)
         {
             var normalizedString = GetNormalizedString (wildWord);
-            var wordInformation = new Word (normalizedString);
-            words.Add (normalizedString, wordInformation);
-            return wordInformation;
+            if (words.ContainsKey (normalizedString)) {
+                return words [normalizedString];
+            } else {
+                var wordInformation = new Word (normalizedString);
+                words.Add (normalizedString, wordInformation);
+                return wordInformation;
+            }
         }
 
         public CollectionOfFileDescriptions this [string wildWord] {
@@ -74,7 +97,7 @@ namespace MyPad
                 return wordInformation.Occurences;
             }
         }
-        string GetNormalizedString (string wildWord)
+        public static string GetNormalizedString (string wildWord)
         {
             return wildWord.ToLower (CultureInfo.CurrentCulture);
         }

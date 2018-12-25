@@ -298,6 +298,7 @@
 			<LastGenOutput>MainForm.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<Compile Include="IndexedSearch\FileIndexerBackgroundWorker.cs" />
+		<Compile Include="IndexedSearch\Globals.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Data\MRUList.xml">
