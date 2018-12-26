@@ -21,7 +21,7 @@ namespace MyPad
             var args = (string [])e.Argument;
             var path = args [0];
             var ext = args [1];
-            InitGlobals ();
+            Globals.InitIndex ();
             int i = 0;
             foreach (var file in TraverseDirectory (path, f => f.Extension == ext)) {
                 if (this.CancellationPending == true) {
@@ -56,12 +56,6 @@ namespace MyPad
                 foreach (var f in dir.GetFiles ().Where (Pattern)) // "Pattern" is a function
                     yield return f;
             }
-        }
-
-        void InitGlobals ()
-        {
-            Globals.allWords = new IndexOfWords ();
-            Globals.allFiles = new CollectionOfFileDescriptions ();
         }
 
         void SplitFileIntoWords (string fullName)

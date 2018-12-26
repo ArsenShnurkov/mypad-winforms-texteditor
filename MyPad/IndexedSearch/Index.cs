@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace MyPad
 {
@@ -28,13 +29,13 @@ namespace MyPad
                 return files;
             }
         }
+        protected List<DescriptionOfFile> filesRaw = new List<DescriptionOfFile> ();
         public DescriptionOfFile this [int index] {
             get {
-                LinkedListNode<DescriptionOfFile> node = files.First;
-                for (int i = 0; i < index; ++i) {
-                    node = node.Next;
+                if (filesRaw.Count != files.Count) {
+                    filesRaw = files.ToList ();
                 }
-                return node.Value;
+                return filesRaw [index];
             }
         }
     }
@@ -57,11 +58,12 @@ namespace MyPad
         {
             unifiedRepresentationOfWord = content;
         }
+        //public int Index;
     }
 
     public class IndexOfWords : IEnumerable<Word>
     {
-        protected SortedDictionary<string, Word> words = new SortedDictionary<string, Word> ();
+        protected Dictionary<string, Word> words = new Dictionary<string, Word> ();
         public IEnumerable<Word> GetWords ()
         {
             return words.Values;
@@ -75,6 +77,7 @@ namespace MyPad
         {
             return GetEnumerator ();
         }
+
         public Word NormalizeAndAdd (string wildWord)
         {
             var normalizedString = GetNormalizedString (wildWord);
@@ -82,9 +85,16 @@ namespace MyPad
                 return words [normalizedString];
             } else {
                 var wordInformation = new Word (normalizedString);
+                //wordInformation.Index = words.Count;
                 words.Add (normalizedString, wordInformation);
                 return wordInformation;
             }
+        }
+
+        internal void AddWithNoChecks (string line)
+        {
+            var wordInformation = new Word (line);
+            words.Add (line, wordInformation);
         }
 
         public CollectionOfFileDescriptions this [string wildWord] {
@@ -97,9 +107,31 @@ namespace MyPad
                 return wordInformation.Occurences;
             }
         }
+        protected List<Word> wordsRaw = new List<Word> ();
+        public Word this [int index] {
+            get {
+                if (wordsRaw.Count != words.Count) {
+                    wordsRaw = words.Values.ToList ();
+                }
+                return wordsRaw [index];
+            }
+        }
         public static string GetNormalizedString (string wildWord)
         {
             return wildWord.ToLower (CultureInfo.CurrentCulture);
         }
+
+        internal bool ContainsKey (string wildWord)
+        {
+            var normalizedString = GetNormalizedString (wildWord);
+            return this.words.ContainsKey (normalizedString);
+        }
+
+        public int Count {
+            get {
+                return this.words.Count;
+            }
+        }
+
     }
 }

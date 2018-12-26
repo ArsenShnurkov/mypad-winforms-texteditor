@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Threading;
 
 namespace MyPad
 {
@@ -15,11 +16,24 @@ namespace MyPad
         ToolStripSeparator separatorLabel;
         ToolStripMenuItem firefoxLabel;
 
+        ContextMenuStrip directoryMenu;
+        ToolStripMenuItem labelExploreDirectory;
+
         public IndexedSearchTabPage ()
         {
             InitializeComponent ();
 
-            // Create the ContextMenuStrip.
+            // Populate directory context menu
+            directoryMenu = new ContextMenuStrip ();
+
+            labelExploreDirectory = new ToolStripMenuItem ();
+            labelExploreDirectory.Text = "Explore";
+            labelExploreDirectory.Click += labelExploreDirectory_Click;
+
+            directoryMenu.Items.AddRange (
+                new ToolStripItem [] { labelExploreDirectory });
+
+            // Populate file context menu
             docMenu = new ContextMenuStrip ();
 
             //Create some menu items.
@@ -75,13 +89,12 @@ namespace MyPad
 
         void backgroundWorker1_ProgressChanged (object sender, ProgressChangedEventArgs e)
         {
-            Debug.WriteLine (e.ProgressPercentage);
-
             var res = e.UserState as SearchResult;
             if (res == null) {
                 return;
             }
             FileInfo fi = new FileInfo (res.filePathName);
+            Debug.WriteLine (res.filePathName);
             TreeNode fileNode = GetTreeNodeFromName (fi.FullName);
             try {
                 string nodeText = res.lineNumber.ToString () + ":" + res.lineContent;
@@ -111,8 +124,10 @@ namespace MyPad
             // create such path in tree
             TreeNode res = null;
             var currentSet = treeViewResults.Nodes;
+            string currentPath = dir.FullName;
             while (parts.Count > 0) {
                 string part = parts.Pop ();
+                currentPath = Path.Combine (currentPath, part);
                 res = null;
                 for (int nc = 0; nc < currentSet.Count; ++nc) {
                     if (string.Compare (((TreeNodeInfo)(currentSet [nc].Tag)).ShortName, part) == 0) {
@@ -124,10 +139,15 @@ namespace MyPad
                     res = new TreeNode (part);
                     res.Tag = new TreeNodeInfo (part);
                     if (parts.Count > 0) {
+                        res.ContextMenuStrip = directoryMenu;
+                        ((TreeNodeInfo)res.Tag).LongName = currentPath;
+                        res.ToolTipText = currentPath;
                         res.Expand ();
+                        treeViewResults.Invalidate ();
+                        Thread.Sleep (10);
                     } else {
-                        ((TreeNodeInfo)res.Tag).LongName = fi.FullName;
                         res.ContextMenuStrip = docMenu;
+                        ((TreeNodeInfo)res.Tag).LongName = fi.FullName;
                         string title = Globals.GetTextTitleFromFile (fi.FullName);
                         if (string.IsNullOrWhiteSpace (title) == false) {
                             res.Text = fi.LastWriteTimeUtc.ToString ("yyyy") + ", \"" + title + "\", " + part;
@@ -220,6 +240,35 @@ namespace MyPad
             start.Arguments = filename;
             // Enter the executable to run, including the complete path
             start.FileName = "/usr/bin/firefox";
+            // Do you want to show a console window?
+            start.WindowStyle = ProcessWindowStyle.Hidden;
+            start.CreateNoWindow = true;
+            int exitCode;
+
+            // Run the external process & wait for it to finish
+            using (Process proc = Process.Start (start)) {
+                proc.WaitForExit ();
+
+                // Retrieve the app's exit code
+                exitCode = proc.ExitCode;
+            }
+        }
+
+        private void labelExploreDirectory_Click (object sender, EventArgs e)
+        {
+            TreeNode item = this.treeViewResults.SelectedNode;
+            TreeNodeInfo info = item.Tag as TreeNodeInfo;
+            if (info == null) {
+                return;
+            }
+            var directory = info.LongName;
+
+            // Prepare the process to run
+            ProcessStartInfo start = new ProcessStartInfo ();
+            // Enter in the command line arguments, everything you would enter after the executable name itself
+            start.Arguments = directory;
+            // Enter the executable to run, including the complete path
+            start.FileName = "/usr/bin/caja";
             // Do you want to show a console window?
             start.WindowStyle = ProcessWindowStyle.Hidden;
             start.CreateNoWindow = true;

@@ -169,8 +169,23 @@
             }
             this.textBoxIndexLocationDirectory.Text = dirname;
             if (Globals.allFiles.Files.Count == 0) {
-                Globals.LoadIndexFromCSV (dirname);
-                this.currentFilesCount.Text = Globals.allFiles.Files.Count.ToString ();
+                var backgroundWorker = new BackgroundWorker ();
+                //backgroundWorker.WorkerReportsProgress = true;
+                Stopwatch sw = new Stopwatch ();
+                backgroundWorker.DoWork += (s, e) => {
+                    sw.Start ();
+                    this.currentFilesCount.Text = "Loading ...";
+                    Globals.LoadIndexFromDirectory (dirname);
+                };
+                backgroundWorker.RunWorkerCompleted += (s, e) => {
+                    sw.Stop ();
+                    var text = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0} files, {1} words, load time {2:0.00} sec",
+                        Globals.allFiles.Files.Count,
+                        Globals.allWords.Count,
+                        sw.Elapsed.TotalSeconds);
+                    this.currentFilesCount.Text = text;
+                };
+                backgroundWorker.RunWorkerAsync ();
             }
         }
         protected void SaveIndexSettings ()
@@ -178,10 +193,10 @@
             var dirname = Path.Combine (this.textBoxIndexLocationDirectory.Text, "");
             cfg.AppSettings.Settings.Add (SearchIndexDirectory, dirname);
             if (Globals.allFiles.Files.Count == 0) {
-                Globals.SaveIndexToCSV (dirname);
+                Globals.SaveIndexToDirectory (dirname);
             }
         }
-
+        Stopwatch workerTime = new Stopwatch ();
         private void buttonReindex_Click (object sender, EventArgs e)
         {
             if (worker.IsBusy) {
@@ -193,6 +208,7 @@
                 }
                 return;
             }
+            workerTime.Start ();
             var SearchDirectory = Globals.LoadConfiguration ().AppSettings.Settings ["SearchDirectory"]?.Value;
             worker.RunWorkerAsync (new string [] { SearchDirectory, ".htm" });
         }
@@ -205,14 +221,18 @@
         {
             try {
                 var dirname = cfg.AppSettings.Settings [SearchIndexDirectory]?.Value;
-                Globals.SaveIndexToCSV (dirname);
+                var saveTime = new Stopwatch ();
+                saveTime.Start ();
+                Globals.SaveIndexToDirectory (dirname);
+                saveTime.Stop ();
                 string text;
                 if (e.Cancelled) {
                     text = this.currentFilesCount.Text + " - Cancelled";
                 } else {
                     text = this.currentFilesCount.Text + " - Finished";
                 }
-                this.currentFilesCount.Text = text;
+                workerTime.Stop ();
+                this.currentFilesCount.Text = text + string.Format (", elapsed {0}/{1}", saveTime.Elapsed, workerTime.Elapsed);
             } catch (Exception ex) {
                 this.currentFilesCount.Text = ex.ToString ();
             }

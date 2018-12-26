@@ -511,7 +511,7 @@
             // showSearchTabPageToolStripMenuItem
             // 
             this.showSearchTabPageToolStripMenuItem.Name = "showSearchTabPageToolStripMenuItem";
-            this.showSearchTabPageToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F4;
+            this.showSearchTabPageToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F4;
             this.showSearchTabPageToolStripMenuItem.Size = new System.Drawing.Size (236, 22);
             this.showSearchTabPageToolStripMenuItem.Text = "Show search tool";
             this.showSearchTabPageToolStripMenuItem.Click += new System.EventHandler (this.showSearchTabPageToolStripMenuItem_Click);
@@ -903,7 +903,7 @@
             this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject ("optionsToolStripMenuItem.Image")));
             this.settingsToolStripMenuItem.Name = nameof (this.settingsToolStripMenuItem);
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size (116, 22);
-            this.settingsToolStripMenuItem.Text = "Settins";
+            this.settingsToolStripMenuItem.Text = "Settings...";
             this.settingsToolStripMenuItem.Click += new System.EventHandler (this.settingsToolStripMenuItem_Click);
             // 
             // atomFeedEditorToolStripMenuItem

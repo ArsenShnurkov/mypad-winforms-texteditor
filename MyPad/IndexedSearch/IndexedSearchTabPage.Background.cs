@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace MyPad
 {
@@ -21,52 +23,70 @@ namespace MyPad
                 return;
             }
 
-            ProcessDirectory (new DirectoryInfo (req.SearchDirectory));
+            string [] words = req.query.Split (new string [] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            var files = new Dictionary<string, int> ();
+            int includedWords = 0;
+            foreach (var w in words) {
+                bool exclude = false;
+                string wildWord = w;
+                if (w.StartsWith ("!", StringComparison.InvariantCulture)) {
+                    exclude = true;
+                    wildWord = w.Substring (1);
+                } else {
+                    includedWords++;
+                }
+                if (Globals.allWords.ContainsKey (wildWord)) {
+                    foreach (var fileInfo in Globals.allWords [wildWord].Files) {
+                        if (this.backgroundWorker1.CancellationPending) {
+                            // Set the e.Cancel flag so that the WorkerCompleted event
+                            // knows that the process was cancelled.
+                            e.Cancel = true;
+                            this.backgroundWorker1.ReportProgress (0);
+                            return;
+                        }
+                        if (files.ContainsKey (fileInfo.FullName)) {
+                            int count = files [fileInfo.FullName];
+                            if (count != -1) {
+                                files [fileInfo.FullName] = count + 1;
+                            }
+                        } else {
+                            files.Add (fileInfo.FullName, 1);
+                        }
+                        if (exclude) {
+                            files [fileInfo.FullName] = -1;
+                        }
+                    }
+                }
+            }
+            var filteredList = new List<FileInfo> ();
+            foreach (var kvp in files) {
+                if (kvp.Value == includedWords) {
+                    //if (kvp.Value != -1) {
+                    var fi = new FileInfo (kvp.Key);
+                    filteredList.Add (fi);
+                }
+            }
+
+            foreach (var fn in filteredList.OrderByDescending (fi => fi.LastAccessTimeUtc)) {
+                try {
+                    ProcessFile (fn, words);
+                } catch (Exception ex) {
+                    Trace.WriteLine (ex.ToString ());
+                }
+            }
         }
 
-        void ProcessDirectory (DirectoryInfo di)
+        void ProcessFile (FileInfo fi, string [] words)
         {
-            FileInfo [] fileInfos = di.GetFiles ("*.htm");
-            var files = new SortedList<string, FileInfo> ();
-            for (int f1 = 0; f1 < fileInfos.Length; ++f1) {
-                FileInfo sf = fileInfos [f1];
-                files.Add (sf.Name, sf);
-            }
-            foreach (string fileName in files.Keys) {
-                if (this.backgroundWorker1.CancellationPending) {
-                    // Set the e.Cancel flag so that the WorkerCompleted event
-                    // knows that the process was cancelled.
-                    e.Cancel = true;
-                    this.backgroundWorker1.ReportProgress (0);
-                    return;
-                }
-                ProcessFile (files [fileName]);
-            }
-
-            DirectoryInfo [] subdirs = di.GetDirectories ();
-            var dirs = new SortedList<string, DirectoryInfo> ();
-            for (int d1 = 0; d1 < subdirs.Length; ++d1) {
-                DirectoryInfo sd = subdirs [d1];
-                dirs.Add (sd.Name, sd);
-            }
-            foreach (string shortName in dirs.Keys) {
-                if (this.backgroundWorker1.CancellationPending) {
-                    // Set the e.Cancel flag so that the WorkerCompleted event
-                    // knows that the process was cancelled.
-                    e.Cancel = true;
-                    this.backgroundWorker1.ReportProgress (0);
-                    return;
-                }
-                ProcessDirectory (dirs [shortName]);
-            }
-        }
-
-        void ProcessFile (FileInfo fi)
-        {
-            Thread.Sleep (10);
             string [] fileLines = System.IO.File.ReadAllLines (fi.FullName);
             for (int li = 0; li < fileLines.Length; ++li) {
-                if (fileLines [li].IndexOf (this.searchQuery, StringComparison.InvariantCulture) >= 0) {
+                bool found = false;
+                foreach (var word in words) {
+                    if (fileLines [li].IndexOf (word, StringComparison.InvariantCulture) >= 0) {
+                        found = true;
+                    }
+                }
+                if (found) {
                     SearchResult res = new SearchResult ();
                     res.filePathName = fi.FullName;
                     res.lineNumber = li;
@@ -75,7 +95,6 @@ namespace MyPad
                 }
             }
         }
-
     }
 }
 
