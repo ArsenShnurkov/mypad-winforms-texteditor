@@ -25,7 +25,7 @@
 
         protected void Initialize_SearchSettingsTab ()
         {
-            worker = new FileIndexerBackgroundWorker ();
+            worker = new FileIndexerBackgroundWorker (Globals.allFiles.Files.Count);
             worker.ProgressChanged += this.backgroundWorker1_OnProgressChanged;
             worker.RunWorkerCompleted += this.backgroundWorker1_OnRunWorkerCompleted;
 

@@ -10,10 +10,13 @@ namespace MyPad
 {
     public class FileIndexerBackgroundWorker : BackgroundWorker
     {
-        public FileIndexerBackgroundWorker ()
+        protected int filecountEstimation;
+
+        public FileIndexerBackgroundWorker (int estimation)
         {
             this.WorkerReportsProgress = true;
             this.WorkerSupportsCancellation = true;
+            filecountEstimation = estimation;
         }
 
         protected override void OnDoWork (DoWorkEventArgs e)
@@ -37,7 +40,11 @@ namespace MyPad
                     Trace.WriteLine (ex.ToString ());
                 }
                 i++;
-                this.ReportProgress (0, i);
+                if (filecountEstimation == 0) {
+                    filecountEstimation = 100;
+                }
+                int percent = (100 * i) / filecountEstimation;
+                this.ReportProgress (percent, i);
             }
         }
 
