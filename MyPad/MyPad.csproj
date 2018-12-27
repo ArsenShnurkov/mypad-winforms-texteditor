@@ -299,6 +299,7 @@
 		</EmbeddedResource>
 		<Compile Include="IndexedSearch\FileIndexerBackgroundWorker.cs" />
 		<Compile Include="IndexedSearch\Globals.cs" />
+		<Compile Include="IndexedSearch\FileSearcherBackgroundWorker.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Data\MRUList.xml">
