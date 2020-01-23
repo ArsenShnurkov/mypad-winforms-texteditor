@@ -19,121 +19,148 @@ namespace MyPad
         [ConfigurationPropertyAttribute (nameof (AllowCaretBeyondEOL))]
         public BooleanElement AllowCaretBeyondEOL {
             get {
-                return ((BooleanElement)(this [nameof (AllowCaretBeyondEOL)]));
+                var res = ((BooleanElement)(this [nameof (AllowCaretBeyondEOL)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ConvertTabsToSpaces))]
         public BooleanElement ConvertTabsToSpaces {
             get {
-                return ((BooleanElement)(this [nameof (ConvertTabsToSpaces)]));
+                var res = ((BooleanElement)(this [nameof (ConvertTabsToSpaces)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (EnableFolding))]
         public BooleanElement EnableFolding {
             get {
-                return ((BooleanElement)(this [nameof (EnableFolding)]));
+                var res = ((BooleanElement)(this [nameof (EnableFolding)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ShowEOLMarkers))]
         public BooleanElement ShowEOLMarkers {
             get {
-                return ((BooleanElement)(this [nameof (ShowEOLMarkers)]));
+                var res = ((BooleanElement)(this [nameof (ShowEOLMarkers)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ShowHRuler))]
         public BooleanElement ShowHRuler {
             get {
-                return ((BooleanElement)(this [nameof (ShowHRuler)]));
+                var res = ((BooleanElement)(this [nameof (ShowHRuler)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ShowInvalidLines))]
         public BooleanElement ShowInvalidLines {
             get {
-                return ((BooleanElement)(this [nameof (ShowInvalidLines)]));
+                var res = ((BooleanElement)(this [nameof (ShowInvalidLines)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ShowLineNumbers))]
         public BooleanElement ShowLineNumbers {
             get {
-                return ((BooleanElement)(this [nameof (ShowLineNumbers)]));
+                var res = ((BooleanElement)(this [nameof (ShowLineNumbers)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ShowMatchingBrackets))]
         public BooleanElement ShowMatchingBrackets {
             get {
-                return ((BooleanElement)(this [nameof (ShowMatchingBrackets)]));
+                var res = ((BooleanElement)(this [nameof (ShowMatchingBrackets)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ShowSpaces))]
         public BooleanElement ShowSpaces {
             get {
-                return ((BooleanElement)(this [nameof (ShowSpaces)]));
+                var res = ((BooleanElement)(this [nameof (ShowSpaces)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ShowTabs))]
         public BooleanElement ShowTabs {
             get {
-                return ((BooleanElement)(this [nameof (ShowTabs)]));
+                var res = ((BooleanElement)(this [nameof (ShowTabs)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (ShowVRuler))]
         public BooleanElement ShowVRuler {
             get {
-                return ((BooleanElement)(this [nameof (ShowVRuler)]));
+                var res = ((BooleanElement)(this [nameof (ShowVRuler)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (HighlightCurrentLine))]
         public BooleanElement HighlightCurrentLine {
             get {
-                return ((BooleanElement)(this [nameof (HighlightCurrentLine)]));
+                var res = ((BooleanElement)(this [nameof (HighlightCurrentLine)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (AutoInsertBrackets))]
         public BooleanElement AutoInsertBrackets {
             get {
-                return ((BooleanElement)(this [nameof (AutoInsertBrackets)]));
+                var res = ((BooleanElement)(this [nameof (AutoInsertBrackets)]));
+                return res;
+            }
+        }
+        [ConfigurationPropertyAttribute (nameof (TrailingWhitespace))]
+        public BooleanElement TrailingWhitespace {
+            get {
+                var res = ((BooleanElement)(this [nameof (TrailingWhitespace)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (IndentStyle))]
         public StringElement IndentStyle {
             get {
-                return ((StringElement)(this [nameof (IndentStyle)]));
+                var res = ((StringElement)(this [nameof (IndentStyle)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (FontName))]
         public StringElement FontName {
             get {
-                return ((StringElement)(this [nameof (FontName)]));
+                var res = ((StringElement)(this [nameof (FontName)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (FontSize))]
         public FloatElement FontSize {
             get {
-                return ((FloatElement)(this [nameof (FontSize)]));
+                var res = ((FloatElement)(this [nameof (FontSize)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (MainWindowX))]
         public IntElement MainWindowX {
             get {
-                return ((IntElement)(this [nameof (MainWindowX)]));
+                var res = ((IntElement)(this [nameof (MainWindowX)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (MainWindowY))]
         public IntElement MainWindowY {
             get {
-                return ((IntElement)(this [nameof (MainWindowY)]));
+                var res = ((IntElement)(this [nameof (MainWindowY)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (MainWindowWidth))]
         public IntElement MainWindowWidth {
             get {
-                return ((IntElement)(this [nameof (MainWindowWidth)]));
+                var res = ((IntElement)(this [nameof (MainWindowWidth)]));
+                return res;
             }
         }
         [ConfigurationPropertyAttribute (nameof (MainWindowHeight))]
         public IntElement MainWindowHeight {
             get {
-                return ((IntElement)(this [nameof (MainWindowHeight)]));
+                var res = ((IntElement)(this [nameof (MainWindowHeight)]));
+                return res;
             }
         }
     }
@@ -143,7 +170,8 @@ namespace MyPad
         [System.Configuration.ConfigurationPropertyAttribute ("value", IsRequired = true)]
         public string Value {
             get {
-                return this ["value"] as string;
+                var res = this ["value"] as string;
+                return res;
             }
             set {
                 this ["value"] = value;
@@ -156,8 +184,8 @@ namespace MyPad
         [System.Configuration.ConfigurationPropertyAttribute ("value", IsRequired = true)]
         public bool Value {
             get {
-                bool result = (bool)this ["value"];
-                return result;
+                bool res = (bool)this ["value"];
+                return res;
             }
             set {
                 this ["value"] = value;
@@ -170,8 +198,8 @@ namespace MyPad
         [System.Configuration.ConfigurationPropertyAttribute ("value", IsRequired = true)]
         public float Value {
             get {
-                float result = (float)this ["value"];
-                return result;
+                float res = (float)this ["value"];
+                return res;
             }
             set {
                 this ["value"] = value;
@@ -183,8 +211,8 @@ namespace MyPad
         [System.Configuration.ConfigurationPropertyAttribute ("value", IsRequired = true)]
         public int Value {
             get {
-                                int result = (int)this ["value"];
-                return result;
+                int res = (int)this ["value"];
+                return res;
             }
             set {
                 this ["value"] = value;
@@ -192,4 +220,3 @@ namespace MyPad
         }
     }
 }
-

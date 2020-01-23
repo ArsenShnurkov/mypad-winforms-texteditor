@@ -239,16 +239,6 @@
 		<Compile Include="MainForm.Images.cs">
 			<DependentUpon>MainForm.cs</DependentUpon>
 		</Compile>
-		<EmbeddedResource Include="Resources\Resources.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-			<SubType>Designer</SubType>
-		</EmbeddedResource>
-		<Compile Include="Resources\Resources.Designer.cs">
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Resources.resx</DependentUpon>
-			<DesignTime>True</DesignTime>
-		</Compile>
 		<Compile Include="Dialogs\InsertImageDialog.cs">
 			<SubType>Form</SubType>
 		</Compile>
@@ -300,6 +290,32 @@
 		<Compile Include="IndexedSearch\FileIndexerBackgroundWorker.cs" />
 		<Compile Include="IndexedSearch\Globals.cs" />
 		<Compile Include="IndexedSearch\FileSearcherBackgroundWorker.cs" />
+		<EmbeddedResource Include="Properties\Resources.resx">
+		  <Generator>ResXFileCodeGenerator</Generator>
+		  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		  <SubType>Designer</SubType>
+		</EmbeddedResource>
+		<Compile Include="Properties\Resources.Designer.cs">
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>Resources.resx</DependentUpon>
+		  <DesignTime>True</DesignTime>
+		</Compile>
+		<EmbeddedResource Include="Resources\MethodIcon.png" />
+		<EmbeddedResource Include="Resources\DefaultIcon.png" />
+		<EmbeddedResource Include="Resources\FunctionIcon.png" />
+		<EmbeddedResource Include="Resources\InterfaceIcon.png" />
+		<EmbeddedResource Include="Resources\VariableIcon.png" />
+		<Compile Include="CodeCompletionProviders\PHPCompletionProvider.cs" />
+		<None Include="Resources\CloseIcon.png" />
+		<Compile Include="EditorWindow.cs" />
+		<Compile Include="MyTabPage.cs" />
+		<Compile Include="CodeCompletionKeyHandler.cs" />
+		<Compile Include="SettingsCollection.cs" />
+		<Compile Include="Languages\CLanguageStrategy.cs" />
+		<Compile Include="Languages\ILanguageStrategy.cs" />
+		<Compile Include="Languages\LanguageManager.cs" />
+		<Compile Include="Languages\PHPLanguageStrategy.cs" />
+		<Compile Include="Languages\DefaultFoldingStrategy.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Data\MRUList.xml">
@@ -346,6 +362,10 @@
 		<ProjectReference Include="..\..\..\ICSharpCode.TextEditor\ArsenShnurkov\Project\ICSharpCode.TextEditor.csproj">
 			<Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
 			<Name>ICSharpCode.TextEditor</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\MyPad.Plugins\MyPad.Plugins.csproj">
+		  <Project>{6A80E9BF-BF6C-4CF1-A410-FF1CE424CD91}</Project>
+		  <Name>MyPad.Plugins</Name>
 		</ProjectReference>
 	</ItemGroup>
 	<ProjectExtensions>

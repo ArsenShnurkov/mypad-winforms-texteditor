@@ -9,14 +9,14 @@ namespace MyPad
 {
     public class MyTabPage : Panel
     {
-        public delegate void TextChangedEventHandler(object sender, EventArgs e);
-        public event TextChangedEventHandler TextChanged;
+        //public delegate void TextChangedEventHandler (object sender, EventArgs e);
+        //public event TextChangedEventHandler TextChanged;
 
-        Rectangle bounds;
-        string text = "";
+        //Rectangle bounds;
+        //string text = "";
         string toolTipText = "";
 
-        public override string Text
+        /*public override string Text
         {
             get
             {
@@ -25,42 +25,36 @@ namespace MyPad
             set
             {
                 text = value;
-                TextChanged(this, EventArgs.Empty);
+                base.OnTextChanged(EventArgs.Empty);
             }
-        }
+        }*/
 
-        public string ToolTipText
-        {
-            get
-            {
+        public string ToolTipText {
+            get {
                 return toolTipText;
             }
-            set
-            {
+            set {
                 toolTipText = value;
             }
         }
 
-        public Rectangle Bounds
-        {
-            get
-            {
+        /*public Rectangle Bounds {
+            get {
                 return bounds;
             }
-            internal set
-            {
+            internal set {
                 bounds = value;
             }
-        }
+        }*/
 
-        public MyTabPage()
-            : base()
+        public MyTabPage ()
+            : base ()
         {
             this.BackColor = SystemColors.Control;
-            this.TextChanged +=new TextChangedEventHandler(OnTextChanged);
+            base.TextChanged += new EventHandler (OnTextChanged);
         }
 
-        protected virtual void OnTextChanged(object sender, EventArgs e)
+        protected virtual void OnTextChanged (object sender, EventArgs e)
         {
 
         }

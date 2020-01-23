@@ -97,7 +97,7 @@ namespace MyPad
             rect.Location = new Point (e.ClipRectangle.Right - 20, e.ClipRectangle.Top + 5);
             rect.Size = new Size (12, 12);
 
-            e.Graphics.DrawImage (MyPad.Resources.Resources.cross, rect);
+            e.Graphics.DrawImage (MyPad.Properties.Resources.cross, rect);
         }
 
         protected override void OnPaint (PaintEventArgs e)
