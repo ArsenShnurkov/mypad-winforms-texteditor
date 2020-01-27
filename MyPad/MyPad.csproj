@@ -133,9 +133,6 @@
 		<Compile Include="MainForm.NewFile.cs">
 			<DependentUpon>MainForm.cs</DependentUpon>
 		</Compile>
-		<None Include="Text1.aspx">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
 		<Compile Include="MainForm.ContextMenu.cs">
 			<DependentUpon>MainForm.cs</DependentUpon>
 		</Compile>
@@ -332,6 +329,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Include="Resources\cross.png" />
+		<Content Include="Text1.aspx">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
