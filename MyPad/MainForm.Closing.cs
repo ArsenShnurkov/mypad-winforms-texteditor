@@ -45,7 +45,7 @@ namespace MyPad
                 }
             }
             tabControl1.SelectedIndex = -1;
-            tabControl1.TabPages.Remove(tb);
+            tabControl1.TabPages.Remove (tb);
             tb.Dispose ();
             tabControl1.SelectedIndex = tabControl1.TabCount - 1;
             SetupActiveTab ();
@@ -53,12 +53,15 @@ namespace MyPad
 
         private void closeAllToolStripMenuItem_Click (object sender, EventArgs e)
         {
+            var pages_to_close = new List<EditorTabPage> ();
             foreach (TabPage tb in tabControl1.TabPages) {
                 if (tb is EditorTabPage) {
-                    EditorTabPage etb = tb as EditorTabPage;
-                    tabControl1.SelectedTab = etb;
-                    closeToolStripMenuItem_Click (sender, e);
+                    pages_to_close.Add (tb as EditorTabPage);
                 }
+            }
+            foreach (EditorTabPage etb in pages_to_close) {
+                tabControl1.SelectedTab = etb;
+                closeToolStripMenuItem_Click (sender, e);
             }
         }
 
